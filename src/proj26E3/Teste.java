@@ -11,17 +11,22 @@ public class Teste {
 
 		int opc;
 		do {
+			System.out.println("========== MENU USÚARIO ==========");
 			System.out.println("Seleciona perfil");
 			System.out.println("1- Administrador");
 			System.out.println("2- Gerente");
 			System.out.println("3- Funcionario do Bar");
 			System.out.println("4- Cliente");
 			System.out.println("0- Terminar Programa");
-			System.out.print("Opcação:");
+			System.out.println("===================================");
+			System.out.print("\nOpção:");
 			opc = sc.nextInt();
 			sc.nextLine();
 			System.out.println();
 			
+			/*
+			 * INTRODUÇAO DADOS FUNCIONARIO
+			 */
 			if (opc != 0 && opc != 1 && opc != 2 && opc != 3 && opc != 4 ) {
 				System.out.println("Esse perfil não existe! Tente novamente.");
 				continue;
@@ -39,7 +44,9 @@ public class Teste {
 			String chave = sc.nextLine();
 			System.out.println();
 			
-			//VERIFICAÇÃO DE AUTENTICAÇÃO
+			/*
+			 * VERIFICAÇÃO DE AUTENTICAÇÃO DO USUARIO
+			 */
 			if (opc == 1 || opc == 2 || opc == 3) {
 				try {
 					int numTrabalhador = Integer.parseInt(uti);
@@ -90,6 +97,9 @@ public class Teste {
 				System.out.println("Menu do Administrador em desenvolvimento...\n");
 			}
 			
+			/* 
+			 * USUARIO - GERENTE
+			 */
 			if(opc == 2){
 				do {
 					System.out.println("1- Adicionar Produtos");
@@ -184,12 +194,19 @@ public class Teste {
 					}
 				}while(escolha != 0 && escolha != 10);
 			}
-			
+			/*
+			 * UAUARIO - FUNCIONARIO DO BAR
+			 */
 			if(opc == 3){
 				do {
-					System.out.println("1- Consultar Produtos Disponíveis (US06)");
-					System.out.println("10 - Sair para login");
+					System.out.println("===== MENU FUNCIONARIO BAR =====");
+					System.out.println("1- Consultar Produtos Disponíveis");
+					System.out.println("2- Registrar pedido");
+					System.out.println("3- Consultar reservas pendentes");
+					System.out.println("4- Confirmar reserva");
+					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
+					System.out.println("================================");
 					System.out.print("Opção:");
 					escolha = sc.nextInt();
 					sc.nextLine();
@@ -197,8 +214,17 @@ public class Teste {
 					
 					switch (escolha) {
 					case 1:
-						gb.consultarProdutosDisponiveis();
+						gb.consultarProdutosDisponiveis(); 
 						break;
+					case 2:
+						gb.registrarPedido();
+						System.out.println("O pedido foi registrado!");
+						break;
+					case 3:
+						gb.consultarReservasPendentes();
+						break;
+					case 4:
+						gb.confirmarReserva();
 					case 10:
 						System.out.println("A sair para o login");
 						break;

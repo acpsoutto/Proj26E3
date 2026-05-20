@@ -10,7 +10,9 @@ public class Produto {
 	private ArrayList<YearMonth> validades;
 	private CategoriaProduto categoria;
 	private ArrayList<Integer> stock;
+	
 	/**
+	 * CONSTRUTOR
 	 * @param id - id do produto
 	 * @param nome - nome do produto
 	 * @param preco - preço do produto

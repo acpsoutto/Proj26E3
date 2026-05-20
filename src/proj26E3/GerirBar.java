@@ -54,7 +54,7 @@ public class GerirBar {
 
 //--------------------------------------------------------------------
 	/*
-	 *US06: Consultar produtos disponíveis (Stock > 0 e dentro da validade)
+	 *US06:Consultar produtos disponíveis (Stock > 0 e dentro da validade)
 	 */
 	public void consultarProdutosDisponiveis() {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");

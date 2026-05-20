@@ -3,6 +3,7 @@ package proj26E3;
 public class Administrador extends Funcionario{
 
 	/**
+	 * CONSTRUTOR
 	 * @param numeroTrabalhador
 	 * @param nome
 	 * @param email

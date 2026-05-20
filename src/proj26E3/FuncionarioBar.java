@@ -15,7 +15,7 @@ public class FuncionarioBar extends Funcionario {
 
 	@Override
 	public String toString() {
-		return "|Funcionario : Funcionario do Bar\n " + super.toString();
+		return "|Funcionario : Funcionario do Bar\n  " + super.toString();
 	}
 	
 	

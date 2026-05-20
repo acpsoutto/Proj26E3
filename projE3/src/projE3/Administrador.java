@@ -12,4 +12,6 @@ public class Administrador extends Funcionario{
 		super(numeroTrabalhador, nome, email, codigoAcesso);
 	}
 	
+	public void registarFuncionario(Funcionario f) {}
+	
 }

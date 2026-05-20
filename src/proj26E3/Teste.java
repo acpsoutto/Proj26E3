@@ -32,49 +32,62 @@ public class Teste {
 				break;
 			}
 			
-			System.out.print("Insira o utilizador:");
+			System.out.print("Insira o utilizador (Nº Trabalhador/ID):");
 			String uti = sc.nextLine();
 			System.out.println();
 			System.out.print("Insira a palavra-chave:");
 			String chave = sc.nextLine();
 			System.out.println();
 			
-			switch(opc) {
-			case 1:
-				/*
-				 * Admnistrador A = gb.pesquisarAdmin();
-				 * if(A == null || !A.getCodigoAcesso().equals(chave){
-				 * 		System.out.println("Utilizador ou palavra-chave errada. Tente outra vez);
-				 * 		continue
-				 *	}	
-				 */
-			case 2://repetir de cima
-			case 3: //repetir de cima ou
-				/*Funcionario f = gb.pesquisarFuncionario();
-				 * if(A == null || !f.getCodigoAcesso().equals(chave){
-				 * 		System.out.println("Utilizador ou palavra-chave errada. Tente outra vez);
-				 * 		continue
-				 *	}	
-				 */
-				break;
-			case 4:
-				Cliente c = gb.pesquisarCliente();
-				 if(c == null || !c.getCodigoAcesso().equals(chave)){
-					 System.out.println("Utilizador ou palavra-chave errada. Tente outra vez");
-					  	continue;
+			//VERIFICAÇÃO DE AUTENTICAÇÃO
+			if (opc == 1 || opc == 2 || opc == 3) {
+				try {
+					int numTrabalhador = Integer.parseInt(uti);
+					Funcionario f = gb.pesquisarFuncionario(numTrabalhador);
+					
+					if (f == null || !f.getCodigoAcesso().equals(chave)) {
+						System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
+						continue;
 					}
-				 break;
+					
+					// Validação do tipo de perfil correspondente
+					if (opc == 1 && !(f instanceof Administrador)) { // Nota: classe Administrador deve existir
+						System.out.println("Este funcionário não é Administrador!\n");
+						continue;
+					}
+					if (opc == 2 && !(f instanceof Gerente)) {
+						System.out.println("Este funcionário não é Gerente!\n");
+						continue;
+					}
+					if (opc == 3 && !(f instanceof FuncionarioBar)) {
+						System.out.println("Este funcionário não é do Bar!\n");
+						continue;
+					}
+					
+				} catch (NumberFormatException e) {
+					System.out.println("Para funcionários, o utilizador deve ser o número de trabalhador numérico.\n");
+					continue;
+				}
+			} else if (opc == 4) {
+				Cliente c = gb.pesquisarCliente(uti);
+				if (c == null || !c.getCodigoAcesso().equals(chave)) { // Nota: Ajustar se o método de chave do cliente for diferente
+					System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
+					continue;
+				}
 			}
 			
-			int escolha;
+			int escolha = -1; // Inicializado para evitar erros de compilação
+			
 			if(opc == 1){
-				do {
+				/* do {
 					//Menu do Admnistrador
 					//0 - Para encerrar programa 10: voltar login
 					switch (escolha) {
 					//funcionalidades do Admnistrador
 					}
 				}while(escolha != 0 || escolha != 10);
+				*/
+				System.out.println("Menu do Administrador em desenvolvimento...\n");
 			}
 			
 			if(opc == 2){
@@ -146,11 +159,11 @@ public class Teste {
 						System.out.println();
 						if(gb.pesquisarProduto(id) !=null) {
 							System.out.print("Novo preço do produto: ");
-							double preco = sc.nextDouble();
+							double novoPreco = sc.nextDouble();
 							sc.nextLine();
 							System.out.println();
 							
-							gb.atualizarPreco(id, preco);
+							gb.atualizarPreco(id, novoPreco);
 						} else{
 							System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 						}
@@ -169,19 +182,38 @@ public class Teste {
 					default :
 						System.out.println("Opção Invalida! Tente outra vez");
 					}
-				}while(escolha != 0 || escolha != 10);
+				}while(escolha != 0 && escolha != 10);
 			}
+			
 			if(opc == 3){
 				do {
-					//Menu do Funcionario do Bar
-					//0 - Para encerrar programa 10: voltar login
+					System.out.println("1- Consultar Produtos Disponíveis (US06)");
+					System.out.println("10 - Sair para login");
+					System.out.println("0- Encerrar programa");
+					System.out.print("Opção:");
+					escolha = sc.nextInt();
+					sc.nextLine();
+					System.out.println();
+					
 					switch (escolha) {
-					//funcionalidades do funcionario do bar
+					case 1:
+						gb.consultarProdutosDisponiveis();
+						break;
+					case 10:
+						System.out.println("A sair para o login");
+						break;
+					case 0:
+						System.out.println("Obrigado por utilizar o programa.");
+						opc = 0;
+						break;
+					default:
+						System.out.println("Opção Inválida! Tente outra vez");
 					}
-				}while(escolha != 0 || escolha != 10);
+				}while(escolha != 0 && escolha != 10);
 			}
 			
 			if(opc == 4){
+				/*
 				do {
 					//Menu do Cliente
 					//0 - Para encerrar programa 10: voltar login
@@ -189,7 +221,11 @@ public class Teste {
 					//funcionalidades do cliente
 					}
 				}while(escolha != 0|| escolha != 10);
+				*/
+				System.out.println("Menu do Cliente em desenvolvimento...\n");
 			}
 		}while(opc != 0);
+		
+		sc.close();
 	}
 }

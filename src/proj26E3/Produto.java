@@ -9,7 +9,7 @@ public class Produto {
 	private double preco;
 	private ArrayList<YearMonth> validades;
 	private CategoriaProduto categoria;
-	private ArrayList<Integer> stock;
+	private ArrayList<Integer> stock; 
 	
 	/**
 	 * CONSTRUTOR
@@ -73,9 +73,8 @@ public class Produto {
 	 * Se novoPreco > 0 ele atualiza o preço.
 	 */
 	
-		public ArrayList<Funcionario> getStock() {
-		// TODO Auto-generated method stub
-		return null;
+		public ArrayList<Integer> getStock() {
+		return this.stock;
 	}
 		
 	public void atualizarPreco(double novoPreco) {

@@ -54,8 +54,10 @@ public abstract class Funcionario {
 
 	@Override
 	public String toString() {
-		return "Funcionario [numeroTrabalhador=" + numeroTrabalhador + ", nome=" + nome + ", email=" + email
-				+ ", codigoAcesso=" + codigoAcesso + "]";
+		return "Funcionario: Número de Trabalhador:" + numeroTrabalhador
+				 + "| nome=" + nome 
+				 + "| email=" + email
+				 + ", codigo de acesso=" + codigoAcesso + "]";
 	}
     
     

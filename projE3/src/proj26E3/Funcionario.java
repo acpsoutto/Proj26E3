@@ -1,4 +1,4 @@
-package projE3;
+package proj26E3;
 
 public abstract class Funcionario {
 	

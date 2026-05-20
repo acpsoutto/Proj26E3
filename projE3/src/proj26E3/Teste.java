@@ -9,7 +9,6 @@ public class Teste {
 		GerirBar gb = new GerirBar();
 		CategoriaProduto categoria = null;
 
-
 		int opc;
 		do {
 			System.out.println("Seleciona perfil");
@@ -129,7 +128,7 @@ public class Teste {
 							System.out.println("Validade invalida! Tente novamente");
 							break;
 						}
-						gb.adicionarProduto(id,nome,preco,categoria,stock, validade, g);
+						gb.adicionarProduto(id,nome,preco,categoria,stock, validade);
 						break;
 						
 					case 2:

@@ -65,6 +65,38 @@ public class Produto {
 		return categoria;
 	}
 	
+	public int getStock() {
+		int total = 0;
+		for ( int i : stock) {
+			total += stock.get(i);
+		}
+		return total;
+	}
+	
+	/*
+	 * @param s - stock do novo lote
+	 * @param val - meses de valiade do novo lote
+	 */
+	public void adicionarStock(int s, int val) {
+		stock.add(s);
+		validades.add(YearMonth.now().plusMonths(val));
+		
+		for(int i = 0; i < validades.size() -1; i++) {
+			for(int j = i+1; j < validades.size();j++) {
+				if(validades.get(i).isAfter(validades.get(j))) {
+					YearMonth temp= validades.get(i);
+					int tempStock = stock.get(i);
+					
+					validades.set(i, validades.get(j));
+					stock.set(i, stock.get(j));
+					
+					validades.set(j, temp);
+					stock.set(j, tempStock);
+				}
+			}
+		}
+		
+	}
 	/*
 	 * Atualiza o preço do produto.
 	 * Se novoPreco <= 0 ele não atualiza o preço.
@@ -80,6 +112,28 @@ public class Produto {
 		System.out.println("Preço de "+getNome()+ " atualizado agora é: "+getPreco());
 	}
 	
+	/*
+	 * @param redu - quantidade de itens a reduzir
+	 */
+	public void reduzirStock(int redu) {
+		int i = 0;
+		do {
+			int lote = stock.get(i);
+			if(lote >= redu) {
+				stock.set(i, lote - redu);
+				redu = 0;
+			}else {
+				redu -= lote;
+				stock.set(i, 0);
+			}
+			
+			if(stock.get(i) == 0) {
+				stock.remove(i);
+				validades.remove(i);
+			}
+		}while(redu > 0);
+		
+	}
 	
 	@Override
 	public String toString() {

@@ -4,16 +4,55 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GerirBar {
-	private ArrayList<Funcionario> funcionarios;
-	private ArrayList<Cliente> clientes;
+	private ArrayList<Utilizador> utilizadores;
 	private ArrayList<Produto> produtos;
 	
 	public GerirBar() {
-		funcionarios = new ArrayList<>();
-		clientes = new ArrayList<>();
+		utilizadores = new ArrayList<>();
 		produtos = new ArrayList<>();
 	}
-
+	
+	
+	public boolean autenticarPorFuncionario(int num, String chave) {
+		if (utilizadores.isEmpty()) {
+			return false;
+		}
+		for (Utilizador f: utilizadores) {
+			if (f.getNumero() == num && f.getPw().equals(chave)){
+				System.out.print("Utilizador encontrado!");
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Utilizador pesquisarUtilizador(int num) {
+		if (utilizadores.isEmpty()) {
+			return null;
+		}
+		for (Utilizador u : utilizadores) {
+			if (u.getNumero()== num) {
+				return u;
+			}
+		}
+		return null;
+	}
+	
+	public void adicionarUtilizador(int num, String nome, String pw, String mail, TipoUtilizador tipo) {
+		if (tipo == TipoUtilizador.ADMNISTRACAO || tipo== TipoUtilizador.GERENTE) {
+			Utilizador u = new Utilizador (num, nome, pw, mail, tipo);
+			utilizadores.add(u);
+		}
+		if (tipo == TipoUtilizador.FUNCIONARIO_BAR) {
+			FuncionarioBar f = new FuncionarioBar (num, nome, pw, mail, tipo);
+			utilizadores.add(f);
+		}
+		if (tipo == TipoUtilizador.CLIENTE) {
+			Cliente c = new Cliente (num, nome, pw, mail, tipo);
+			utilizadores.add(c);
+		}
+	}
+	
 	/*
 	 * Metodos relacionados com as funções do gerente
 	 */
@@ -175,7 +214,7 @@ public class GerirBar {
 			 */
 		}
 		
-		public void addFuncionario(Funcionario f) {
+		public void addFuncionario(Utilizador f) {
 			funcionarios.add(f);
 		}
 }

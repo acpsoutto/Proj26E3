@@ -33,9 +33,9 @@ public class Administrador extends Funcionario{
 				gerir.addFuncionario(new Gerente(nTra,nome,mail,codAcc));
 				break;
 			case 2:
-				/**
-				 gerir.addFuncionario(new FuncionarioBar(nTra,nome,mail,codAcc)); 
-				 * */
+				
+				gerir.addFuncionario(new FuncionarioBar(nTra,nome,mail,codAcc)); 
+				break;
 		}
 	}
 	

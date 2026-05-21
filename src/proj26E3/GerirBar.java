@@ -156,5 +156,9 @@ public class GerirBar {
 			 * System.out.println("Reserva confirmada com sucesso! Stock atualizado.");
 			 * }
 			 */
-		}	
+		}
+		
+		public void addFuncionario(Funcionario f) {
+			funcionarios.add(f);
+		}
 }

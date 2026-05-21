@@ -218,6 +218,7 @@ public class Teste {
 					System.out.println("2- Consultar Produtos");
 					System.out.println("3- Consultar Preços"); //Menu do Gerente
 					System.out.println("4- Atualizar Preços");
+					System.out.println("5- Adicionar stock");
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
 					System.out.print("Opção:");
@@ -289,9 +290,26 @@ public class Teste {
 						} else{
 							System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 						}
-						
 						break;
 						
+					case 5:
+						System.out.print("Qual o id do produto: ");
+						id = sc.nextInt();
+						sc.nextLine();
+						System.out.println();
+						if(gb.pesquisarProduto(id) !=null) {
+							System.out.println("Quantidade a adicionar em stock:");
+							int quant = sc.nextInt();
+							sc.nextLine();
+							System.out.println("Validade em meses do novo lot:");
+							int val = sc.nextInt();
+							sc.nextLine();
+							
+							gb.adicionarStock(id, quant, val);
+						}else {
+							System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
+						}
+						break;
 					case 10:
 						System.out.println("A sair para o login");
 						break;

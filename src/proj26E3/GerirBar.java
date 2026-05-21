@@ -19,7 +19,7 @@ public class GerirBar {
 			return false;
 		}
 		for (Utilizador f: funcionarios) {
-			if (f.getNumeroTrabalhador() == num && f.getCodigoAcesso().equals(chave)){
+			if (f.getNumero() == num && f.getPw().equals(chave)){
 				System.out.print("Utilizador encontrado!");
 				return true;
 			}

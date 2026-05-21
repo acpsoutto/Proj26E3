@@ -1,56 +1,52 @@
 package proj26E3;
 
-public abstract class Utilizador {
+public class Utilizador {
 	
-    private int numeroTrabalhador;
+    private int numero;
     private String nome;
     private String email;
-    private String codigoAcesso;
+    private String pw;
     
     
-	public Utilizador(int numeroTrabalhador, String nome, String email, String codigoAcesso) {
-		this.numeroTrabalhador = numeroTrabalhador;
+	public Utilizador(int numero, String nome, String email, String pw) {
+		this.numero = numero;
 		this.nome = nome;
 		this.email = email;
-		this.codigoAcesso = codigoAcesso;
+		this.pw = pw;
 	}
 
+	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getPw() {
+		return pw;
+	}
+
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+
+	public int getNumero() {
+		return numero;
+	}
 
 	public String getNome() {
 		return nome;
 	}
 
 
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	public String getCodigoAcesso() {
-		return codigoAcesso;
-	}
-
-
-	public void setCodigoAcesso(String codigoAcesso) {
-		this.codigoAcesso = codigoAcesso;
-	}
-
-
-	public int getNumeroTrabalhador() {
-		return numeroTrabalhador;
-	}
-	
 	@Override
 	public String toString() {
-		return "Funcionario: Número de Trabalhador:" + numeroTrabalhador
+		return "Funcionario: Número de Trabalhador:" + numero
 				 + "| Nome:" + nome 
 				 + "| Email:" + email
-				 + "| Código de acesso:" + codigoAcesso;
+				 + "| Código de acesso:" + pw;
 	}
 	
 }	

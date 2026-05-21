@@ -1,6 +1,6 @@
 package proj26E3;
 
-public abstract class Funcionario {
+public abstract class Utilizador {
 	
     private int numeroTrabalhador;
     private String nome;
@@ -8,8 +8,7 @@ public abstract class Funcionario {
     private String codigoAcesso;
     
     
-	public Funcionario(int numeroTrabalhador, String nome, String email, String codigoAcesso) {
-		super();
+	public Utilizador(int numeroTrabalhador, String nome, String email, String codigoAcesso) {
 		this.numeroTrabalhador = numeroTrabalhador;
 		this.nome = nome;
 		this.email = email;
@@ -19,11 +18,6 @@ public abstract class Funcionario {
 
 	public String getNome() {
 		return nome;
-	}
-
-
-	public void setNome(String nome) {
-		this.nome = nome;
 	}
 
 
@@ -50,15 +44,13 @@ public abstract class Funcionario {
 	public int getNumeroTrabalhador() {
 		return numeroTrabalhador;
 	}
-
-
+	
 	@Override
 	public String toString() {
 		return "Funcionario: Número de Trabalhador:" + numeroTrabalhador
-				 + "| nome=" + nome 
-				 + "| email=" + email
-				 + ", codigo de acesso=" + codigoAcesso + "]";
+				 + "| Nome:" + nome 
+				 + "| Email:" + email
+				 + "| Código de acesso:" + codigoAcesso;
 	}
-    
-    
+	
 }	

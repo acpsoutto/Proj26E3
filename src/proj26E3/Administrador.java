@@ -1,7 +1,7 @@
 package proj26E3;
 import java.util.Scanner;
 
-public class Administrador extends Funcionario{
+public class Administrador extends Utilizador{
 
 	/**
 	 * @param numeroTrabalhador

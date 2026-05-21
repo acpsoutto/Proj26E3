@@ -50,7 +50,7 @@ public class Teste {
 			if (opc == 1 || opc == 2 || opc == 3) {
 				try {
 					int numTrabalhador = Integer.parseInt(uti);
-					Funcionario f = gb.pesquisarFuncionario(numTrabalhador);
+					Utilizador f = gb.pesquisarFuncionario(numTrabalhador);
 					
 					if (f == null || !f.getCodigoAcesso().equals(chave)) {
 						System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");

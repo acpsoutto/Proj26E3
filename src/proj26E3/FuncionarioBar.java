@@ -1,6 +1,6 @@
 package proj26E3;
 
-public class FuncionarioBar extends Funcionario {
+public class FuncionarioBar extends Utilizador {
 
 	/**
 	 * CONSTRUTOR 

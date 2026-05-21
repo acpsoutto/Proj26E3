@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GerirBar {
-	private ArrayList<Funcionario> funcionarios;
+	private ArrayList<Utilizador> funcionarios;
 	private ArrayList<Cliente> clientes;
 	private ArrayList<Produto> produtos;
 	
@@ -14,6 +14,18 @@ public class GerirBar {
 	}
 	
 	
+	public boolean autenticarPorFuncionario(int num, String chave) {
+		if (funcionarios.isEmpty()) {
+			return false;
+		}
+		for (Utilizador f: funcionarios) {
+			if (f.getNumeroTrabalhador() == num && f.getCodigoAcesso().equals(chave)){
+				System.out.print("Utilizador encontrado!");
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	
@@ -158,7 +170,7 @@ public class GerirBar {
 			 */
 		}
 		
-		public void addFuncionario(Funcionario f) {
+		public void addFuncionario(Utilizador f) {
 			funcionarios.add(f);
 		}
 }

@@ -11,16 +11,16 @@ public class GerirBar {
 	public GerirBar() {
 		funcionarios = new ArrayList<>();
 		clientes = new ArrayList<>();
+		produtos = new ArrayList<>();
 	}
-	
-	
-	
-	
-	
+
 	/*
 	 * Metodos relacionados com as funções do gerente
 	 */
 	public Produto pesquisarProduto(int id) {
+		if(produtos.isEmpty()){
+			return null;
+		}
 		for(Produto p : produtos ) {
 			if(p.getId() == id) {
 				return p;
@@ -51,6 +51,23 @@ public class GerirBar {
 	public void atualizarPreco(int id, double preco) {
 		Produto p = pesquisarProduto(id);
 		p.atualizarPreco(preco);
+	}
+	
+	public void adicionarStock(int id, int quant, int val) {
+		Produto p = pesquisarProduto(id);
+		p.adicionarStock(quant, val);
+	}
+	
+//---------------------------------------------------------------------
+	
+	/*
+	 * METODO PARA REDUZIR O STOCK COM VENDAS
+	 * @param quant - quantidade de itens a ser reduzido do stock
+	 * @param id - id do produto
+	 */
+	public void reduzirStock(int id, int quant) {
+		Produto p = pesquisarProduto(id);
+		p.reduzirStock(quant);
 	}
 
 //--------------------------------------------------------------------

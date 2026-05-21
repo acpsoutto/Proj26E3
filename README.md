@@ -43,11 +43,9 @@ A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de PO
 📦 Proj26E3/
 ├── 📂 src/
 │   └── 📂 proj26E3/
-│       ├── 📄 Administrador.java       # Classe do perfil Administrador
 │       ├── 📄 CategoriaProduto.java    # Enum/Classe de categorias de produto
 │       ├── 📄 Funcionario.java         # Classe base do Funcionário
 │       ├── 📄 FuncionarioBar.java      # Classe do perfil Funcionário de Bar
-│       ├── 📄 Gerente.java             # Classe do perfil Gerente
 │       ├── 📄 GerirBar.java            # Classe principal de gestão do bar
 │       ├── 📄 ItemPedido.java          # Classe que representa um item de um pedido
 │       ├── 📄 Produto.java             # Classe de Produto

@@ -83,6 +83,22 @@ feature/login-utilizador
 fix/calculo-total-pedido
 docs/atualizar-readme
 ```
+
+---
+> 💬 **Relativamente á nomeação de Commit:**
+- `[ADD]` -- adicionar algo
+- `[COR]` -- correção de um erro
+- `[ORG]` -- organizar
+- `[ATL]` -- atualização de algo
+- `[REM]` -- remoção de código / ficheiros
+- `[DOC]` -- relativo a documentação
+
+Exemplos:
+```
+[ADD] classe Produto 
+[COR] erro no cálculo do troco
+[DOC] atualizar README com instruções de execução
+```
 ## ⚠️7. Resolução de Merge Conflicts (GitHub Desktop)
 
 Um Merge Conflict ocorre quando dois membros editam o mesmo ficheiro/linha em branches diferentes.
@@ -107,23 +123,6 @@ código que o colega escreveu
 - Cada membro trabalha em **ficheiros/funcionalidades diferentes**
 - **Comunicar** antes de editar ficheiros partilhados (ex: `GerirBar.java`)
 - Fazer **commits pequenos e frequentes**
-
----
-> 💬 **Relativamente á nomeação de Commit:**
-- `[ADD]` -- adicionar algo
-- `[COR]` -- correção de um erro
-- `[ORG]` -- organizar
-- `[ATL]` -- atualização de algo
-- `[REM]` -- remoção de código / ficheiros
-- `[DOC]` -- relativo a documentação
-
-Exemplos:
-```
-[ADD] classe Produto 
-[COR] erro no cálculo do troco
-[DOC] atualizar README com instruções de execução
-```
-
 ---
 
 ### ⚖️ 8. Licença

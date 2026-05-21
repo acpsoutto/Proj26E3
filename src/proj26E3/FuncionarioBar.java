@@ -1,6 +1,10 @@
 package proj26E3;
 
+import java.util.ArrayList;
+
 public class FuncionarioBar extends Utilizador {
+	
+	private ArrayList<Pedido>pedidos;
 
 	/**
 	 * CONSTRUTOR 
@@ -9,13 +13,14 @@ public class FuncionarioBar extends Utilizador {
 	 * @param email - email do funcionario bar
 	 * @param codigoAcesso - codigo de acesso do funcionario bar
 	 */
-	public FuncionarioBar(int numeroTrabalhador, String nome, String email, String codigoAcesso) {
-		super(numeroTrabalhador, nome, email, codigoAcesso);
+	public FuncionarioBar(int numeroTrabalhador, String nome, String email, String codigoAcesso, TipoUtilizador tipo) {
+		super(numeroTrabalhador, nome, email, codigoAcesso, tipo);
+		pedidos = new ArrayList<>();
 	}
 
 	@Override
 	public String toString() {
-		return "|Funcionario : Funcionario do Bar\n  " + super.toString();
+		return "Funcionario : Funcionario do Bar\n  " + super.toString();
 	}
 	
 	

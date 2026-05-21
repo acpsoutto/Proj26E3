@@ -25,7 +25,7 @@ public class Teste {
 			System.out.println();
 			
 			/*
-			 * INTRODUÇAO DADOS FUNCIONARIO
+			 * INTRODUÇAO DADOS
 			 */
 			if (opc != 0 && opc != 1 && opc != 2 && opc != 3 && opc != 4 ) {
 				System.out.println("Esse perfil não existe! Tente novamente.");
@@ -37,8 +37,8 @@ public class Teste {
 				break;
 			}
 			
-			System.out.print("Insira o utilizador (Nº Trabalhador/ID):");
-			String uti = sc.nextLine();
+			System.out.print("Insira o Número de Identificação:");
+			int uti = sc.nextInt(); sc.nextLine();
 			System.out.println();
 			System.out.print("Insira a palavra-chave:");
 			String chave = sc.nextLine();
@@ -47,55 +47,167 @@ public class Teste {
 			/*
 			 * VERIFICAÇÃO DE AUTENTICAÇÃO DO USUARIO
 			 */
-			if (opc == 1 || opc == 2 || opc == 3) {
-				try {
-					int numTrabalhador = Integer.parseInt(uti);
-					Utilizador f = gb.pesquisarFuncionario(numTrabalhador);
+			
+			try {
+				Utilizador f = gb.pesquisarUtilizador(uti);
 					
-					if (f == null || !f.getCodigoAcesso().equals(chave)) {
-						System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
-						continue;
-					}
-					
-					// Validação do tipo de perfil correspondente
-					if (opc == 1 && !(f instanceof Administrador)) { // Nota: classe Administrador deve existir
-						System.out.println("Este funcionário não é Administrador!\n");
-						continue;
-					}
-					if (opc == 2 && !(f instanceof Gerente)) {
-						System.out.println("Este funcionário não é Gerente!\n");
-						continue;
-					}
-					if (opc == 3 && !(f instanceof FuncionarioBar)) {
-						System.out.println("Este funcionário não é do Bar!\n");
-						continue;
-					}
-					
-				} catch (NumberFormatException e) {
-					System.out.println("Para funcionários, o utilizador deve ser o número de trabalhador numérico.\n");
-					continue;
-				}
-			} else if (opc == 4) {
-				Cliente c = gb.pesquisarCliente(uti);
-				if (c == null || !c.getCodigoAcesso().equals(chave)) { // Nota: Ajustar se o método de chave do cliente for diferente
+				if (f == null || !f.getPw().equals(chave)) {
 					System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
 					continue;
+					}
+					
+				// Validação do tipo de perfil correspondente
+				
+				if (opc == 1 && f.getTipo()!= TipoUtilizador.ADMNISTRACAO) { 
+					System.out.println("Este utilizador não é Administrador!\n");
+					continue;
 				}
+				if (opc == 2 && f.getTipo()!= TipoUtilizador.GERENTE) {
+					System.out.println("Este utilizador não é Gerente!\n");
+					continue;
+				}
+				if (opc == 3 && f.getTipo()!= TipoUtilizador.FUNCIONARIO_BAR) {
+					System.out.println("Este utilizador não é do Bar!\n");
+					continue;
+				}
+				if (opc == 4 && f.getTipo()!= TipoUtilizador.CLIENTE) {
+					System.out.println("Este utilizador não é cliente");
+					continue;
+				}
+					
+			} catch (NumberFormatException e) {
+				System.out.println("Para funcionários, o utilizador deve ser o número de trabalhador numérico.\n");
+				continue;
 			}
+
 			
 			int escolha = -1; // Inicializado para evitar erros de compilação
 			
 			if(opc == 1){
-				/* do {
-					//Menu do Admnistrador
-					//0 - Para encerrar programa 10: voltar login
+				do {
+					System.out.println("1- Adicionar Funcionário do bar");
+					System.out.println("2- Adicionar Cliente");
+					System.out.println("3- Adicionar Gerente");
+					System.out.println("4- Adicionar Admnistrador");
+					System.out.println("10- Sair para login");
+					System.out.println("0- Encerrar programa");
+					System.out.print("Opção:");
+					escolha = sc.nextInt();
+					sc.nextLine();
+					System.out.println();
+					
 					switch (escolha) {
-					//funcionalidades do Admnistrador
+					case 1: 
+						System.out.println("ID do Funcionário:");
+						int id = sc.nextInt();
+						sc.nextLine();
+						
+						if (gb.pesquisarUtilizador(id)!= null) {
+							System.out.println("ID já existe.");
+							continue;
+						}
+						System.out.println("Email do Funcionário:");
+						String mail = sc.next();
+						
+						System.out.println("PassWord do Funcionário:");
+						String pw = sc.next();
+						
+						System.out.println("Nome do Funcionário:");
+						String nome = sc.next();
+						
+						TipoUtilizador tipo = TipoUtilizador.FUNCIONARIO_BAR;
+						
+						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						System.out.print("Funcionário adicionado");
+						break;
+						
+					case 2:
+						System.out.println("ID do Cliente:");
+						id = sc.nextInt();
+						sc.nextLine();
+						
+						if (gb.pesquisarUtilizador(id)!= null) {
+							System.out.println("ID já existe.");
+							continue;
+						}
+						System.out.println("Email do Cliente:");
+						mail = sc.next();
+						
+						System.out.println("PassWord do Cliente:");
+						pw = sc.next();
+						
+						System.out.println("Nome do Cliente:");
+						nome = sc.next();
+						
+						tipo = TipoUtilizador.CLIENTE;
+						
+						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						System.out.print("Cliente adicionado");
+						break;
+						
+					case 3: 
+						System.out.println("ID do Gerente:");
+						id = sc.nextInt();
+						sc.nextLine();
+						
+						if (gb.pesquisarUtilizador(id)!= null) {
+							System.out.println("ID já existe.");
+							continue;
+						}
+						System.out.println("Email do Gerente:");
+						mail = sc.next();
+						
+						System.out.println("PassWord do Gerente:");
+						pw = sc.next();
+						
+						System.out.println("Nome do Gerente:");
+						nome = sc.next();
+						
+						tipo = TipoUtilizador.GERENTE;
+						
+						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						System.out.print("Gerente adicionado");
+						break;
+					case 4: 
+						System.out.println("ID do Admnistrador:");
+						id = sc.nextInt();
+						sc.nextLine();
+						
+						if (gb.pesquisarUtilizador(id)!= null) {
+							System.out.println("ID já existe.");
+							continue;
+						}
+						System.out.println("Email do Admnistrador:");
+						mail = sc.next();
+						
+						System.out.println("PassWord do Admnistrador:");
+						pw = sc.next();
+						
+						System.out.println("Nome do Admnistrador:");
+						nome = sc.next();
+						
+						tipo = TipoUtilizador.ADMNISTRACAO;
+						
+						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						System.out.print("Admnistrador adicionado");
+						break;
+						
+					case 10:
+						System.out.println("A sair para o login");
+						break;
+						
+					case 0:
+						System.out.println("Obrigado por utilizar o programa.");
+						opc = 0;
+						break;
+						
+					default :
+						System.out.println("Opção Invalida! Tente outra vez");
 					}
-				}while(escolha != 0 || escolha != 10);
-				*/
-				System.out.println("Menu do Administrador em desenvolvimento...\n");
+				} while (escolha != 10 || opc != 0);
 			}
+			 
+				
 			
 			/* 
 			 * USUARIO - GERENTE
@@ -108,7 +220,7 @@ public class Teste {
 					System.out.println("4- Atualizar Preços");
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
-					System.out.print("Opcação:");
+					System.out.print("Opção:");
 					escolha = sc.nextInt();
 					sc.nextLine();
 					System.out.println();
@@ -192,10 +304,10 @@ public class Teste {
 					default :
 						System.out.println("Opção Invalida! Tente outra vez");
 					}
-				}while(escolha != 0 && escolha != 10);
+				}while(opc != 0 && escolha != 10);
 			}
 			/*
-			 * UAUARIO - FUNCIONARIO DO BAR
+			 * USUARIO - FUNCIONARIO DO BAR
 			 */
 			if(opc == 3){
 				do {

@@ -6,13 +6,14 @@ public class Utilizador {
     private String nome;
     private String email;
     private String pw;
+    private TipoUtilizador tipo;
     
-    
-	public Utilizador(int numero, String nome, String email, String pw) {
+	public Utilizador(int numero, String nome, String email, String pw, TipoUtilizador tipo) {
 		this.numero = numero;
 		this.nome = nome;
 		this.email = email;
 		this.pw = pw;
+		this.tipo = tipo;
 	}
 
 	
@@ -39,14 +40,19 @@ public class Utilizador {
 	public String getNome() {
 		return nome;
 	}
+	
+	public TipoUtilizador getTipo() {
+		return tipo;
+	}
 
 
 	@Override
 	public String toString() {
 		return "Funcionario: Número de Trabalhador:" + numero
-				 + "| Nome:" + nome 
-				 + "| Email:" + email
-				 + "| Código de acesso:" + pw;
+				 + "| Nome: " + nome 
+				 + "| Email: " + email
+				 + "| Código de acesso: " + pw
+				 + "| Tipo: " + tipo;
 	}
 	
 }	

@@ -26,13 +26,14 @@ diferentes stakeholders.
 | Controlo de Versões | Git & GitHub |
 | Modelação | Diagrama de Classes (UML) |
 
-## 👥 3. Equipa de Desenvolvimento (Grupo 2)
+## 👥 3. Equipa de Desenvolvimento (Grupo 3)
 
  Nome | Número de Aluno |
 |---|---|
 | Ana Souto | `53986` |
 | António Santos | `47303` |
 | Diogo Ferreira | `53501` |
+| João Pinto | `53255` |
 | Mathias Pando | `53035` |
 | Tomás Santos | `54379` |
 

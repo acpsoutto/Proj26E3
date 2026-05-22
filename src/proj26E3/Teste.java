@@ -354,7 +354,7 @@ public class Teste {
 						gb.consultarReservasPendentes();
 						break;
 					case 4:
-						gb.confirmarReserva();
+						gb.confirmarReserva(sc);
 					case 10:
 						System.out.println("A sair para o login");
 						break;

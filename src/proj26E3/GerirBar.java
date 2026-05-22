@@ -193,8 +193,7 @@ public class GerirBar {
 		 * US09: Confirmar Reserva INCOMPLETA PRECISA DA PARTE DO TOMAS
 		 * O funcionário aceita a reserva pendente, o que faz o stock ser finalmente decrementado.
 		 */
-		public void confirmarReserva() {
-			Scanner sc = new Scanner(System.in);
+		public void confirmarReserva(Scanner sc) {
 			System.out.println("--- CONFIRMAR RESERVA ---");
 			
 			System.out.print("Introduza o ID da Reserva a confirmar: ");

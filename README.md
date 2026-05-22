@@ -26,19 +26,36 @@ diferentes stakeholders.
 | Controlo de Versões | Git & GitHub |
 | Modelação | Diagrama de Classes (UML) |
 
-## 👥 3. Equipa de Desenvolvimento (Grupo 2)
+## 👥 3. Equipa de Desenvolvimento (Grupo 3)
 
  Nome | Número de Aluno |
 |---|---|
 | Ana Souto | `53986` |
 | António Santos | `47303` |
 | Diogo Ferreira | `53501` |
+| João Pinto | `53255` |
 | Mathias Pando | `53035` |
 | Tomás Santos | `54379` |
 
 ## 📐 4. Arquitetura do Sistema
 A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de POO, promovendo os conceitos de modularidade, coesão e capsulamento. A arquitetura do sistema também ajuda a entender e ter uma visão inicial dos contornos que o projeto terá, de forma a impulsionar positivamente o começo deste projeto. 
-
+```
+📦 Proj26E3/
+├── 📂 src/
+│   └── 📂 proj26E3/
+│       ├── 📄 CategoriaProduto.java    # Enum/Classe de categorias de produto
+│       ├── 📄 Funcionario.java         # Classe base do Funcionário
+│       ├── 📄 FuncionarioBar.java      # Classe do perfil Funcionário de Bar
+│       ├── 📄 GerirBar.java            # Classe principal de gestão do bar
+│       ├── 📄 ItemPedido.java          # Classe que representa um item de um pedido
+│       ├── 📄 Produto.java             # Classe de Produto
+│       └── 📄 Teste.java              # Classe de testes
+│       └── ...                  
+├── 📄 .classpath
+├── 📄 .gitignore
+├── 📄 .project
+└── 📄 README.md
+```
 ## 🏃5. Metodologia SCRUM (Sprints)
 
 O projeto foi dividido rigidamente em dois blocos de entrega (Incrementos):
@@ -52,7 +69,7 @@ O projeto foi dividido rigidamente em dois blocos de entrega (Incrementos):
 * **Entregáveis:** 2º Incremento (Aplicação Global) e Reflexão Global do PBL.
 ---
 
-## 6. 📜 Regras de Nomenclatura ( GitHub )
+## 📜6. Regras de Nomenclatura ( GitHub )
 
 > 🌿 **Relativamente á nomeação de branches :**
 - Procurar seguir o formato tipo/descricao-curta; 
@@ -81,9 +98,32 @@ Exemplos:
 [COR] erro no cálculo do troco
 [DOC] atualizar README com instruções de execução
 ```
+## ⚠️7. Resolução de Merge Conflicts (GitHub Desktop)
 
+Um Merge Conflict ocorre quando dois membros editam o mesmo ficheiro/linha em branches diferentes.
+
+### 📌 Passo a Passo
+
+1. Fazer **fetch/pull** antes de começar a trabalhar → `Repository` → `Fetch origin` → `Pull`
+2. O GitHub Desktop assinala os ficheiros em conflito com ⚠️
+3. Clicar em **"Open in editor"** no ficheiro em conflito e resolver manualmente:
+<<<<<<< HEAD (a tua versão)
+código que tu escreveste
+código que o colega escreveu
+|||||||| branch-do-colega
+
+4. Apagar os marcadores `<<<<<<<` `=======` `>>>>>>>` e ficar só com o código correto
+5. Voltar ao GitHub Desktop → **"Mark as resolved"**
+6. Clicar em **"Continue merge"** e fazer **push**
+
+### 💡 Como evitar conflicts
+
+- Fazer sempre **pull antes de começar** a trabalhar
+- Cada membro trabalha em **ficheiros/funcionalidades diferentes**
+- **Comunicar** antes de editar ficheiros partilhados (ex: `GerirBar.java`)
+- Fazer **commits pequenos e frequentes**
 ---
 
-### ⚖️ 7. Licença
+### ⚖️ 8. Licença
 Projeto académico desenvolvido no âmbito da Universidade Portucalense.
 Uso restrito — não autorizado para fins comerciais ou reprodução sem permissão dos autores.

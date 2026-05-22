@@ -4,23 +4,64 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GerirBar {
-	private ArrayList<Funcionario> funcionarios;
-	private ArrayList<Cliente> clientes;
+	private ArrayList<Utilizador> utilizadores;
 	private ArrayList<Produto> produtos;
+	private ArrayList<Reserva> reservas; // ADICIONADO: lista de reservas (Tomás)
 	
 	public GerirBar() {
-		funcionarios = new ArrayList<>();
-		clientes = new ArrayList<>();
+		utilizadores = new ArrayList<>();
+		produtos = new ArrayList<>();
+		reservas = new ArrayList<>(); // ADICIONADO: inicialização da lista de reservas (Tomás)
 	}
 	
 	
+	public boolean autenticarPorFuncionario(int num, String chave) {
+		if (utilizadores.isEmpty()) {
+			return false;
+		}
+		for (Utilizador f: utilizadores) {
+			if (f.getNumero() == num && f.getPw().equals(chave)){
+				System.out.print("Utilizador encontrado!");
+				return true;
+			}
+		}
+		return false;
+	}
 	
+	public Utilizador pesquisarUtilizador(int num) {
+		if (utilizadores.isEmpty()) {
+			return null;
+		}
+		for (Utilizador u : utilizadores) {
+			if (u.getNumero()== num) {
+				return u;
+			}
+		}
+		return null;
+	}
 	
+	public void adicionarUtilizador(int num, String nome, String pw, String mail, TipoUtilizador tipo) {
+		if (tipo == TipoUtilizador.ADMNISTRACAO || tipo== TipoUtilizador.GERENTE) {
+			Utilizador u = new Utilizador (num, nome, pw, mail, tipo);
+			utilizadores.add(u);
+		}
+		if (tipo == TipoUtilizador.FUNCIONARIO_BAR) {
+			FuncionarioBar f = new FuncionarioBar (num, nome, pw, mail, tipo);
+			utilizadores.add(f);
+		}
+		if (tipo == TipoUtilizador.CLIENTE) {
+			Cliente c = new Cliente (num, nome, pw, mail, tipo);
+			utilizadores.add(c);
+		}
+	}
 	
 	/*
 	 * Metodos relacionados com as funções do gerente
 	 */
 	public Produto pesquisarProduto(int id) {
+		if(produtos.isEmpty()){
+			return null;
+		}
 		for(Produto p : produtos ) {
 			if(p.getId() == id) {
 				return p;
@@ -52,17 +93,33 @@ public class GerirBar {
 		Produto p = pesquisarProduto(id);
 		p.atualizarPreco(preco);
 	}
+	
+	public void adicionarStock(int id, int quant, int val) {
+		Produto p = pesquisarProduto(id);
+		p.adicionarStock(quant, val);
+	}
+	
+//---------------------------------------------------------------------
+	
+	/*
+	 * METODO PARA REDUZIR O STOCK COM VENDAS
+	 * 
+	 */
+	public void reduzirStock(int id, int quant) {
+		Produto p = pesquisarProduto(id);
+		p.reduzirStock(quant);
+	}
 
 //--------------------------------------------------------------------
 	/*
-	 *US06:Consultar produtos disponíveis (Stock > 0 e dentro da validade)
+	 * Consultar produtos disponíveis (Stock > 0)
 	 */
 	public void consultarProdutosDisponiveis() {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");
 		boolean encontrou = false;
 		
 		for (Produto p: produtos) {
-			if (!p.getStock().isEmpty() && p.getStock().get(0) > 0) {
+			if (!(p.getStock()==0)) {
 				System.out.println("|ID: " +p.getId() 
 						+ "\n|Nome: " + p.getNome() 
 						+ "\n|Categoria: " +p.getCategoria() 
@@ -71,18 +128,15 @@ public class GerirBar {
 			}
 		}
 		if (!encontrou) {
-			System.out.println("Não existem produtos disponiveis no stck este momento!");
+			System.out.println("Não existem produtos disponiveis no stock este momento!");
 		}
 	}
 	
 //--------------------------------------------------------------------
 		/*
 		 * US02: Registar Pedido 
-		 * O funcionário introduz o ID do produto e a quantidade. 
-		 * O sistema valida o stock, reduz o stock e calcula o total.
 		 */
-		public void registrarPedido() {
-			Scanner sc = new Scanner(System.in);
+		public void registrarPedido(Scanner sc) {
 			System.out.println("--- REGISTAR NOVO PEDIDO ---");
 			
 			System.out.print("Introduza o ID do produto: ");
@@ -96,8 +150,7 @@ public class GerirBar {
 				return;
 			}
 			
-			// Validação de Stock (usando a estrutura de lotes)
-			if (p.getStock().isEmpty() || p.getStock().get(0).intValue() <= 0) {
+			if (p.getStock()==0 ) {
 				System.out.println("Erro: Produto sem stock disponível ou fora da validade!");
 				return;
 			}
@@ -106,14 +159,13 @@ public class GerirBar {
 			int qtd = sc.nextInt();
 			sc.nextLine();
 			
-			int stockAtual = p.getStock().get(0).intValue();
+			int stockAtual = p.getStock();
 			if (qtd > stockAtual) {
 				System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
 				return;
 			}
 			
-			// Atualizar o stock (reduzir a quantidade no lote 0)
-			p.getStock().set(0, stockAtual - qtd);
+			p.reduzirStock(stockAtual - qtd);
 			
 			double totalItem = p.getPreco() * qtd;
 			System.out.println("\nPedido registado com sucesso!");
@@ -123,42 +175,133 @@ public class GerirBar {
 
 //--------------------------------------------------------------------
 		/*
-		 * US09: Consultar Reservas Pendentes - INCOMPLETA PRECISA DA PARTE DO TOMAS
-		 * Mostra as pré-reservas feitas pelos clientes que ainda não foram levantadas.
+		 * ADICIONADO (Tomás): Pesquisa uma reserva pelo seu ID
+		 * Percorre a lista de reservas e devolve a que tiver o id correspondente.
+		 * Devolve null se não encontrar nenhuma.
+		 */
+		public Reserva pesquisarReserva(int id) {
+			for (Reserva r : reservas) {
+				if (r.getId() == id) {
+					return r;
+				}
+			}
+			return null;
+		}
+
+//--------------------------------------------------------------------
+		/*
+		 * ADICIONADO (Tomás): US06 - Fazer Pré-Reserva
+		 * O cliente seleciona produtos disponíveis e submete uma pré-reserva.
+		 * A reserva fica no estado PENDENTE até ser confirmada por um funcionário.
+		 */
+		public void fazerPreReserva(Scanner sc) {
+			System.out.println("--- FAZER PRÉ-RESERVA ---");
+
+			// Mostra os produtos disponíveis para o cliente escolher
+			consultarProdutosDisponiveis();
+
+			// Gera um ID único para a reserva (tamanho da lista + 1)
+			int novoId = reservas.size() + 1;
+			Reserva novaReserva = new Reserva(novoId);
+
+			// Loop para adicionar vários produtos à reserva
+			String continuar = "s";
+			while (continuar.equalsIgnoreCase("s")) {
+				System.out.print("Introduza o ID do produto que quer reservar: ");
+				int idProduto = sc.nextInt();
+				sc.nextLine();
+
+				Produto p = pesquisarProduto(idProduto);
+
+				if (p == null) {
+					System.out.println("Produto não encontrado! Tente novamente.");
+				} else if (p.getStock() == 0) {
+					System.out.println("Produto sem stock disponível! Tente outro.");
+				} else {
+					System.out.print("Introduza a quantidade: ");
+					int qtd = sc.nextInt();
+					sc.nextLine();
+
+					if (qtd <= 0) {
+						System.out.println("Quantidade inválida!");
+					} else if (qtd > p.getStock()) {
+						System.out.println("Stock insuficiente! Stock disponível: " + p.getStock());
+					} else {
+						// Adiciona o item à reserva
+						novaReserva.adicionarItem(p, qtd);
+						System.out.println("Item adicionado: " + p.getNome() + " x" + qtd);
+					}
+				}
+
+				System.out.print("Deseja adicionar mais produtos? (s/n): ");
+				continuar = sc.nextLine();
+			}
+
+			// Só guarda a reserva se tiver pelo menos um item
+			if (novaReserva.getItensR().isEmpty()) {
+				System.out.println("Reserva cancelada — nenhum item foi adicionado.");
+			} else {
+				reservas.add(novaReserva);
+				System.out.println("\nPré-reserva submetida com sucesso!");
+				System.out.println("ID da sua reserva: " + novaReserva.getId());
+				System.out.println("Total estimado: " + novaReserva.calcularTotal() + "€");
+				System.out.println("Estado: " + novaReserva.getEstado());
+			}
+		}
+
+//--------------------------------------------------------------------
+		/*
+		 * COMPLETO (Tomás): US09 - Consultar Reservas Pendentes
+		 * Percorre a lista de reservas e mostra apenas as que estão no estado PENDENTE.
 		 */
 		public void consultarReservasPendentes() {
 			System.out.println("--- CONSULTAR RESERVAS PENDENTES ---");
-			//System.out.println(" À procura de reservas com EstadoReserva.PENDENTE...");
-			//System.out.println("Não existem reservas pendentes para apresentar de momento.");
+			boolean encontrou = false;
+
+			for (Reserva r : reservas) {
+				// Só mostra as reservas que ainda estão pendentes
+				if (r.getEstado() == EstadoReserva.PENDENTE) {
+					System.out.println(r);
+					encontrou = true;
+				}
+			}
+
+			if (!encontrou) {
+				System.out.println("Não existem reservas pendentes de momento.");
+			}
 		}
 
-		//--------------------------------------------------------------------
+//--------------------------------------------------------------------
 		/*
-		 * US09: Confirmar Reserva INCOMPLETA PRECISA DA PARTE DO TOMAS
-		 * O funcionário aceita a reserva pendente, o que faz o stock ser finalmente decrementado.
+		 * COMPLETO (Tomás): US09 - Confirmar Reserva
+		 * O funcionário procura a reserva pelo ID e confirma-a.
+		 * Ao confirmar, o stock dos produtos é reduzido.
 		 */
-		public void confirmarReserva() {
-			Scanner sc = new Scanner(System.in);
+		public void confirmarReserva(Scanner sc) {
 			System.out.println("--- CONFIRMAR RESERVA ---");
-			
+
 			System.out.print("Introduza o ID da Reserva a confirmar: ");
 			int idReserva = sc.nextInt();
 			sc.nextLine();
-			
-			System.out.println("Reserva " + idReserva + " não encontrada (Modo de simulação ativo).");
-			
-			/* * NOTA DE INTEGRAÇÃO (Tomás e António):
-			 * O código final fará algo como:
-			 * * Reserva r = pesquisarReserva(idReserva);
-			 * if (r != null && r.getEstado() == EstadoReserva.PENDENTE) {
-			 * r.setEstado(EstadoReserva.CONFIRMADA);
-			 * // Bloquear/reduzir o stock dos produtos que estão dentro da reserva
-			 * System.out.println("Reserva confirmada com sucesso! Stock atualizado.");
-			 * }
-			 */
-		}
-		
-		public void addFuncionario(Funcionario f) {
-			funcionarios.add(f);
+
+			// Procura a reserva na lista
+			Reserva r = pesquisarReserva(idReserva);
+
+			if (r == null) {
+				System.out.println("Reserva " + idReserva + " não encontrada.");
+				return;
+			}
+
+			if (r.getEstado() != EstadoReserva.PENDENTE) {
+				System.out.println("Esta reserva não pode ser confirmada. Estado atual: " + r.getEstado());
+				return;
+			}
+
+			// Confirma a reserva e reduz o stock de cada produto reservado
+			r.confirmar();
+			for (ItemReserva item : r.getItensR()) {
+				item.getProduto().reduzirStock(item.getQuantidade());
+			}
+			System.out.println("Stock atualizado com sucesso!");
 		}
 }

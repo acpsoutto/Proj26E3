@@ -168,7 +168,7 @@ public class GerirBar {
 			}
 			
 			// Atualizar o stock (reduzir a quantidade no lote 0)
-			p.getStock().set(0, stockAtual - qtd);
+			p.reduzirStock(stockAtual - qtd);
 			
 			double totalItem = p.getPreco() * qtd;
 			System.out.println("\nPedido registado com sucesso!");

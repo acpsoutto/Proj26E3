@@ -118,7 +118,7 @@ public class GerirBar {
 		boolean encontrou = false;
 		
 		for (Produto p: produtos) {
-			if (!p.getStock().isEmpty() && p.getStock().get(0) > 0) {
+			if (!(p.getStock()==0)) {
 				System.out.println("|ID: " +p.getId() 
 						+ "\n|Nome: " + p.getNome() 
 						+ "\n|Categoria: " +p.getCategoria() 
@@ -137,8 +137,7 @@ public class GerirBar {
 		 * O funcionário introduz o ID do produto e a quantidade. 
 		 * O sistema valida o stock, reduz o stock e calcula o total.
 		 */
-		public void registrarPedido() {
-			Scanner sc = new Scanner(System.in);
+		public void registrarPedido(Scanner sc) {
 			System.out.println("--- REGISTAR NOVO PEDIDO ---");
 			
 			System.out.print("Introduza o ID do produto: ");
@@ -153,7 +152,7 @@ public class GerirBar {
 			}
 			
 			// Validação de Stock (usando a estrutura de lotes)
-			if (p.getStock().isEmpty() || p.getStock().get(0).intValue() <= 0) {
+			if (p.getStock()==0 ) {
 				System.out.println("Erro: Produto sem stock disponível ou fora da validade!");
 				return;
 			}
@@ -162,7 +161,7 @@ public class GerirBar {
 			int qtd = sc.nextInt();
 			sc.nextLine();
 			
-			int stockAtual = p.getStock().get(0).intValue();
+			int stockAtual = p.getStock();
 			if (qtd > stockAtual) {
 				System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
 				return;

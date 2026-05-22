@@ -347,7 +347,7 @@ public class Teste {
 						gb.consultarProdutosDisponiveis(); 
 						break;
 					case 2:
-						gb.registrarPedido();
+						gb.registrarPedido(sc);
 						System.out.println("O pedido foi registrado!");
 						break;
 					case 3:

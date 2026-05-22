@@ -214,7 +214,5 @@ public class GerirBar {
 			 */
 		}
 		
-		public void addFuncionario(Utilizador f) {
-			funcionarios.add(f);
-		}
+		
 }

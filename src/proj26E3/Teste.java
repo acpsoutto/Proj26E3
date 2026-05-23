@@ -63,6 +63,7 @@ public class Teste {
 					continue;
 					}
 				if(!f.getPw().equals(chave)){
+					System.out.println(f.getPw());
 					System.out.println("Chave errada");
 					continue;
 					
@@ -130,7 +131,7 @@ public class Teste {
 						
 						TipoUtilizador tipo = TipoUtilizador.FUNCIONARIO_BAR;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
 						System.out.print("Funcionário adicionado");
 						break;
 						
@@ -154,7 +155,7 @@ public class Teste {
 						
 						tipo = TipoUtilizador.CLIENTE;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
 						System.out.print("Cliente adicionado");
 						break;
 						
@@ -178,7 +179,7 @@ public class Teste {
 						
 						tipo = TipoUtilizador.GERENTE;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
 						System.out.print("Gerente adicionado");
 						break;
 					case 4: 
@@ -201,7 +202,7 @@ public class Teste {
 						
 						tipo = TipoUtilizador.ADMNISTRACAO;
 						
-						gb.adicionarUtilizador(id,nome, mail, pw, tipo);
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
 						System.out.print("Admnistrador adicionado");
 						break;
 						
@@ -460,7 +461,9 @@ public class Teste {
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
 					System.out.println("================================");
-					System.out.print("Opção:");				
+					System.out.print("Opção:");	
+					escolha = sc.nextInt();
+					sc.nextLine();
 					switch (escolha) {
 					case 1:
 						boolean tenta = false;

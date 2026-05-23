@@ -2,14 +2,20 @@ package proj26E3;
 
 import java.util.Scanner;
 
+//import jdk.internal.org.jline.terminal.TerminalBuilder.SystemOutput;
+
 public class Teste {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		GerirBar gb = new GerirBar();
 		CategoriaProduto categoria = null;
-
+		int idReserva = 0;
 		int opc;
+		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
+		
+		gb.adicionarUtilizador(1, "Admin", "admin@gmail.com", "123", tipoU);
+		
 		do {
 			System.out.println("========== MENU USÚARIO ==========");
 			System.out.println("Seleciona perfil");
@@ -51,10 +57,15 @@ public class Teste {
 			try {
 				Utilizador f = gb.pesquisarUtilizador(uti);
 					
-				if (f == null || !f.getPw().equals(chave)) {
+				if (f == null) {
 					System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
 					continue;
 					}
+				if(!f.getPw().equals(chave)){
+					System.out.println("Chave errada");
+					continue;
+					
+				}
 					
 				// Validação do tipo de perfil correspondente
 				
@@ -91,6 +102,7 @@ public class Teste {
 					System.out.println("4- Adicionar Admnistrador");
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
+					System.out.println("================================");
 					System.out.print("Opção:");
 					escolha = sc.nextInt();
 					sc.nextLine();
@@ -188,7 +200,7 @@ public class Teste {
 						
 						tipo = TipoUtilizador.ADMNISTRACAO;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
+						gb.adicionarUtilizador(id,nome, mail, pw, tipo);
 						System.out.print("Admnistrador adicionado");
 						break;
 						
@@ -204,7 +216,7 @@ public class Teste {
 					default :
 						System.out.println("Opção Invalida! Tente outra vez");
 					}
-				} while (escolha != 10 || opc != 0);
+				} while (escolha != 10 && opc != 0);
 			}
 			 
 				
@@ -221,6 +233,7 @@ public class Teste {
 					System.out.println("5- Adicionar stock");
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
+					System.out.println("================================");
 					System.out.print("Opção:");
 					escolha = sc.nextInt();
 					sc.nextLine();
@@ -231,6 +244,10 @@ public class Teste {
 						System.out.println("ID do novo produto");
 						int id = sc.nextInt();
 						sc.nextLine();
+						if(id == 0) {
+							System.out.println("ID indisponivel! Tente novamente.");
+							break;
+						}
 						if(gb.pesquisarProduto(id) != null) {
 							System.out.println("ID já em utilização! Tente novamente.");
 							break;
@@ -312,7 +329,7 @@ public class Teste {
 						break;
 					case 10:
 						System.out.println("A sair para o login");
-						break;
+						continue;
 						
 					case 0:
 						System.out.println("Obrigado por utilizar o programa.");
@@ -354,7 +371,17 @@ public class Teste {
 						gb.consultarReservasPendentes();
 						break;
 					case 4:
-						gb.confirmarReserva(sc);
+						gb.consultarReservasPendentes();
+						System.out.println("================================");
+						System.out.println();
+						System.out.println("Introduza o id da reserva que quer confirma:");
+						int id = sc.nextInt();
+						sc.hasNextLine();
+						if(gb.pesquisarReserva(id)!= null) {
+							System.out.println("Não existe reserva com esse id:");
+							break;
+						}
+						gb.confirmarReserva(id);
 					case 10:
 						System.out.println("A sair para o login");
 						break;
@@ -369,19 +396,97 @@ public class Teste {
 			}
 			
 			if(opc == 4){
-				/*
 				do {
-					//Menu do Cliente
-					//0 - Para encerrar programa 10: voltar login
+					System.out.println("1- Fazer Reserva");
+					System.out.println("2- Consultar Reservas");
+					System.out.println("3- Canselar Reserva");
+					System.out.println("10- Sair para login");
+					System.out.println("0- Encerrar programa");
+					System.out.println("================================");
+					System.out.print("Opção:");				
 					switch (escolha) {
-					//funcionalidades do cliente
+					case 1:
+						boolean tenta = false;
+						int id;
+						gb.consultarProdutosDisponiveis();
+						System.out.println("--- FAZER PRÉ-RESERVA ---");
+						System.out.println("Quando quer recolher (Introduza na forma de dia-mes-ano Hora:min):");
+						String input = sc.nextLine();
+						idReserva += 1;
+						Reserva r = gb.criarReserva(uti,idReserva, input);
+						do {
+							System.out.println("Id do produto a utilizar (insira '0' para parar de adicionar):");
+							id = sc.nextInt();
+							sc.nextLine();
+							
+							if(id == 0) {
+								break;
+							}
+							if(gb.pesquisarProduto(id) == null) {
+								System.out.println("Produto não encontrado! Tente Novamente");
+								continue;
+							}
+							System.out.println("Quantidade:");
+							int qtd = sc.nextInt();
+							sc.nextLine();
+							if(qtd <= 0) {
+								System.out.println("Erro! Quantidade tem de ser superiror a 0.");
+								System.out.println("Tente outra vez.");
+								continue;
+							}else if(!gb.verificarStock(id, qtd)){
+								System.out.println("Quantidade pedida acima do stock!");
+								System.out.println("Tente outra vez.");
+								continue;
+							}
+							gb.adicionarNaReserva(id,qtd, r);
+							tenta = true;
+						}while(id != 0);
+						if(!tenta) {
+							gb.apagarReserva(idReserva,uti);
+							idReserva -=1;
+						}
+					break;
+					
+					case 2:
+						gb.imprimirReservasdeUti(uti);
+					break;
+					
+					case 3:
+						gb.imprimirReservasdeUti(uti);
+						System.out.println("================================");
+						System.out.println();
+						System.out.println("Qual reserva quer cancelar:");
+						int reservaid = sc.nextInt();
+						sc.nextLine();
+						if(gb.pesquisarReserva(reservaid)== null) {
+							System.out.println("Reserva não existe");
+							break;
+						}
+						if(!gb.detetarEstado(reservaid)) {
+							System.out.println("A reserva que selecionou já não pode ser cancelada, uma vez que se encontra num estado avançado");						
+						}else {
+							gb.cancelarReserva(reservaid, uti);
+							System.out.println("Reserva cancelada");
+						}
+						
+						
+						break;
+					case 10:
+						System.out.println("A sair para o login");
+						break;
+						
+					case 0:
+						System.out.println("Obrigado por utilizar o programa.");
+						opc = 0;
+						break;
+						
+					default :
+						System.out.println("Opção Invalida! Tente outra vez");
+					
 					}
-				}while(escolha != 0|| escolha != 10);
-				*/
-				System.out.println("Menu do Cliente em desenvolvimento...\n");
+				}while(escolha != 0 && escolha != 10);
 			}
 		}while(opc != 0);
-		
 		sc.close();
 	}
 }

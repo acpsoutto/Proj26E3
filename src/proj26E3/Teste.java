@@ -11,6 +11,7 @@ public class Teste {
 		GerirBar gb = new GerirBar();
 		CategoriaProduto categoria = null;
 		int idReserva = 0;
+		int idPedido = 0;
 		int opc;
 		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
 		
@@ -364,9 +365,65 @@ public class Teste {
 						gb.consultarProdutosDisponiveis(); 
 						break;
 					case 2:
-						gb.registrarPedido(sc);
-						System.out.println("O pedido foi registrado!");
+						idPedido += 1;
+						Pedido pd = gb.registrarPedido(uti, idPedido);
+						int idP;
+						boolean tenta = false;
+						
+						System.out.println("--- REGISTAR NOVO PEDIDO ---");
+						
+						do {
+							
+						
+							System.out.print("Introduza o ID do produto (Insira 0 para parar de adicionar): ");
+							idP = sc.nextInt();
+							sc.nextLine();
+							
+							Produto p = gb.pesquisarProduto(idP);
+							
+							if (idP == 0) {
+								break;
+							}
+							
+							if (p == null) {
+								System.out.println("Produto não encontrado!");
+								continue;
+							}
+							
+							if (p.getStock()==0 ) {
+								System.out.println("Erro: Produto sem stock disponível!");
+								continue;
+							}
+							
+							System.out.print("Introduza a quantidade desejada: ");
+							int qtd = sc.nextInt();
+							sc.nextLine();
+							
+							if(qtd<=0) {
+								System.out.println("Erro: A quantidade deve ser maior que 0.");
+								continue;
+							}
+							
+							int stockAtual = p.getStock();
+							
+							if (qtd > stockAtual) {
+								System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
+								continue;
+							}
+							
+							gb.adicionarNoPedido(idP, qtd, pd);
+							tenta = true;
+							
+						} while (idP!=0);
+						
+						if(!tenta) {
+							gb.apagarPedido(idPedido, uti);
+							idPedido -=1;
+						} else {
+							System.out.println("O pedido foi registrado!");
+						}
 						break;
+					
 					case 3:
 						gb.consultarReservasPendentes();
 						break;

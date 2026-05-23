@@ -31,8 +31,17 @@ public class ItemPedido {
 		return produto;
 	}
 
+    public double calcularSubtotal() {
+        return precoUnitario * quantidade;
+    }
 
-
+	public void reduzir() {
+		Produto p = getProduto();
+		int quantidade = getQuantidade();
+		p.reduzirStock(quantidade);
+	}
+    
+    
 
 
 

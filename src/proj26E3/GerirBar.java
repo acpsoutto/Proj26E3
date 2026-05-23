@@ -145,43 +145,25 @@ public class GerirBar {
 		/*
 		 * Registar Pedido 
 		 */
-		public void registrarPedido(Scanner sc) {
-			System.out.println("--- REGISTAR NOVO PEDIDO ---");
-			
-			System.out.print("Introduza o ID do produto: ");
-			int id = sc.nextInt();
-			sc.nextLine();
-			
-			Produto p = pesquisarProduto(id);
-			
-			if (p == null) {
-				System.out.println("Produto não encontrado!");
-				return;
-			}
-			
-			if (p.getStock()==0 ) {
-				System.out.println("Erro: Produto sem stock disponível ou fora da validade!");
-				return;
-			}
-			
-			System.out.print("Introduza a quantidade desejada: ");
-			int qtd = sc.nextInt();
-			sc.nextLine();
-			
-			int stockAtual = p.getStock();
-			if (qtd > stockAtual) {
-				System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
-				return;
-			}
-			
-			p.reduzirStock(stockAtual - qtd);
-			
-			double totalItem = p.getPreco() * qtd;
-			System.out.println("\nPedido registado com sucesso!");
-			System.out.println("Produto: " + p.getNome() + " x" + qtd);
-			System.out.println("Total a pagar: " + totalItem + "€");
+		public Pedido registrarPedido(int numU, int idPedido) {
+			Utilizador u = pesquisarUtilizador(numU);
+			FuncionarioBar f = (FuncionarioBar) u;
+			Pedido pd = new Pedido (idPedido);
+			f.adicionarPedido(pd);
+			return pd;
 		}
 
+		public void adicionarNoPedido(int idP, int qtd, Pedido pd) {
+			Produto p = pesquisarProduto(idP);
+			pd.adicionarItem(p, qtd);
+		}
+		
+		public void apagarPedido(int idPedido, int uti) {
+			Utilizador u = pesquisarUtilizador(uti);
+			FuncionarioBar fb = (FuncionarioBar) u;
+			fb.apagarPedido(idPedido);
+		}
+		
 //--------------------------------------------------------------------
 		/*
 		 * Pesquisa uma reserva pelo seu ID

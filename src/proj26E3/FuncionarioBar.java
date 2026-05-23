@@ -22,7 +22,18 @@ public class FuncionarioBar extends Utilizador {
 	public String toString() {
 		return "Funcionario : Funcionario do Bar\n  " + super.toString();
 	}
+
+	public void adicionarPedido(Pedido p) {
+		pedidos.add(p);
+	}
 	
+	public void apagarPedido(int idPedido) {
+		for (Pedido p: pedidos) {
+			if(p.getId()==idPedido) {
+				pedidos.remove(p);
+			}
+		}
+	}
 	
 
 

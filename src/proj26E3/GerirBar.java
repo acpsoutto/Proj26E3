@@ -3,7 +3,6 @@ package proj26E3;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class GerirBar {
 	private ArrayList<Utilizador> utilizadores;
@@ -102,7 +101,7 @@ public class GerirBar {
 	
 	public boolean verificarStock(int id, int qtd) {
 		Produto p = pesquisarProduto(id);
-		if(p.getStock() > qtd) {
+		if(p.getStock() < qtd) {
 			return false;
 		}
 		return true;
@@ -123,12 +122,11 @@ public class GerirBar {
 	/*
 	 * Consultar produtos disponíveis (Stock > 0)
 	 */
-	public void consultarProdutosDisponiveis() {
+	public boolean consultarProdutosDisponiveis() {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");
 		boolean encontrou = false;
-		
 		for (Produto p: produtos) {
-			if (!(p.getStock()==0)) {
+			if (p.getStock()!=0) {
 				System.out.println("|ID: " +p.getId() 
 						+ "\n|Nome: " + p.getNome() 
 						+ "\n|Categoria: " +p.getCategoria() 
@@ -139,6 +137,7 @@ public class GerirBar {
 		if (!encontrou) {
 			System.out.println("Não existem produtos disponiveis no stock este momento!");
 		}
+		return encontrou;
 	}
 	
 //--------------------------------------------------------------------
@@ -201,7 +200,7 @@ public class GerirBar {
 		
 		public Reserva criarReserva(int uti, int idReserva,String input) {
 			Utilizador p = pesquisarUtilizador(uti);
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
 			LocalDateTime dt = LocalDateTime.parse(input, formatter);
 			Cliente c = (Cliente) p;
 			
@@ -229,10 +228,10 @@ public class GerirBar {
 			c.apagarReserva(idReserva);
 		}
 		
-		public void imprimirReservasdeUti(int uti) {
+		public boolean imprimirReservasdeUti(int uti) {
 			Utilizador p = pesquisarUtilizador(uti);
 			Cliente c = (Cliente) p;
-			c.imprimir();
+			return c.imprimir();
 		}
 
 //--------------------------------------------------------------------
@@ -240,7 +239,7 @@ public class GerirBar {
 		 * Consultar Reservas Pendentes
 		 * Percorre a lista de reservas e mostra apenas as que estão no estado PENDENTE.
 		 */
-		public void consultarReservasPendentes() {
+		public boolean consultarReservasPendentes() {
 			System.out.println("--- CONSULTAR RESERVAS PENDENTES ---");
 			boolean encontrou = false;
 			int a = 0;
@@ -252,10 +251,11 @@ public class GerirBar {
 						encontrou = true;
 					}
 				}
+			}
 			if (!encontrou) {
 				System.out.println("Não existem reservas pendentes de momento.");
 			}
-		}
+			return encontrou;
 	}
 
 //--------------------------------------------------------------------

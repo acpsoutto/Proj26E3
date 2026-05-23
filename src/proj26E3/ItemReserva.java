@@ -32,7 +32,7 @@ public class ItemReserva {
     public int getQuantidade() {
         int total = 0;
 		for ( int i : quantidadesL) {
-			total += quantidadesL.get(i);
+			total += i;
 		}
 		return total;
     }

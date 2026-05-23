@@ -63,6 +63,7 @@ public class Teste {
 					continue;
 					}
 				if(!f.getPw().equals(chave)){
+					System.out.println(f.getPw());
 					System.out.println("Chave errada");
 					continue;
 					

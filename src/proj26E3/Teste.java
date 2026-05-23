@@ -130,8 +130,8 @@ public class Teste {
 						
 						TipoUtilizador tipo = TipoUtilizador.FUNCIONARIO_BAR;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
-						System.out.print("Funcionário adicionado");
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
+						System.out.println("Funcionário adicionado");
 						break;
 						
 					case 2:
@@ -154,8 +154,8 @@ public class Teste {
 						
 						tipo = TipoUtilizador.CLIENTE;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
-						System.out.print("Cliente adicionado");
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
+						System.out.println("Cliente adicionado");
 						break;
 						
 					case 3: 
@@ -178,8 +178,8 @@ public class Teste {
 						
 						tipo = TipoUtilizador.GERENTE;
 						
-						gb.adicionarUtilizador(id, mail, pw, nome, tipo);
-						System.out.print("Gerente adicionado");
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
+						System.out.println("Gerente adicionado");
 						break;
 					case 4: 
 						System.out.println("ID do Admnistrador:");
@@ -201,8 +201,8 @@ public class Teste {
 						
 						tipo = TipoUtilizador.ADMNISTRACAO;
 						
-						gb.adicionarUtilizador(id,nome, mail, pw, tipo);
-						System.out.print("Admnistrador adicionado");
+						gb.adicionarUtilizador(id, nome, mail, pw, tipo);
+						System.out.println("Admnistrador adicionado");
 						break;
 						
 					case 10:
@@ -428,13 +428,15 @@ public class Teste {
 						gb.consultarReservasPendentes();
 						break;
 					case 4:
-						gb.consultarReservasPendentes();
+						if(!gb.consultarReservasPendentes()){
+							break;
+						}
 						System.out.println("================================");
 						System.out.println();
 						System.out.println("Introduza o id da reserva que quer confirma:");
 						int id = sc.nextInt();
 						sc.hasNextLine();
-						if(gb.pesquisarReserva(id)!= null) {
+						if(gb.pesquisarReserva(id)== null) {
 							System.out.println("Não existe reserva com esse id:");
 							break;
 						}
@@ -460,14 +462,20 @@ public class Teste {
 					System.out.println("10- Sair para login");
 					System.out.println("0- Encerrar programa");
 					System.out.println("================================");
-					System.out.print("Opção:");				
+					System.out.print("Opção:");	
+					escolha = sc.nextInt();
+					sc.nextLine();
+					System.out.println();
+					
 					switch (escolha) {
 					case 1:
 						boolean tenta = false;
 						int id;
-						gb.consultarProdutosDisponiveis();
+						if(!gb.consultarProdutosDisponiveis()) {
+							break;
+						}
 						System.out.println("--- FAZER PRÉ-RESERVA ---");
-						System.out.println("Quando quer recolher (Introduza na forma de dia-mes-ano Hora:min):");
+						System.out.println("Quando quer recolher (Introduza na forma de ano-mes-dia Hora:min):");
 						String input = sc.nextLine();
 						idReserva += 1;
 						Reserva r = gb.criarReserva(uti,idReserva, input);
@@ -505,11 +513,16 @@ public class Teste {
 					break;
 					
 					case 2:
-						gb.imprimirReservasdeUti(uti);
+						if(!gb.imprimirReservasdeUti(uti)){
+							System.out.println("Não existem Reservas!");
+						}
 					break;
 					
 					case 3:
-						gb.imprimirReservasdeUti(uti);
+						if(!gb.imprimirReservasdeUti(uti)){
+							System.out.println("Não existem Reservas!");
+							break;
+						}
 						System.out.println("================================");
 						System.out.println();
 						System.out.println("Qual reserva quer cancelar:");
@@ -519,7 +532,7 @@ public class Teste {
 							System.out.println("Reserva não existe");
 							break;
 						}
-						if(!gb.detetarEstado(reservaid)) {
+						if(gb.detetarEstado(reservaid)) {
 							System.out.println("A reserva que selecionou já não pode ser cancelada, uma vez que se encontra num estado avançado");						
 						}else {
 							gb.cancelarReserva(reservaid, uti);

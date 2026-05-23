@@ -13,8 +13,8 @@ public class FuncionarioBar extends Utilizador {
 	 * @param email - email do funcionario bar
 	 * @param codigoAcesso - codigo de acesso do funcionario bar
 	 */
-	public FuncionarioBar(int numeroTrabalhador, String nome, String email, String codigoAcesso, TipoUtilizador tipo) {
-		super(numeroTrabalhador, nome, email, codigoAcesso, tipo);
+	public FuncionarioBar(int numeroTrabalhador, String nome, String email, String pw, TipoUtilizador tipo) {
+		super(numeroTrabalhador, nome, email, pw, tipo);
 		pedidos = new ArrayList<>();
 	}
 

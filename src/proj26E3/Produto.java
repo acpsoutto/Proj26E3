@@ -68,11 +68,11 @@ public class Produto {
 	}
 	
 	public int getStock() {
-		int total = 0;
-		for ( int i : stock) {
-			total += stock.get(i);
-		}
-		return total;
+	    int total = 0;
+	    for (int valor : stock) {
+	        total += valor;      
+	    }
+	    return total;
 	}
 	
 	/*
@@ -80,9 +80,15 @@ public class Produto {
 	 * @param val - meses de valiade do novo lote
 	 */
 	public void adicionarStock(int s, int val) {
+		YearMonth novaValidade = YearMonth.now().plusMonths(val);
+	    for (int i = 0; i < validades.size(); i++) {
+	        if (validades.get(i).equals(novaValidade)) {
+	            stock.set(i, stock.get(i) + s);
+	            return;
+	        }
+	    }
 		stock.add(s);
 		validades.add(YearMonth.now().plusMonths(val));
-		
 		for(int i = 0; i < validades.size() -1; i++) {
 			for(int j = i+1; j < validades.size();j++) {
 				if(validades.get(i).isAfter(validades.get(j))) {
@@ -163,14 +169,30 @@ public class Produto {
 	}
 	
 	public void restituirStock(ArrayList<Integer> quantidadesL, ArrayList<YearMonth> validadesL) {
-		for(int i = 0; i<= stock.size(); i++) {
-			for(int j = 0; i<= quantidadesL.size(); j++)
-					if(validades.get(i).isAfter(validadesL.get(j))) {
-						validades.add(i, validadesL.get(j));
-						stock.add(i, quantidadesL.get(i));
-					}
-		}
+		for (int i = 0; i < quantidadesL.size(); i++) {
+
+	        int quantidade = quantidadesL.get(i);
+	        YearMonth validade = validadesL.get(i);
+	        boolean encontrado = false;
+
+	        for (int j = 0; j < validades.size(); j++) {
+	            if (validades.get(j).equals(validade)) {
+	                stock.set(j, stock.get(j) + quantidade);
+	                encontrado = true;
+	                break;
+	            }
+	        }
+	        if (!encontrado) {
+	            int pos = 0;
+	            while (pos < validades.size() && validades.get(pos).isBefore(validade)) {
+	                pos++;
+	            }
+	            validades.add(pos, validade);
+	            stock.add(pos, quantidade);
+	        }
+	    }
 	}
+
 	
 	@Override
 	public String toString() {

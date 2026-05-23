@@ -39,10 +39,14 @@ public class Cliente extends Utilizador {
 		}
 	}
 	
-	public void imprimir() {
+	public boolean imprimir() {
+		if(reservas.isEmpty()) {
+			return false;
+		}
 		for(Reserva r : reservas) {
 			System.out.println(r);
 		}
+		return true;
 	}
 
 	public Reserva encontrarReserva(int id) {

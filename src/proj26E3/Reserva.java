@@ -7,18 +7,20 @@ public class Reserva {
 
     private int id;
     private EstadoReserva estado;
-    private LocalDateTime dataHora;
+    private LocalDateTime datahora;
     private ArrayList<ItemReserva> itensR;
     
     /**
      * CONSTRUTOR
      * @param id - identificador único da reserva
+     * @param dt 
+     * @param input 
      */
-    public Reserva(int id) {
+    public Reserva(int id, LocalDateTime dt) {
         this.id = id;
         this.estado = EstadoReserva.PENDENTE; // toda a reserva começa pendente
-        this.dataHora = LocalDateTime.now();  // regista o momento exato da criação
-        this.itensR = new ArrayList<>();      // começa vazia, items são adicionados depois
+        datahora = dt;  // regista quando o pedido é para ser recolhido
+        itensR = new ArrayList<>();      // começa vazia, items são adicionados depois
     }
     
     
@@ -30,6 +32,7 @@ public class Reserva {
     public void adicionarItem(Produto produto, int quantidade) {
         ItemReserva item = new ItemReserva(produto, quantidade);
         itensR.add(item);
+        item.registarStockeVal(quantidade);
     }
 
     /**
@@ -59,12 +62,23 @@ public class Reserva {
      * Cancela a reserva — só funciona se não estiver já LEVANTADA
      */
     public void cancelar() {
-        if (estado == EstadoReserva.LEVANTADA) {
+        if (estado == EstadoReserva.LEVANTADA ) {
             System.out.println("Não é possível cancelar uma reserva já levantada.");
-        } else {
+        } else if(estado == EstadoReserva.CANCELADA){
+        	 System.out.println("Não é possível cancelar uma reserva já cancelada.");
+        	}else if(estado == EstadoReserva.CONFIRMADA ){
+        		 System.out.println("Não é possível cancelar uma reserva já confirmada.");
+        		}else {	
             estado = EstadoReserva.CANCELADA;
+            reporItens();
             System.out.println("Reserva " + id + " cancelada.");
         }
+    }
+    
+    public void reporItens() {
+    	for(ItemReserva i: itensR) {
+    		i.repor();
+    	}
     }
     
     public int getId() {
@@ -76,7 +90,7 @@ public class Reserva {
     }
 
     public LocalDateTime getDataHora() {
-        return dataHora;
+        return datahora;
     }
 
     public ArrayList<ItemReserva> getItensR() {
@@ -87,7 +101,7 @@ public class Reserva {
     public String toString() {
         return "Reserva #" + id 
             + " | Estado: " + estado 
-            + " | Data: " + dataHora 
+            + " | Data: " + datahora 
             + " | Total: " + calcularTotal() + "€"
             + " | Itens: " + itensR;
     }

@@ -136,6 +136,41 @@ public class Produto {
 		}while(redu > 0);
 	}
 	
+	public void reduzirComRegisto(int qtd, ArrayList<Integer> quantidadesRetiradas, ArrayList<YearMonth> validadesRetiradas ) {
+		int i = 0;
+		do {
+			int lote = stock.get(i);
+			YearMonth valid = validades.get(i);
+			if(lote >= qtd) {
+				stock.set(i, lote - qtd);
+				quantidadesRetiradas.add(qtd);
+	            validadesRetiradas.add(valid);
+
+				qtd = 0;
+			}else {
+				quantidadesRetiradas.add(qtd);
+	            validadesRetiradas.add(valid);
+	            
+				qtd -= lote;
+				stock.set(i, 0);
+			}
+			
+			if(stock.get(i) == 0) {
+				stock.remove(i);
+				validades.remove(i);
+			}
+		}while(qtd > 0);
+	}
+	
+	public void restituirStock(ArrayList<Integer> quantidadesL, ArrayList<YearMonth> validadesL) {
+		for(int i = 0; i<= stock.size(); i++) {
+			for(int j = 0; i<= quantidadesL.size(); j++)
+					if(validades.get(i).isAfter(validadesL.get(j))) {
+						validades.add(i, validadesL.get(j));
+						stock.add(i, quantidadesL.get(i));
+					}
+		}
+	}
 	
 	@Override
 	public String toString() {

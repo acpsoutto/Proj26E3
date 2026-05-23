@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class FuncionarioBar extends Utilizador {
 	
-	private ArrayList<Pedido>pedidos;
+	private ArrayList<Pedido> pedidos;
 
 	/**
 	 * CONSTRUTOR 

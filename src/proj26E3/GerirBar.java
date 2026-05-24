@@ -1,5 +1,9 @@
 package proj26E3;
-
+/**
+ * Classe principal de gestão do bar.
+ * Centraliza todas as operações sobre utilizadores, produtos,
+ * reservas e pedidos do sistema.
+ */
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -8,13 +12,20 @@ public class GerirBar {
 	private ArrayList<Utilizador> utilizadores;
 	private ArrayList<Produto> produtos;
 	
+	/**
+	 * CONSTRUTOR
+	 */
 	public GerirBar() {
 		utilizadores = new ArrayList<>();
 		produtos = new ArrayList<>();
-
 	}
 	
-	
+	/**
+	 * Autentica um utilizador verificando o número e a palavra-passe.
+	 * @param num -número identificador do utilizador
+	 * @param chave - palavra-passe a verificar
+	 * @return true, caso as credenciais forem validar e falso caso contrario
+	 */
 	public boolean autenticarPorFuncionario(int num, String chave) {
 		if (utilizadores.isEmpty()) {
 			return false;
@@ -28,6 +39,10 @@ public class GerirBar {
 		return false;
 	}
 	
+	/**Pesquisa um utilizador pelo número identificador.
+	 * @param num -número do utilizador a pesquisar
+	 * @return o utilizador e null se nao existir
+	 */
 	public Utilizador pesquisarUtilizador(int num) {
 		if (utilizadores.isEmpty()) {
 			return null;
@@ -40,6 +55,15 @@ public class GerirBar {
 		return null;
 	}
 	
+	/**
+	 * Adiciona um novo utilizador ao sistema, instanciando o subtipo
+     * correto consoante o (TipoUtilizador) fornecido.
+	 * @param num -número identificador
+	 * @param nome - nome completo
+	 * @param mail - endereço de e-mail
+	 * @param pw - palavra-passe
+	 * @param tipo -tipo de utilizador a criar
+	 */
 	public void adicionarUtilizador(int num, String nome, String mail, String pw, TipoUtilizador tipo) {
 		if (tipo == TipoUtilizador.ADMNISTRACAO || tipo== TipoUtilizador.GERENTE) {
 			Utilizador u = new Utilizador (num, nome,mail, pw, tipo);
@@ -55,8 +79,11 @@ public class GerirBar {
 		}
 	}
 	
-	/*
-	 * Metodos relacionados com as funções do gerente
+	
+	/**
+	 * Pesquisa um produto pelo seu identificador.
+	 * @param id - identificador do produto
+	 * @return o produto encontrado ou null se nao existir
 	 */
 	public Produto pesquisarProduto(int id) {
 		if(produtos.isEmpty()){
@@ -70,18 +97,33 @@ public class GerirBar {
 		return null;
 	}
 
+	/**
+	 * Cria e adiciona um novo produto à lista de produtos do bar.
+	 * @param id - identificador único do produto
+	 * @param nome - nome do produto
+	 * @param preco - preço unitário
+	 * @param categoria - categoria do produto
+	 * @param stock - quantidade inicial em stock
+	 * @param validade - meses de validade do lote inicial
+	 */
 	public void adicionarProduto(int id, String nome, double preco, CategoriaProduto categoria, int stock, int validade) {
 		Produto p = new Produto(id, nome, preco, categoria, stock, validade);
 		produtos.add(p);
 		System.out.println("Produto adicionado");
 	}
 
+	/**
+	 * Imprime todos os produtos registados no output padrão.
+	 */
 	public void imprimirProdutos() {
 		for(Produto p : produtos) {
 			System.out.println(p);
 		}
 	}
 
+	/**
+	 * Imprime o ID, nome e preço de cada produto no output padrão.
+	 */
 	public void imprimirPreços() {
 		for(Produto p : produtos){
 			System.out.println("Produto: " +p.getId()+ " | "+p.getNome()+" Preço="+p.getPreco());
@@ -89,16 +131,33 @@ public class GerirBar {
 		
 	}
 
+	/**
+	 * Atualiza o preço de um produto existente.
+	 * @param id -identificador do produto
+	 * @param preco -novo preço a aplicar
+	 */
 	public void atualizarPreco(int id, double preco) {
 		Produto p = pesquisarProduto(id);
 		p.atualizarPreco(preco);
 	}
 	
+	/**
+	 * Adiciona um novo lote de stock a um produto existente.
+	 * @param id -identificador do produto
+	 * @param quant -quantidade a adicionar
+	 * @param val -meses de validade do novo lote
+	 */
 	public void adicionarStock(int id, int quant, int val) {
 		Produto p = pesquisarProduto(id);
 		p.adicionarStock(quant, val);
 	}
 	
+	/**
+	 * Verifica se um produto tem stock suficiente para a quantidade pedida.
+	 * @param id identificador do produto
+	 * @param qtd quantidade desejada
+	 * @return true se o stock for suficiente e false caso contrario
+	 */
 	public boolean verificarStock(int id, int qtd) {
 		Produto p = pesquisarProduto(id);
 		if(p.getStock() < qtd) {
@@ -107,20 +166,20 @@ public class GerirBar {
 		return true;
 	}
 	
-//---------------------------------------------------------------------
-	
-	/*
-	 * METODO PARA REDUZIR O STOCK COM VENDAS
-	 * 
+	/**
+	 * Reduz o stock de um produto após uma venda.
+	 * @param id identificador do produto
+	 * @param quant quantidade a subtrair do stock
 	 */
 	public void reduzirStock(int id, int quant) {
 		Produto p = pesquisarProduto(id);
 		p.reduzirStock(quant);
 	}
 
-//--------------------------------------------------------------------
-	/*
-	 * Consultar produtos disponíveis (Stock > 0)
+
+	/**
+	 * Lista todos os produtos com stock disponível
+	 * @return true, se existirem produtos disponiveis e false caso contrario
 	 */
 	public boolean consultarProdutosDisponiveis() {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");
@@ -140,9 +199,11 @@ public class GerirBar {
 		return encontrou;
 	}
 	
-//--------------------------------------------------------------------
-		/*
-		 * Registar Pedido 
+		/**
+		 * Cria um novo pedido e associa-o ao funcionário do bar indicado.
+		 * @param num Unúmero do utilizador (funcionário do bar)
+		 * @param idPedido identificador do novo pedido
+		 * @return o pedido criado
 		 */
 		public Pedido registrarPedido(int numU, int idPedido) {
 			Utilizador u = pesquisarUtilizador(numU);
@@ -152,22 +213,32 @@ public class GerirBar {
 			return pd;
 		}
 
+		/**
+		 * Adiciona um item (produto e quantidade) a um pedido existente.
+		 * @param idP - identificador do produto
+		 * @param qtd- quantidade do produto
+		 * @param pd- pedido ao qual o item sera adicionado
+		 */
 		public void adicionarNoPedido(int idP, int qtd, Pedido pd) {
 			Produto p = pesquisarProduto(idP);
 			pd.adicionarItem(p, qtd);
 		}
 		
+		/**
+		 * Remove um pedido da lista do funcionário do bar indicado.
+		 * @param idPedido identificador do pedido
+		 * @param uti - numero do utilizador (funcionario bar)
+		 */
 		public void apagarPedido(int idPedido, int uti) {
 			Utilizador u = pesquisarUtilizador(uti);
 			FuncionarioBar fb = (FuncionarioBar) u;
 			fb.apagarPedido(idPedido);
 		}
 		
-//--------------------------------------------------------------------
-		/*
-		 * Pesquisa uma reserva pelo seu ID
-		 * Percorre a lista de reservas e devolve a que tiver o id correspondente.
-		 * Devolve null se não encontrar nenhuma.
+		/**
+		 * Pesquisa uma reserva pelo seu ID, percorrendo todos os clientes registados.
+		 * @param id - identificador de reserva
+		 * @return a reserva encontrada e null se nao existir
 		 */
 		public Reserva pesquisarReserva(int id) {
 			Reserva r;
@@ -183,6 +254,12 @@ public class GerirBar {
 			return null;
 		}
 		
+		/**
+		 *Verifica se o estado de uma reserva impede alterações,ou seja, se já está
+		 * (CONFIRMADA),(CANCELADA) ou (LEVANTADA).
+		 * @param id  identificador da reserva
+		 * @return true se o estado bloquear edicao e false caso contrario
+		 */
 		public boolean detetarEstado(int id) {
 			Reserva r = pesquisarReserva(id);
 			if(r.getEstado()!= EstadoReserva.CONFIRMADA || r.getEstado()!= EstadoReserva.CANCELADA || r.getEstado()!= EstadoReserva.LEVANTADA) {
@@ -190,14 +267,14 @@ public class GerirBar {
 			}
 			return true;
 		}
-
-//--------------------------------------------------------------------
-		/*
-		 * Cria uma reserva vazia e adiciona ao respetivo cliente
-		 * adiconarNaReserva() vai asseguir adicionar cada item a reserva
-		 * 
-		 */
 		
+		/**
+		 * Cria uma nova reserva no estado (PENDENTE) e associa ao cliente indicado.
+		 * @param uti -número do utilizador (cliente)
+		 * @param idReserva -identificador da nova reserva
+		 * @param input -data e hora no formato {@code "yyyy-M-d H:m"}
+		 * @return RESERVA CRIADA
+		 */
 		public Reserva criarReserva(int uti, int idReserva,String input) {
 			Utilizador p = pesquisarUtilizador(uti);
 			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
@@ -209,11 +286,22 @@ public class GerirBar {
 			return r;
 		}
 		
+		/**
+		 * Adiciona um item (produto e quantidade) a uma reserva existente.
+		 * @param idProd - identificador do produto
+		 * @param qtd -quantidade do produto
+		 * @param r - reserva à qual o item será adicionado
+		 */
 		public void adicionarNaReserva(int idProd, int qtd, Reserva r) {
 			Produto p = pesquisarProduto(idProd);
 			r.adicionarItem(p, qtd);
 		}
 		
+		/**
+		 * Cancela a reserva com o ID indicado para o cliente especificado.
+		 * @param idReserva -identificador da reserva a cancelar
+		 * @param uti - número do utilizador (cliente)
+		 */
 		public void cancelarReserva(int idReserva, int uti) {
 			Utilizador p = pesquisarUtilizador(uti);
 			Cliente c = (Cliente) p;
@@ -221,6 +309,11 @@ public class GerirBar {
 			c.cancelarReserva(idReserva);
 		}
 		
+		/**
+		 * Apaga a reserva com o ID indicado para o cliente especificado.
+		 * @param idReserva -identificador da reserva a apagar
+		 * @param uti - número do utilizador (cliente)
+		 */
 		public void apagarReserva(int idReserva,int uti){
 			Utilizador p = pesquisarUtilizador(uti);
 			Cliente c = (Cliente) p;
@@ -228,16 +321,21 @@ public class GerirBar {
 			c.apagarReserva(idReserva);
 		}
 		
+		/**
+		 * Imprime todas as reservas do cliente indicado.
+		 * @param uti - numero do utilizador (cliente)
+		 * @return true, caso exista reservas e false se a lista estiver vazia
+		 */
 		public boolean imprimirReservasdeUti(int uti) {
 			Utilizador p = pesquisarUtilizador(uti);
 			Cliente c = (Cliente) p;
 			return c.imprimir();
 		}
 
-//--------------------------------------------------------------------
-		/*
-		 * Consultar Reservas Pendentes
-		 * Percorre a lista de reservas e mostra apenas as que estão no estado PENDENTE.
+		/**
+         *Consulta e imprime todas as reservas no estado (PENDENTE)
+         * de todos os clientes registados.
+		 * @return true, se existir reservas pendentes e false, caso contrario
 		 */
 		public boolean consultarReservasPendentes() {
 			System.out.println("--- CONSULTAR RESERVAS PENDENTES ---");
@@ -256,23 +354,20 @@ public class GerirBar {
 				System.out.println("Não existem reservas pendentes de momento.");
 			}
 			return encontrou;
-	}
+	    }
 
-//--------------------------------------------------------------------
-		/*
-		 * Confirmar Reserva
-		 * O funcionário procura a reserva pelo ID e confirma-a.
-		 * Ao confirmar, o stock dos produtos é reduzido.
+		/**
+		*Confirma a reserva com o IDreserva indicado, desde que esteja no estado
+         *(PENDENTE). Caso contrário, informa o estado atual.
+		 * @param id - identificador da reserva
 		 */
-		public void confirmarReserva(int id) {
-			Reserva r = pesquisarReserva(id);
+		public void confirmarReserva(int idReserva) {
+			Reserva r = pesquisarReserva(idReserva);
 
 			if (r.getEstado() != EstadoReserva.PENDENTE) {
 				System.out.println("Esta reserva não pode ser confirmada. Estado atual: " + r.getEstado());
 				return;
 			}
-
-			// Confirma a reserva e reduz o stock de cada produto reservado
 			r.confirmar();
 		}
 }

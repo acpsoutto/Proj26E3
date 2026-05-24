@@ -1,7 +1,9 @@
 package proj26E3;
-
+/**
+ * Classe principal do programa, responsável pela interação com o utilizador
+ ** através de menus em modo de texto (consola).
+ **/
 import java.util.Scanner;
-
 //import jdk.internal.org.jline.terminal.TerminalBuilder.SystemOutput;
 
 public class Teste {
@@ -31,9 +33,7 @@ public class Teste {
 			sc.nextLine();
 			System.out.println();
 			
-			/*
-			 * INTRODUÇAO DADOS
-			 */
+			
 			if (opc != 0 && opc != 1 && opc != 2 && opc != 3 && opc != 4 ) {
 				System.out.println("Esse perfil não existe! Tente novamente.");
 				continue;
@@ -50,11 +50,11 @@ public class Teste {
 			System.out.print("Insira a palavra-chave:");
 			String chave = sc.nextLine();
 			System.out.println();
-			
-			/*
-			 * VERIFICAÇÃO DE AUTENTICAÇÃO DO USUARIO
-			 */
-			
+			/**
+             * Lê o número de identificação e a palavra-chave do utilizador.
+             * Valida se o utilizador existe, se a palavra-chave está correta
+             * e se o perfil selecionado corresponde ao tipo do utilizador.
+             */
 			try {
 				Utilizador f = gb.pesquisarUtilizador(uti);
 					
@@ -96,6 +96,12 @@ public class Teste {
 			
 			int escolha = -1; // Inicializado para evitar erros de compilação
 			
+			// --- Menu Administrador ---
+            /**
+             * Permite ao administrador adicionar novos utilizadores ao sistema:
+             * funcionários do bar, clientes, gerentes e outros administradores.
+             * Verifica se o ID introduzido já está em uso antes de criar o utilizador.
+             */
 			if(opc == 1){
 				do {
 					System.out.println("1- Adicionar Funcionário do bar");
@@ -242,6 +248,10 @@ public class Teste {
 					System.out.println();
 					
 					switch (escolha) {
+					/** Adiciona um novo produto ao sistema.
+			         * Solicita ID, nome, preço, categoria, stock e validade em meses.
+			         * Valida se o ID já existe e se os valores de stock e validade são positivos.
+			         */
 					case 1:
 						System.out.println("ID do novo produto");
 						int id = sc.nextInt();
@@ -285,15 +295,18 @@ public class Teste {
 						}
 						gb.adicionarProduto(id,nome,preco,categoria,stock, validade);
 						break;
-						
+					/** Imprime todos os produtos registados no sistema. */	
 					case 2:
 						gb.imprimirProdutos();
 						break;
-						
+					/** Imprime o ID, nome e preço de cada produto. */	
 					case 3:
 						gb.imprimirPreços();
 						break;
-						
+					/** Atualiza o preço de um produto existente.
+				      * Solicita o ID do produto e o novo preço.
+				      * Verifica se o produto existe antes de atualizar.
+				      */	
 					case 4:
 						System.out.print("Qual o id do produto a nome: ");
 						id = sc.nextInt();
@@ -310,7 +323,10 @@ public class Teste {
 							System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 						}
 						break;
-						
+					/** Adiciona stock a um produto existente.
+				     * Solicita o ID do produto, a quantidade a adicionar e a validade em meses do novo lote.
+				     * Verifica se o produto existe antes de adicionar.
+				     */	
 					case 5:
 						System.out.print("Qual o id do produto: ");
 						id = sc.nextInt();
@@ -329,10 +345,11 @@ public class Teste {
 							System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 						}
 						break;
+					/** Regressa ao menu de login. */
 					case 10:
 						System.out.println("A sair para o login");
 						continue;
-						
+					/** Encerra o programa. */	
 					case 0:
 						System.out.println("Obrigado por utilizar o programa.");
 						opc = 0;
@@ -362,9 +379,15 @@ public class Teste {
 					System.out.println();
 					
 					switch (escolha) {
+					/** Consulta e imprime todos os produtos com stock disponível. */
 					case 1:
 						gb.consultarProdutosDisponiveis(); 
 						break;
+					/** Regista um novo pedido para o funcionário autenticado.
+				     * Solicita produtos e quantidades em ciclo até o utilizador inserir 0.
+				     * Valida stock disponível para cada produto adicionado.
+				     * Se nenhum item for adicionado, o pedido é descartado.
+				      */
 					case 2:
 						idPedido += 1;
 						Pedido pd = gb.registrarPedido(uti, idPedido);
@@ -424,10 +447,14 @@ public class Teste {
 							System.out.println("O pedido foi registrado!");
 						}
 						break;
-					
+					/** Consulta e imprime todas as reservas no estado PENDENTE. */
 					case 3:
 						gb.consultarReservasPendentes();
 						break;
+					/** Confirma uma reserva pendente pelo seu ID.
+				     * Verifica se existem reservas pendentes antes de solicitar o ID.
+				     * Valida se a reserva existe antes de confirmar.
+				     */
 					case 4:
 						if(!gb.consultarReservasPendentes()){
 							break;
@@ -442,9 +469,11 @@ public class Teste {
 							break;
 						}
 						gb.confirmarReserva(id);
+					/** Regressa ao menu de login. */
 					case 10:
 						System.out.println("A sair para o login");
 						break;
+					/** Encerra o programa. */
 					case 0:
 						System.out.println("Obrigado por utilizar o programa.");
 						opc = 0;
@@ -454,7 +483,9 @@ public class Teste {
 					}
 				}while(escolha != 0 && escolha != 10);
 			}
-			
+			/*
+			 * USUARIO - CLIENTE
+			 */
 			if(opc == 4){
 				do {
 					System.out.println("1- Fazer Reserva");
@@ -469,6 +500,12 @@ public class Teste {
 					System.out.println();
 					
 					switch (escolha) {
+					/** Cria uma nova reserva para o cliente autenticado.
+			         * Verifica se existem produtos disponíveis antes de iniciar.
+			         * Solicita a data/hora de recolha e os produtos a reservar em ciclo.
+			         * Valida stock disponível para cada produto adicionado.
+			         * Se nenhum item for adicionado, a reserva é descartada.
+			         */
 					case 1:
 						boolean tenta = false;
 						int id;
@@ -512,13 +549,16 @@ public class Teste {
 							idReserva -=1;
 						}
 					break;
-					
+					/** Imprime todas as reservas do cliente autenticado. */
 					case 2:
 						if(!gb.imprimirReservasdeUti(uti)){
 							System.out.println("Não existem Reservas!");
 						}
 					break;
-					
+					/** Cancela uma reserva do cliente autenticado pelo seu ID.
+			         * Imprime as reservas existentes antes de solicitar o ID.
+			         * Verifica se a reserva existe e se o seu estado permite cancelamento.
+			         */
 					case 3:
 						if(!gb.imprimirReservasdeUti(uti)){
 							System.out.println("Não existem Reservas!");
@@ -542,10 +582,11 @@ public class Teste {
 						
 						
 						break;
+					/** Regressa ao menu de login. */
 					case 10:
 						System.out.println("A sair para o login");
 						break;
-						
+					/** Encerra o programa. */	
 					case 0:
 						System.out.println("Obrigado por utilizar o programa.");
 						opc = 0;

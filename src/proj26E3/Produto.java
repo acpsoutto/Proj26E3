@@ -1,5 +1,8 @@
 package proj26E3;
 
+/**
+ * Representa um produto do bar, com id, nome, preço, categoria.
+ */
 import java.time.YearMonth;
 import java.util.ArrayList;
 
@@ -13,13 +16,14 @@ public class Produto {
 	
 	/**
 	 * CONSTRUTOR
-	 * @param id - id do produto
+	 * @param id - identificador do produto
 	 * @param nome - nome do produto
 	 * @param preco - preço do produto
 	 * @param validade - meses de validade do produto 
 	 * @param categoria - categoria do produto (Elementar, Composto, Bebida)
 	 * @param quantidadestock - quantidade do produto em stock
 	 */
+
 	public Produto(int id, String nome, double preco, CategoriaProduto categoria, int quantidadeslot, int validade) {
 		this.id = id;
 		this.nome = nome;
@@ -33,6 +37,7 @@ public class Produto {
 	}
 	
 	/**
+	 * GET devolve o preço do produto
 	 * @return the preco - preco do produto
 	 */
 	public double getPreco() {
@@ -40,6 +45,7 @@ public class Produto {
 	}
 
 	/**
+	 * GET altera o preço dos produtos
 	 * @param preco - guarda o novo preço do produto
 	 */
 	public void setPreco(double preco) {
@@ -47,6 +53,7 @@ public class Produto {
 	}
 
 	/**
+	 * GET devolve id do produto
 	 * @return the id - id do produto
 	 */
 	public int getId() {
@@ -54,6 +61,7 @@ public class Produto {
 	}
 
 	/**
+	 * GET devolve o nome do produto
 	 * @return the nome - nome do produto
 	 */
 	public String getNome() {
@@ -61,12 +69,17 @@ public class Produto {
 	}
 
 	/**
+	 * GET devolve a categoria do produto
 	 * @return the categoria - categoria do produto
 	 */
 	public CategoriaProduto getCategoria() {
 		return categoria;
 	}
 	
+	/**
+	 * GET devolve a quantidade de produto no stock 
+	 * @return total - total de quantidade no stock
+	 */
 	public int getStock() {
 	    int total = 0;
 	    for (int valor : stock) {
@@ -75,7 +88,9 @@ public class Produto {
 	    return total;
 	}
 	
-	/*
+
+	/**
+	 * Adiciona no stock um novo lote
 	 * @param s - stock do novo lote
 	 * @param val - meses de valiade do novo lote
 	 */
@@ -105,11 +120,13 @@ public class Produto {
 		}
 	}
 	
-	/*
+
+	/**
 	 * Atualiza o preço do produto.
 	 * Se novoPreco <= 0 ele não atualiza o preço.
 	 * Se novoPreco > 0 ele atualiza o preço.
-	 */	
+	 * @param novoPreco - novo preço do produto
+	 */
 	public void atualizarPreco(double novoPreco) {
 		if(novoPreco <= 0 ){
 			System.out.println("Preço Invalido! O novo preço inserido é igual ou inferior 0 Tente Novamente.");
@@ -119,8 +136,9 @@ public class Produto {
 		setPreco(novoPreco);
 		System.out.println("Preço de "+getNome()+ " atualizado agora é: "+getPreco());
 	}
-	
-	/*
+
+	/**
+	 * Reduz no stock a quantidade de itens desejado
 	 * @param redu - quantidade de itens a reduzir
 	 */
 	public void reduzirStock(int redu) {
@@ -142,6 +160,12 @@ public class Produto {
 		}while(redu > 0);
 	}
 	
+	/**
+	 * Reduz com registro - é utilizada para as reservas
+	 * @param qtd - quantidade do stock
+	 * @param quantidadesRetiradas - quantidade que a reserva pede
+	 * @param validadesRetiradas - validade de cada respectivo lote 
+	 */
 	public void reduzirComRegisto(int qtd, ArrayList<Integer> quantidadesRetiradas, ArrayList<YearMonth> validadesRetiradas ) {
 		int i = 0;
 		do {
@@ -168,8 +192,13 @@ public class Produto {
 		}while(qtd > 0);
 	}
 	
+	/**
+	 * Restaura o stock 
+	 * @param quantidadesL - quantidade do lote a ser retornada
+	 * @param validadesL - validade do lote a ser retornada
+	 */
 	public void restituirStock(ArrayList<Integer> quantidadesL, ArrayList<YearMonth> validadesL) {
-		for (int i = 0; i < quantidadesL.size(); i++) {
+		for (int i = 0; i < quantidadesL.size(); i++) { 
 
 	        int quantidade = quantidadesL.get(i);
 	        YearMonth validade = validadesL.get(i);
@@ -194,6 +223,9 @@ public class Produto {
 	}
 
 	
+	/**
+	 *toString - devolve as informações do produto
+	 */
 	@Override
 	public String toString() {
 		return "Produto| " + id + " - " + nome + " - "+categoria+" - preco:" + preco + " - Lotes = "+stock+ " - validade respetivo stock = "+ validades;

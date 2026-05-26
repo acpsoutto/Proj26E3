@@ -123,7 +123,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Funcionário:");
-							String mail = sc.next();
+							String mail = inserirEmail(sc);
 							
 							System.out.println("PassWord do Funcionário:");
 							String pw = sc.next();
@@ -146,7 +146,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Cliente:");
-							mail = sc.next();
+							mail = inserirEmail(sc);
 							
 							System.out.println("PassWord do Cliente:");
 							pw = sc.next();
@@ -169,7 +169,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Gerente:");
-							mail = sc.next();
+							mail = inserirEmail(sc);
 							
 							System.out.println("PassWord do Gerente:");
 							pw = sc.next();
@@ -191,7 +191,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Admnistrador:");
-							mail = sc.next();
+							mail = inserirEmail(sc);
 							
 							System.out.println("PassWord do Admnistrador:");
 							pw = sc.next();
@@ -321,8 +321,7 @@ public class Teste {
 							System.out.println();
 							if(gb.pesquisarProduto(id) !=null) {
 								System.out.println("Quantidade a adicionar em stock:");
-								int quant = sc.nextInt();
-								sc.nextLine();inserir(sc);
+								int quant = inserir(sc);
 								System.out.println("Validade em meses do novo lot:");
 								int val = inserir(sc);
 								
@@ -592,6 +591,19 @@ public class Teste {
 				continue;
 			}
 		}
+	}
+	public static String inserirEmail(Scanner sc) {
+		String patron = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+		String mail=null;
+		while(mail==null) {
+			String a=sc.nextLine().trim();
+			if(a.matches(patron)) {
+				mail=a;
+			}else {
+				System.out.println("Email invalido, inserir no siguiente formato: usuario@gmail.com");
+			}
+		}
+		return mail;
 	}
 	
 }

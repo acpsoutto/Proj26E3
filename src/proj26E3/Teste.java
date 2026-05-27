@@ -45,49 +45,61 @@ public class Teste {
 					break;
 				}
 				
-				
+				int intentos=0;
+				Utilizador f=null;
+				int uti =0;
+				do {
 					System.out.print("Insira o Número de Identificação:");
-					int uti = inserir(sc);;
+					uti = inserir(sc);;
 					System.out.println();
 					System.out.print("Insira a palavra-chave:");
 					String chave = sc.nextLine();
 					System.out.println();
 					/**
-		             * Lê o número de identificação e a palavra-chave do utilizador.
-		             * Valida se o utilizador existe, se a palavra-chave está correta
-		             * e se o perfil selecionado corresponde ao tipo do utilizador.
-		             */
+			            * Lê o número de identificação e a palavra-chave do utilizador.
+			            * Valida se o utilizador existe, se a palavra-chave está correta
+			            * e se o perfil selecionado corresponde ao tipo do utilizador.
+			            */
 					
-					Utilizador f = gb.pesquisarUtilizador(uti);
+					f = gb.pesquisarUtilizador(uti);
+					
 						
 					if (f == null) {
 						System.out.println("Utilizador ou palavra-chave errada. Tente outra vez.\n");
+						intentos++;
 						continue;
 						}
 					if(!f.getPw().equals(chave)){
 						System.out.println("Chave errada");
-						continue;
-						
+						intentos++;
+						continue;	
 					}
+					break;
+				}while(intentos<5);	
+				
+				if(intentos<5) {
+					System.out.println("Limite de intentos atingido");
+					continue;
+				}
 						
-					// Validação do tipo de perfil correspondente
+				// Validação do tipo de perfil correspondente
 					
-					if (opc == 1 && f.getTipo()!= TipoUtilizador.ADMNISTRACAO) { 
-						System.out.println("Este utilizador não é Administrador!\n");
-						continue;
-					}
-					if (opc == 2 && f.getTipo()!= TipoUtilizador.GERENTE) {
-						System.out.println("Este utilizador não é Gerente!\n");
-						continue;
-					}
-					if (opc == 3 && f.getTipo()!= TipoUtilizador.FUNCIONARIO_BAR) {
-						System.out.println("Este utilizador não é do Bar!\n");
-						continue;
-					}
-					if (opc == 4 && f.getTipo()!= TipoUtilizador.CLIENTE) {
-						System.out.println("Este utilizador não é cliente");
-						continue;
-					}
+				if (opc == 1 && f.getTipo()!= TipoUtilizador.ADMNISTRACAO) { 
+					System.out.println("Este utilizador não é Administrador!\n");
+					continue;
+				}
+				if (opc == 2 && f.getTipo()!= TipoUtilizador.GERENTE) {
+					System.out.println("Este utilizador não é Gerente!\n");
+					continue;
+				}
+				if (opc == 3 && f.getTipo()!= TipoUtilizador.FUNCIONARIO_BAR) {
+					System.out.println("Este utilizador não é do Bar!\n");
+					continue;
+				}
+				if (opc == 4 && f.getTipo()!= TipoUtilizador.CLIENTE) {
+					System.out.println("Este utilizador não é cliente");
+					continue;
+				}
 						
 				
 	

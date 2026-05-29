@@ -5,6 +5,7 @@ package proj26E3;
  * reservas e pedidos do sistema.
  */
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -97,6 +98,51 @@ public class GerirBar {
 		return null;
 	}
 
+	public Produto pesquisarParcela(int id) {
+		if(produtos.isEmpty()){
+			return null;
+		}
+		for(Produto p : produtos ) {
+			if(!(p instanceof Elementar || p instanceof Composto)) {
+				if(p.getId() == id) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean pesquisarSeExiste() {
+		int i = 0;
+		for(Produto p : produtos ) {
+			if(!(p instanceof Elementar || p instanceof Composto)) {
+				i++;
+			}
+		}
+		if(i >= 2) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean pesquisarJaUsado(int id, int parce) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto)p;
+		p = pesquisarProduto(parce);
+		if(c.jaExiste(p)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean pesquisarComposto(int id) {
+		Produto p = pesquisarProduto(id);
+		if(p instanceof Composto) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Cria e adiciona um novo produto à lista de produtos do bar.
 	 * @param id - identificador único do produto
@@ -106,10 +152,30 @@ public class GerirBar {
 	 * @param stock - quantidade inicial em stock
 	 * @param validade - meses de validade do lote inicial
 	 */
-	public void adicionarProduto(int id, String nome, double preco, CategoriaProduto categoria, int stock, int validade) {
-		Produto p = new Produto(id, nome, preco, categoria, stock, validade);
+	public void adicionarProduto(int id, String nome, double preco, int stock, int validade,int opc) {
+		if(opc == 2) {
+			Elementar p = new Elementar(id, nome, preco);
+			p.adicionarStock(validade, stock);
+			produtos.add(p);
+			System.out.println("Produto adicionado");
+		}else {
+			Composto p = new Composto(id, nome, preco);
+			produtos.add(p);
+		}
+	}
+	
+	public void adicionarParcela(int id, String nome, int stock, int validade) {
+		Produto p = new Produto(id,nome);
+		p.adicionarStock(stock, validade);
 		produtos.add(p);
 		System.out.println("Produto adicionado");
+	}
+	
+	public void adiconarNoComposto (int id, int idParce, double qtd) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		p = pesquisarProduto(idParce);
+		c.adicionarNoComposto(p , qtd);	
 	}
 
 	/**
@@ -120,13 +186,24 @@ public class GerirBar {
 			System.out.println(p);
 		}
 	}
+	
+	public int imprimirConteudos(int id) {
+		System.out.println("Produtos que utiliza:");
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		int i = c.imprimirParcelas();	
+		System.out.println("\n Podem ser adicionadas um maximo de "+i+" do produto.");
+		return i;
+	}
 
 	/**
 	 * Imprime o ID, nome e preço de cada produto no output padrão.
 	 */
 	public void imprimirPreços() {
 		for(Produto p : produtos){
-			System.out.println("Produto: " +p.getId()+ " | "+p.getNome()+" Preço="+p.getPreco());
+			if(p instanceof Elementar || p instanceof Composto) {
+				System.out.println("Produto: " +p.getId()+ " | "+p.getNome()+" Preço="+p.getPreco());
+			}
 		}
 		
 	}
@@ -138,7 +215,7 @@ public class GerirBar {
 	 */
 	public void atualizarPreco(int id, double preco) {
 		Produto p = pesquisarProduto(id);
-		p.atualizarPreco(preco);
+		p.setPreco(preco);
 	}
 	
 	/**
@@ -150,6 +227,12 @@ public class GerirBar {
 	public void adicionarStock(int id, int quant, int val) {
 		Produto p = pesquisarProduto(id);
 		p.adicionarStock(quant, val);
+	}
+	
+	public void adicionarStock(int id, int quant) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto)p;
+		c.produzir(quant);
 	}
 	
 	/**
@@ -175,6 +258,12 @@ public class GerirBar {
 		Produto p = pesquisarProduto(id);
 		p.reduzirStock(quant);
 	}
+	
+	public boolean verficarQuantidadeParce(int id){
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		return c.getSize();
+	}
 
 
 	/**
@@ -188,7 +277,6 @@ public class GerirBar {
 			if (p.getStock()!=0) {
 				System.out.println("|ID: " +p.getId() 
 						+ "\n|Nome: " + p.getNome() 
-						+ "\n|Categoria: " +p.getCategoria() 
 						+ "\n|Preço: " + p.getPreco() + "€");
 			    encontrou =true;
 			}

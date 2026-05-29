@@ -12,13 +12,14 @@ public class Teste {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		GerirBar gb = new GerirBar();
-		CategoriaProduto categoria = null;
 		int idReserva = 0;
 		int idPedido = 0;
 		int opc;
 		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
 		
 		gb.adicionarUtilizador(1, "Admin", "admin@gmail.com", "123", tipoU);
+		tipoU = TipoUtilizador.GERENTE;
+		gb.adicionarUtilizador(2, "Gere", "gere@gmail.com", "123", tipoU);
 		
 		do {
 			
@@ -77,7 +78,7 @@ public class Teste {
 					break;
 				}while(intentos<5);	
 				
-				if(intentos<5) {
+				if(intentos>5) {
 					System.out.println("Limite de intentos atingido");
 					continue;
 				}
@@ -259,6 +260,10 @@ public class Teste {
 						case 1:
 							System.out.println("ID do novo produto");
 							int id = inserir(sc);
+							double preco;
+							int stock=0;
+							int validade=0;
+							int idParce = 0;
 							if(id == 0) {
 								System.out.println("ID indisponivel! Tente novamente.");
 								break;
@@ -269,32 +274,79 @@ public class Teste {
 							}
 							System.out.println("Nome do novo produto");
 							String nome = sc.nextLine();
-							
-							System.out.println("Preço do produto");
-							double preco = sc.nextDouble();
+					
+							System.out.println("Qual é o tipo do produto: ");
+							System.out.println("1-Parcela\n2-Elementar\n3-Composto");
+							int opcao = sc.nextInt();
 							sc.nextLine();
-							
-							System.out.println("Qual a categoria do produto (ELEMENTAR|COMPOSTO|BEBIDA)");
-							String input = sc.nextLine().toUpperCase().trim();
-							try {
-					            categoria = CategoriaProduto.valueOf(input);
-					        } catch (IllegalArgumentException e) {
-					            System.out.println("Categoria inválida. Tente novamente.");
-					            break;
-					        } 
-							System.out.println("Qual é a quantidade a armazenar em stock produto");
-							int stock = inserir(sc);
-							if(stock<0) {
-								System.out.println("Numero de Stock invalido! Tente novamente");
+							if(opcao !=3 && opcao !=2 && opcao !=1 ) {
+								System.out.println("Opção invalida! Tente outra vez.");
 								break;
 							}
-							System.out.println("Quantos meses de validade tem o produto");
-							int validade = inserir(sc);
-							if(validade<0) {
-								System.out.println("Validade invalida! Tente novamente");
+							if(opcao == 3) {
+								if(!gb.pesquisarSeExiste()) {
+									System.out.println("Não existem parcelas sufeciente no sistema para defenir um Composto");
+									break;
+								}
+							}
+							if(opcao == 1 || opcao == 2) {
+								System.out.println("Qual é a quantidade a armazenar em stock produto");
+								stock = inserir(sc);
+								if(stock<0) {
+									System.out.println("Numero de Stock invalido! Tente novamente");
+									break;
+								}
+								System.out.println("Quantos meses de validade tem o produto");
+								validade = inserir(sc);
+								if(validade<0) {
+									System.out.println("Validade invalida! Tente novamente");
+									break;
+								}
+							}
+							if(opcao == 2 || opcao == 3) {
+								System.out.println("Preço do produto");
+								preco = sc.nextDouble();
+								sc.nextLine();
+								if(preco <= 0) {
+									System.out.println("Erro! Preço Invalido.");
+									break;
+								}
+							}else{
+								gb.adicionarParcela(id,nome,stock, validade);
 								break;
 							}
-							gb.adicionarProduto(id,nome,preco,categoria,stock, validade);
+							if(opcao == 2) {
+								gb.adicionarProduto(id, nome, preco, stock, validade, opcao);
+							}else {
+								gb.adicionarProduto(id, nome, preco, 0, 0, opcao);
+								do {
+									System.out.println("Qual é o ID da parcela (Insira 0 para parar de adicionar):");
+									idParce = inserir(sc);
+									if(idParce == 0) {
+										if(gb.verficarQuantidadeParce(id)) {
+											break;
+										}
+										System.out.println("Precisa de 2 ou mais parcelas para poder defenir o produto composto");
+										continue;
+									}
+									if(gb.pesquisarParcela(idParce) == null) {
+										System.out.println("Ou o ID inserido não corresponde a um ID do sistema ou esse produto não é uma parcela.");
+										continue;
+									}
+									if(!gb.pesquisarJaUsado(id, idParce)) {
+										System.out.println("Esta parcela já foi usada");
+										continue;
+									}
+									System.out.println("Quantidade da parcela usada neste produto:");
+									double qtd = sc.nextDouble();
+									sc.nextLine();
+									if(qtd <= 0) {
+										System.out.println("Quantidade colocada invalida!:");
+										continue;
+									}
+									gb.adiconarNoComposto(id,idParce,qtd);
+								}while(idParce != 0);
+							}
 							break;
 						/** Imprime todos os produtos registados no sistema. */	
 						case 2:
@@ -313,12 +365,16 @@ public class Teste {
 							id = inserir(sc);
 							System.out.println();
 							if(gb.pesquisarProduto(id) !=null) {
-								System.out.print("Novo preço do produto: ");
-								double novoPreco = sc.nextDouble();
-								sc.nextLine();
-								System.out.println();
-								
-								gb.atualizarPreco(id, novoPreco);
+								if(gb.pesquisarParcela(id) == null) {
+									System.out.print("Novo preço do produto: ");
+									double novoPreco = sc.nextDouble();
+									sc.nextLine();
+									System.out.println();
+									
+									gb.atualizarPreco(id, novoPreco);
+								}else {
+									System.out.println("Esse ID corresponde a um produto Parcela! Parcelas não tem preço associado.");
+								}
 							} else{
 								System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 							}
@@ -332,12 +388,23 @@ public class Teste {
 							id = inserir(sc);
 							System.out.println();
 							if(gb.pesquisarProduto(id) !=null) {
-								System.out.println("Quantidade a adicionar em stock:");
-								int quant = inserir(sc);
-								System.out.println("Validade em meses do novo lot:");
-								int val = inserir(sc);
-								
+								if(!gb.pesquisarComposto(id)) {
+									System.out.println("Quantidade a adicionar em stock:");
+									int quant = inserir(sc);
+									System.out.println("Validade em meses do novo lot:");
+									int val = inserir(sc);
 								gb.adicionarStock(id, quant, val);
+								}
+								else {
+									int i = gb.imprimirConteudos(id);
+									System.out.println("Quantidade a adicionar em stock:");
+									int quant = inserir(sc);
+									if(quant > i || quant <=0) {
+										System.out.println("Quantidade impossivel de adiconar!");
+										break;
+									}
+									gb.adicionarStock(id, quant);
+								}
 							}else {
 								System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 							}

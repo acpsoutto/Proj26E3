@@ -98,5 +98,24 @@ public class Cliente extends Utilizador {
 		return a;
 	}
 	
+	public double clienteTotalReserva() {
+		double total = 0;
+		for (Reserva r : reservas) {
+			if (r.getEstado() == EstadoReserva.LEVANTADA || r.getEstado()== EstadoReserva.NAO_LEVANTADA) {
+				total += r.getTotal();
+			}
+		}
+		return total;
+	}
+	
+	public int numeroPedidos() {
+		int total = 0;
+		for (Reserva r : reservas) {
+			if (r.getEstado() == EstadoReserva.LEVANTADA || r.getEstado()== EstadoReserva.NAO_LEVANTADA) {
+				total += 1;
+			}
+		}
+		return total;
+	}
 
 }

@@ -5,12 +5,10 @@ package proj26E3;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Reserva {
+public class Reserva extends Pedido {
 
-    private int id;
     private EstadoReserva estado; // Estado da reserva
-    private LocalDateTime dataHora;//Data e hora que a reserva foi marcada
-    private ArrayList<ItemReserva> itensR;//Lista de itens que compoem a reserva
+
     
     /**
      * CONSTRUTOR
@@ -18,12 +16,10 @@ public class Reserva {
      * @param dt - data e hora prevista do levantamento
      */
  
-    public Reserva(int id, LocalDateTime dt) {
-        this.id = id;
-        this.estado = EstadoReserva.PENDENTE;// toda a reserva começa pendente
-        dataHora = dt;  
-        itensR = new ArrayList<>();// começa vazia, items são adicionados depois
-    }
+    public Reserva(int id, EstadoReserva estado) {
+		super(id);
+		this.estado = estado;
+	}
     
     
     /**
@@ -37,7 +33,8 @@ public class Reserva {
         item.registarStockeVal(quantidade);
     }
 
-    /**
+
+	/**
      * Calcula o total da reserva, somando os subtotais de todos os itens.
      * @return total 
      */

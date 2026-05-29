@@ -40,7 +40,13 @@ public class Pedido {
 		return id;
 	}
 
-    /**
+	
+    public LocalDate getDataHora() {
+		return dataHora;
+	}
+
+
+	/**
      * Adiciona um item ao pedido e reduz imediatamente o stock do produto.
      * @param produto a incluir
      * @param quantidade de unidades

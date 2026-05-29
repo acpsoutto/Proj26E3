@@ -458,4 +458,13 @@ public class GerirBar {
 			}
 			r.confirmar();
 		}
+		
+		public String pequisarEmail(String mail) {
+			for(Utilizador u:utilizadores) {
+				if(u.getEmail().equals(mail)) {
+					return mail;
+				}
+			}
+			return null;
+		}
 }

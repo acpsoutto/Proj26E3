@@ -78,7 +78,7 @@ public class Teste {
 					break;
 				}while(intentos<5);	
 				
-				if(intentos>5) {
+				if(intentos>=5) {
 					System.out.println("Limite de intentos atingido");
 					continue;
 				}
@@ -136,7 +136,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Funcionário:");
-							String mail = inserirEmail(sc);
+							String mail = inserirEmail(sc,gb);
 							
 							System.out.println("PassWord do Funcionário:");
 							String pw = sc.next();
@@ -159,7 +159,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Cliente:");
-							mail = inserirEmail(sc);
+							mail = inserirEmail(sc,gb);
 							
 							System.out.println("PassWord do Cliente:");
 							pw = sc.next();
@@ -182,7 +182,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Gerente:");
-							mail = inserirEmail(sc);
+							mail = inserirEmail(sc,gb);
 							
 							System.out.println("PassWord do Gerente:");
 							pw = sc.next();
@@ -204,7 +204,7 @@ public class Teste {
 								continue;
 							}
 							System.out.println("Email do Admnistrador:");
-							mail = inserirEmail(sc);
+							mail = inserirEmail(sc,gb);
 							
 							System.out.println("PassWord do Admnistrador:");
 							pw = sc.next();
@@ -671,17 +671,25 @@ public class Teste {
 			}
 		}
 	}
-	public static String inserirEmail(Scanner sc) {
+	public static String inserirEmail(Scanner sc,GerirBar gb) {
 		String patron = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
 		String mail=null;
 		while(mail==null) {
+		
 			String a=sc.nextLine().trim();
 			if(a.matches(patron)) {
 				mail=a;
 			}else {
-				System.out.println("Email invalido, inserir no siguiente formato: usuario@gmail.com");
+				System.out.println("Email invalido, inserir no siguiente formato: usuario@gmail.com\nInsira de novo:\n");
+				continue;
+			}
+			if(gb.pequisarEmail(mail)!=null) {
+				System.out.println("Email ya en uso\nIngrese de novo:\n");
+				mail=null;
+				continue;
 			}
 		}
+		
 		return mail;
 	}
 	

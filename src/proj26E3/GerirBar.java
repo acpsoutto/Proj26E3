@@ -467,4 +467,39 @@ public class GerirBar {
 			}
 			return null;
 		}
+		
+		
+		public void totalVendas() {
+			double total = 0;
+			for (Utilizador f: utilizadores) {
+				if (f instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar) f;
+					total += fb.funcionarioTotalPedido();
+				}
+				if (f instanceof Cliente) {
+					Cliente c = (Cliente) f;
+					total += c.clienteTotalReserva();
+				}
+			}
+			System.out.println(total);
+		}
+		
+		public void numeroVendas() {
+			double total = 0;
+			for (Utilizador f: utilizadores) {
+				if (f instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar) f;
+					total += fb.numeroPedidos();
+				}
+				if (f instanceof Cliente) {
+					Cliente c = (Cliente) f;
+					total += c.numeroPedidos();
+				}
+			}
+			System.out.println(total);
+		}
+		
+		public void imprimirRelatorio()	{
+			
+		}
 }

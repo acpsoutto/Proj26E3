@@ -48,6 +48,18 @@ public class FuncionarioBar extends Utilizador {
 		}
 	}
 	
+	public double funcionarioTotalPedido() {
+		double total = 0;
+		for (Pedido p : pedidos) {
+			total += p.getTotal();
+		}
+		return total;
+	}
+	
+	public int numeroPedidos() {
+		return pedidos.size();
+	}
+	
 
 
 	

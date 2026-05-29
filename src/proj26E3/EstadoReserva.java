@@ -6,5 +6,6 @@ public enum EstadoReserva {
     PENDENTE,
     CONFIRMADA,
     CANCELADA,
-    LEVANTADA
+    LEVANTADA, 
+    NAO_LEVANTADA
 }

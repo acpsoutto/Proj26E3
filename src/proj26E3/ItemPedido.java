@@ -3,14 +3,17 @@
  */
 package proj26E3;
 
+import java.util.ArrayList;
+
 /**
  * Representa um item individual dentro de um pedido.
  */
 public class ItemPedido {
 
 	private int quantidade;
-	private double precoUnitario;
 	private Produto produto;
+	private ArrayList<Lote> lotes;
+	
 	
 	/**
 	 * CONSTRUTOR

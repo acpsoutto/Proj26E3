@@ -9,10 +9,7 @@ import java.util.ArrayList;
 public class Produto {
 	private int id;
 	private String nome;
-	private double preco;
-	private ArrayList<YearMonth> validades;
-	private CategoriaProduto categoria;
-	private ArrayList<Integer> stock; 
+	private ArrayList<Lote> lotes;
 	
 	/**
 	 * CONSTRUTOR
@@ -24,32 +21,10 @@ public class Produto {
 	 * @param quantidadestock - quantidade do produto em stock
 	 */
 
-	public Produto(int id, String nome, double preco, CategoriaProduto categoria, int quantidadeslot, int validade) {
+	public Produto(int id, String nome) {
 		this.id = id;
 		this.nome = nome;
-		this.preco = preco;
-		this.categoria = categoria;
-		stock = new ArrayList<>();
-		stock.add(quantidadeslot);
-		validades = new ArrayList<>();
-		validades.add(YearMonth.now().plusMonths(validade));
-		
-	}
-	
-	/**
-	 * GET devolve o preço do produto
-	 * @return the preco - preco do produto
-	 */
-	public double getPreco() {
-		return preco;
-	}
-
-	/**
-	 * GET altera o preço dos produtos
-	 * @param preco - guarda o novo preço do produto
-	 */
-	public void setPreco(double preco) {
-		this.preco = preco;
+		lotes = new ArrayList<>();
 	}
 
 	/**
@@ -67,23 +42,23 @@ public class Produto {
 	public String getNome() {
 		return nome;
 	}
-
-	/**
-	 * GET devolve a categoria do produto
-	 * @return the categoria - categoria do produto
-	 */
-	public CategoriaProduto getCategoria() {
-		return categoria;
+	
+	public double getPreco() {
+		return 0;
 	}
 	
+	public void setPreco(double preco) {
+	}
+	
+
 	/**
 	 * GET devolve a quantidade de produto no stock 
 	 * @return total - total de quantidade no stock
 	 */
 	public int getStock() {
 	    int total = 0;
-	    for (int valor : stock) {
-	        total += valor;      
+	    for (Lote l : lotes) {
+	        total += l.getQuantidade();      
 	    }
 	    return total;
 	}
@@ -96,68 +71,62 @@ public class Produto {
 	 */
 	public void adicionarStock(int s, int val) {
 		YearMonth novaValidade = YearMonth.now().plusMonths(val);
-	    for (int i = 0; i < validades.size(); i++) {
-	        if (validades.get(i).equals(novaValidade)) {
-	            stock.set(i, stock.get(i) + s);
-	            return;
-	        }
-	    }
-		stock.add(s);
-		validades.add(YearMonth.now().plusMonths(val));
-		for(int i = 0; i < validades.size() -1; i++) {
-			for(int j = i+1; j < validades.size();j++) {
-				if(validades.get(i).isAfter(validades.get(j))) {
-					YearMonth temp= validades.get(i);
-					int tempStock = stock.get(i);
-					
-					validades.set(i, validades.get(j));
-					stock.set(i, stock.get(j));
-					
-					validades.set(j, temp);
-					stock.set(j, tempStock);
-				}
+		for(Lote l : lotes) {
+			if(l.getValidade().equals(novaValidade)) {
+				l.setQuantidade(l.getQuantidade()+s);
+				return;
 			}
 		}
+		Lote l = new Lote(novaValidade, s);
+		lotes.add(l);
+		
+		lotes.sort((l1,l2) -> l1.getValidade().compareTo(l2.getValidade()));
+	}
+	
+	/**
+	 * Adiciona no stock um novo lote de um produto composto
+	 * @param val - validade do produto
+	 * @param s - quantidade do produto
+	 */
+	public void adicionarStock(YearMonth val, int s) {
+		for(Lote l : lotes) {
+			if(l.getValidade().equals(val)) {
+				l.setQuantidade(l.getQuantidade()+s);
+				return;
+			}
+		}
+		Lote l = new Lote(val, s);
+		lotes.add(l);
+		
+		lotes.sort((l1,l2) -> l1.getValidade().compareTo(l2.getValidade()));
 	}
 	
 
 	/**
-	 * Atualiza o preço do produto.
-	 * Se novoPreco <= 0 ele não atualiza o preço.
-	 * Se novoPreco > 0 ele atualiza o preço.
-	 * @param novoPreco - novo preço do produto
-	 */
-	public void atualizarPreco(double novoPreco) {
-		if(novoPreco <= 0 ){
-			System.out.println("Preço Invalido! O novo preço inserido é igual ou inferior 0 Tente Novamente.");
-			System.out.println("Preco de "+getNome()+" manten-se de: "+getPreco());
-			return;
-		}
-		setPreco(novoPreco);
-		System.out.println("Preço de "+getNome()+ " atualizado agora é: "+getPreco());
-	}
-
-	/**
-	 * Reduz no stock a quantidade de itens desejado
+	 * Reduz no stock a quantidade de itens desejado.
+	 * Este metodo é usada exclusivamente para adiconar ao Stock de produtos compostos reduzindo as suas parcelas
 	 * @param redu - quantidade de itens a reduzir
 	 */
-	public void reduzirStock(int redu) {
-		int i = 0;
-		do {
-			int lote = stock.get(i);
-			if(lote >= redu) {
-				stock.set(i, lote - redu);
-				redu = 0;
-			}else {
-				redu -= lote;
-				stock.set(i, 0);
-			}
-			
-			if(stock.get(i) == 0) {
-				stock.remove(i);
-				validades.remove(i);
-			}
-		}while(redu > 0);
+	public YearMonth consumirQuantidade(double qtdNecessaria) {
+	    lotes.sort((l1, l2) -> l1.getValidade().compareTo(l2.getValidade()));
+	    YearMonth validadeUsada = null;
+	    int i = 0;
+	    while (qtdNecessaria > 0 && i < lotes.size()) {
+	        Lote l = lotes.get(i);
+	        if (validadeUsada == null) {
+	            validadeUsada = l.getValidade();
+	        }
+	        
+	        double qtdLote = l.getQuantidade();
+	        if (qtdLote <= qtdNecessaria) {
+	            qtdNecessaria -= qtdLote;
+	            lotes.remove(i);
+	        } else {
+	            l.setQuantidade(qtdLote - qtdNecessaria);
+	            qtdNecessaria = 0;
+	        }
+	    }
+	    return validadeUsada;
 	}
 	
 	/**
@@ -166,73 +135,49 @@ public class Produto {
 	 * @param quantidadesRetiradas - quantidade que a reserva pede
 	 * @param validadesRetiradas - validade de cada respectivo lote 
 	 */
-	public void reduzirComRegisto(int qtd, ArrayList<Integer> quantidadesRetiradas, ArrayList<YearMonth> validadesRetiradas ) {
-		int i = 0;
-		do {
-			int lote = stock.get(i);
-			YearMonth valid = validades.get(i);
-			if(lote >= qtd) {
-				stock.set(i, lote - qtd);
-				quantidadesRetiradas.add(qtd);
-	            validadesRetiradas.add(valid);
-
-				qtd = 0;
-			}else {
-				quantidadesRetiradas.add(qtd);
-	            validadesRetiradas.add(valid);
-	            
-				qtd -= lote;
-				stock.set(i, 0);
-			}
-			
-			if(stock.get(i) == 0) {
-				stock.remove(i);
-				validades.remove(i);
-			}
-		}while(qtd > 0);
+	public ArrayList<Lote> retirarComRegisto(double qtd) {
+	    ArrayList<Lote> retirados = new ArrayList<>();
+	    int i = 0;
+	    while (qtd > 0 && i < lotes.size()) {
+	        Lote l = lotes.get(i);
+	        double qtdLote = l.getQuantidade();
+	        if (qtdLote <= qtd) {
+	            retirados.add(new Lote(l.getValidade(),qtdLote));
+	            qtd -= qtdLote;
+	            lotes.remove(i);
+	        } else {
+	            retirados.add(new Lote(l.getValidade(),qtd));
+	            l.setQuantidade(qtdLote - qtd);
+	            qtd = 0;
+	        }
+	    }
+	    return retirados;
 	}
 	
 	/**
 	 * Restaura o stock 
-	 * @param quantidadesL - quantidade do lote a ser retornada
-	 * @param validadesL - validade do lote a ser retornada
+	 * 
 	 */
-	public void restituirStock(ArrayList<Integer> quantidadesL, ArrayList<YearMonth> validadesL) {
-		for (int i = 0; i < quantidadesL.size(); i++) { 
-
-	        int quantidade = quantidadesL.get(i);
-	        YearMonth validade = validadesL.get(i);
+	public void restituirStock(ArrayList<Lote> devolvidos) {
+	    for (Lote devolvido : devolvidos) {
 	        boolean encontrado = false;
-
-	        for (int j = 0; j < validades.size(); j++) {
-	            if (validades.get(j).equals(validade)) {
-	                stock.set(j, stock.get(j) + quantidade);
+	        for (Lote l : lotes) {
+	            if (l.getValidade().equals(devolvido.getValidade())) {
+	                l.setQuantidade( l.getQuantidade()+ devolvido.getQuantidade() );
 	                encontrado = true;
 	                break;
 	            }
 	        }
 	        if (!encontrado) {
-	            int pos = 0;
-	            while (pos < validades.size() && validades.get(pos).isBefore(validade)) {
-	                pos++;
-	            }
-	            validades.add(pos, validade);
-	            stock.add(pos, quantidade);
+	            lotes.add(new Lote(devolvido.getValidade(), devolvido.getQuantidade())
+	            );
 	        }
 	    }
+	    lotes.sort((l1, l2) -> l1.getValidade().compareTo(l2.getValidade()));
 	}
 
-	
-	/**
-	 *toString - devolve as informações do produto
-	 */
 	@Override
 	public String toString() {
-		return "Produto| " + id + " - " + nome + " - "+categoria+" - preco:" + preco + " - Lotes = "+stock+ " - validade respetivo stock = "+ validades;
+		return "Produto [id=" + id + ", nome=" + nome + ", lotes=" + lotes + "]";
 	}
-
-
-
-
-
 }

@@ -245,6 +245,7 @@ public class Teste {
 						System.out.println("3- Consultar Preços"); //Menu do Gerente
 						System.out.println("4- Atualizar Preços");
 						System.out.println("5- Adicionar stock");
+						System.out.println("6- Consultar Relatório de vendas");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -409,6 +410,11 @@ public class Teste {
 								System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
 							}
 							break;
+							
+						case 6: 
+							gb.imprimirRelatorio();
+							break;
+							
 						/** Regressa ao menu de login. */
 						case 10:
 							System.out.println("A sair para o login");

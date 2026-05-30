@@ -22,7 +22,11 @@ public class Cliente extends Utilizador {
 		super(numero, nome, email, pw, tipo);
 		reservas = new ArrayList<>();
 	}
-
+	
+	public ArrayList<Reserva> getReservas() {
+	    return reservas;
+	}
+	
 	/**
 	 * Adiciona uma reserva á lista de reservas do cliente.
 	 * @param r
@@ -117,5 +121,5 @@ public class Cliente extends Utilizador {
 		}
 		return total;
 	}
-
+	
 }

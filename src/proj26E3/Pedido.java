@@ -29,7 +29,7 @@ public class Pedido {
 	 * @return total
 	 */
 	public double getTotal() {
-		return total;
+		return calcularTotal();
 	}
 	
 	/**
@@ -69,6 +69,17 @@ public class Pedido {
         }
         return total;
     }
+    
+    public int getQuantidadeProdutos() {
+        int total = 0;
+
+        for(ItemPedido item : itensP) {
+            total += item.getQuantidade();
+        }
+
+        return total;
+    }
+   
 
 	/**
 	 *toString - devolve as informações sobre o pedido

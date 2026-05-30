@@ -500,6 +500,53 @@ public class GerirBar {
 		}
 		
 		public void imprimirRelatorio()	{
-			
+		    System.out.println("\n================ RELATÓRIO DE VENDAS ================");
+
+		    System.out.printf("%-15s %-15s %-15s%n",
+		            "Data",
+		            "Qtd Produtos",
+		            "Total (€)");
+
+		    System.out.println("-----------------------------------------------------");
+
+		    int numeroVendas = 0;
+		    double montanteTotal = 0;
+
+		    // Pedidos dos funcionários
+		    for(Utilizador u : utilizadores) {
+
+		        if(u instanceof FuncionarioBar || u instanceof Cliente) {
+		        	
+		        	if (u instanceof FuncionarioBar) {
+		        		FuncionarioBar fb = (FuncionarioBar) u;
+		        		
+			            for(Pedido p : fb.getPedidos()) {
+
+			                System.out.printf("%-15s %-15d %-15.2f%n", p.getDataHora(), p.getQuantidadeProdutos(), p.getTotal());
+
+			                numeroVendas++;
+			                montanteTotal += p.getTotal();
+			            }
+		        	}
+		        	if (u instanceof Cliente) {
+		        		Cliente c = (Cliente) u;
+		        		
+		        		for (Reserva r : c.getReservas()) {
+		        			if (r.getEstado()==EstadoReserva.LEVANTADA || r.getEstado()==EstadoReserva.NAO_LEVANTADA) {
+		        				System.out.printf("%-15s %-15d %-15.2f%n", r.getDataHora(), r.getQuantidadeProdutos(), r.getTotal());
+
+				                numeroVendas++;
+				                montanteTotal += r.getTotal();	
+		        			}
+		        		}
+		        	} 
+		        	
+		        }
+
+		    System.out.println("-----------------------------------------------------");
+		    System.out.println("Número de vendas: " + numeroVendas);
+		    System.out.printf("Montante total: %.2f €%n", montanteTotal);
+		    }
 		}
 }
+

@@ -21,6 +21,10 @@ public class FuncionarioBar extends Utilizador {
 		pedidos = new ArrayList<>();
 	}
 	
+	public ArrayList<Pedido> getPedidos() {
+	    return pedidos;
+	}
+	
 	/**
 	 * toString - Devolve as informações do funcionário.
      */
@@ -59,11 +63,4 @@ public class FuncionarioBar extends Utilizador {
 	public int numeroPedidos() {
 		return pedidos.size();
 	}
-	
-
-
-	
-	
-	
-
 }

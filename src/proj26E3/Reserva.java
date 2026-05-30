@@ -6,65 +6,63 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Reserva extends Pedido {
-
     private EstadoReserva estado; // Estado da reserva
+    private LocalDateTime dataHoraLevantamento;
+    private ArrayList<Item>itens;
+        /**
+         * CONSTRUTOR
+         * @param id                   - identificador único da reserva
+         * @param dataHoraLevantamento - data e hora prevista do levantamento
+         */
+    public Reserva(int id, LocalDateTime dataHoraLevantamento) {
+       super(id);
 
-    
-    /**
-     * CONSTRUTOR
-     * @param id - identificador único da reserva
-     * @param dt - data e hora prevista do levantamento
-     */
- 
-    public Reserva(int id, EstadoReserva estado) {
-		super(id);
-		this.estado = estado;
-	}
-    
-    
-    /**
-     * Adiciona um produto à reserva e regista os lotes de stock consumidos.
-     * @param produto - o produto a reservar
-     * @param quantidade - quantas unidades a reservar
-     */
+       LocalDateTime agora = LocalDateTime.now(); //passar isto para gerirBar
+       LocalDateTime minimo = agora.plusMinutes(30);
+       LocalDateTime maximo = agora.plusDays(7);
+
+       if (dataHoraLevantamento.isBefore(minimo) || dataHoraLevantamento.isAfter(maximo)) {
+           throw new IllegalArgumentException("A reserva deve ser marcada entre 30 minutos e 7 dias a partir de agora." );
+       }
+            this.estado = EstadoReserva.PENDENTE;
+            this.dataHoraLevantamento = dataHoraLevantamento;
+            this.itens = new ArrayList<>();
+        }
+	
+	@Override
     public void adicionarItem(Produto produto, int quantidade) {
-        ItemReserva item = new ItemReserva(produto, quantidade);
-        itensR.add(item);
-        item.registarStockeVal(quantidade);
+        Item item = new Item(quantidade, produto);
+        itens.add(item);
+        item.registarStockVal(quantidade);
     }
 
-
-	/**
-     * Calcula o total da reserva, somando os subtotais de todos os itens.
-     * @return total 
-     */
+	 @Override
     public double calcularTotal() {
         double total = 0;
-        for (ItemReserva item : itensR) {
+        for (Item item : itens) {
             total += item.calcularSubtotal();
         }
         return total;
     }
+	 
+	 @Override
+	    public int getQuantidadeProdutos() {
+	        int total = 0;
+	        for (Item item : itens) {
+	            total += item.getQtd();
+	        }
+	        return total;
+	    }
 
-    /**
-     *Confirma a reserva, se estiver no estado (PENDENTE).
-     *Caso contrário, informa que a operação não é possível.
-     */
     public void confirmar() {
         if (estado == EstadoReserva.PENDENTE) {
             estado = EstadoReserva.CONFIRMADA;
-            System.out.println("Reserva " + id + " confirmada com sucesso!");
+            System.out.println("Reserva " + getId() +" confirmada com sucesso!");
         } else {
             System.out.println("Não é possível confirmar. Estado atual: " + estado);
         }
     }
 
-    /**
-     * Cancela a reserva, se estiver no estado (PENDENTE).
-     * Repõe o stock dos produtos reservados e impede o cancelamento
-     * de reservas já confirmadas, canceladas ou levantadas.
-     * Cancela a reserva — só funciona se não estiver já LEVANTADA
-     */
     public void cancelar() {
         if (estado == EstadoReserva.LEVANTADA ) {
             System.out.println("Não é possível cancelar uma reserva já levantada.");
@@ -75,61 +73,36 @@ public class Reserva extends Pedido {
         		}else {	
             estado = EstadoReserva.CANCELADA;
             reporItens();
-            System.out.println("Reserva " + id + " cancelada.");
+            System.out.println("Reserva " + getId() +" cancelada.");
         }
     }
     
-    /**
-     * Repõe no stock os itens de todos os (ItemReserva) desta reserva.
-     * Deve ser chamado internamente ao cancelar a reserva.
-     */
     public void reporItens() {
-    	for(ItemReserva i: itensR) {
+    	for(Item i: itens){
     		i.repor();
     	}
     }
-    
-    /**
-     * GET devolve o identificador(ID) da reserva
-     * @return id
-     */
-    public int getId() {
-        return id;
-    }
 
-    /**
-     * GET - devolve o estado da reserva
-     * @return estado
-     */
     public EstadoReserva getEstado() {
         return estado;
     }
 
-    /**
-     * GET - devolve a data e a hora da reserva
-     * @return dataHora
-     */
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
+    public LocalDateTime getDataHoraLevantamento() {
+		return dataHoraLevantamento;
+	}
 
-    /**
-     * GET devolve os itens da reserva
-     * @return itensR
-     */
-    public ArrayList<ItemReserva> getItensR() {
-        return itensR;
-    }
+	public ArrayList<Item> getItens() {
+		return itens;
+	}
 
-    /**
-     *toString - devolve as informaçoes sobre a reserva
-     */
-    @Override
-    public String toString() {
-        return "Reserva #" + id 
-            + " | Estado: " + estado 
-            + " | Data: " + dataHora 
-            + " | Total: " + calcularTotal() + "€"
-            + " | Itens: " + itensR;
-    }
+	@Override
+	public String toString() {
+		return "Reserva "+getId()
+		+"Estado: " + estado 
+		+ "DataHoraLevantamento: " + dataHoraLevantamento 
+		+"Total:" + calcularTotal()+"€"
+		+ "Itens: " + itens;
+	}
+	
+
 }

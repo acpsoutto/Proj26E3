@@ -129,12 +129,10 @@ public class Produto {
 	    return validadeUsada;
 	}
 	
-	/**
-	 * Reduz com registro - é utilizada para as reservas
-	 * @param qtd - quantidade do stock
-	 * @param quantidadesRetiradas - quantidade que a reserva pede
-	 * @param validadesRetiradas - validade de cada respectivo lote 
-	 */
+	public void reduzir(int quant) {
+	    consumirQuantidade(quant);
+	}
+	
 	public ArrayList<Lote> retirarComRegisto(double qtd) {
 	    ArrayList<Lote> retirados = new ArrayList<>();
 	    int i = 0;
@@ -180,4 +178,6 @@ public class Produto {
 	public String toString() {
 		return "Produto [id=" + id + ", nome=" + nome + ", lotes=" + lotes + "]";
 	}
+
+
 }

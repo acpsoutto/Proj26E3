@@ -256,7 +256,7 @@ public class GerirBar {
 	 */
 	public void reduzirStock(int id, int quant) {
 		Produto p = pesquisarProduto(id);
-		p.reduzirStock(quant);
+		p.reduzir(quant);
 	}
 	
 	public boolean verficarQuantidadeParce(int id){

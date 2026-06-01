@@ -1,4 +1,5 @@
 package proj26E3;
+import java.time.LocalDate;
 /**
  * Classe principal de gestão do bar.
  * Centraliza todas as operações sobre utilizadores, produtos,
@@ -155,7 +156,7 @@ public class GerirBar {
 	public void adicionarProduto(int id, String nome, double preco, int stock, int validade,int opc) {
 		if(opc == 2) {
 			Elementar p = new Elementar(id, nome, preco);
-			p.adicionarStock(validade, stock);
+			p.adicionarStock(stock, validade);
 			produtos.add(p);
 			System.out.println("Produto adicionado");
 		}else {
@@ -363,10 +364,8 @@ public class GerirBar {
 		 * @param input -data e hora no formato {@code "yyyy-M-d H:m"}
 		 * @return RESERVA CRIADA
 		 */
-		public Reserva criarReserva(int uti, int idReserva,String input) {
+		public Reserva criarReserva(int uti, int idReserva,LocalDateTime dt) {
 			Utilizador p = pesquisarUtilizador(uti);
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
-			LocalDateTime dt = LocalDateTime.parse(input, formatter);
 			Cliente c = (Cliente) p;
 			
 			Reserva r = new Reserva(idReserva, dt);
@@ -457,6 +456,44 @@ public class GerirBar {
 				return;
 			}
 			r.confirmar();
+		}
+		
+		public boolean verificarJaExiste(int id,int idPedido) {
+			for(Utilizador u : utilizadores) {
+				if(u instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar)u ;
+					if(fb.vericarJaExiste(id,idPedido)) {
+						return true;
+					}
+				}
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente) u;
+					if(c.vericarJaExiste(id,idPedido)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		public void acrescentarMais(int id, int qtd, int idPedido) {
+			for(Utilizador u : utilizadores) {
+				if(u instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar)u ;
+					Pedido p = fb.pesquisaPedio(idPedido);
+					if(p != null) {
+						p.acrescentar(id,qtd);
+						return;
+					}
+				}
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente) u;
+					Reserva r = c.pesquisarReserva(idPedido);
+					if(r != null) {
+						r.acrescentar(id,qtd);
+						return;
+					}
+				}
+			}
 		}
 		
 		public String pequisarEmail(String mail) {

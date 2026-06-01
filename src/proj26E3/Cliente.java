@@ -121,5 +121,14 @@ public class Cliente extends Utilizador {
 		}
 		return total;
 	}
+
+	public Reserva pesquisarReserva(int idPedido) {
+		for(Reserva r : reservas) {
+			if(r.getId()== idPedido) {
+				return r;
+			}
+		}
+		return null;
+	}
 	
 }

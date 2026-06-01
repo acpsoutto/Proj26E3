@@ -1,5 +1,8 @@
 package proj26E3;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 /**
  * Classe principal do programa, responsável pela interação com o utilizador
  ** através de menus em modo de texto (consola).
@@ -12,7 +15,6 @@ public class Teste {
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		GerirBar gb = new GerirBar();
-		int idReserva = 0;
 		int idPedido = 0;
 		int opc;
 		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
@@ -20,6 +22,7 @@ public class Teste {
 		gb.adicionarUtilizador(1, "Admin", "admin@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.GERENTE;
 		gb.adicionarUtilizador(2, "Gere", "gere@gmail.com", "123", tipoU);
+		gb.adicionarProduto(1, "Maça", 1.99 , 100, 1, 2);
 		
 		do {
 			
@@ -580,8 +583,14 @@ public class Teste {
 							System.out.println("--- FAZER PRÉ-RESERVA ---");
 							System.out.println("Quando quer recolher (Introduza na forma de ano-mes-dia Hora:min):");
 							String input = sc.nextLine();
-							idReserva += 1;
-							Reserva r = gb.criarReserva(uti,idReserva, input);
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
+							LocalDateTime dt = LocalDateTime.parse(input, formatter);
+							if(dt.isBefore(LocalDateTime.now().plus(30, ChronoUnit.MINUTES)) || dt.isAfter(LocalDateTime.now().plus(7, ChronoUnit.DAYS) )){
+								System.out.println("A data inserida tem de ser abaixo de 7 dias ou acima de 30 minuntos.");
+								break;
+							}
+							idPedido += 1;
+							Reserva r = gb.criarReserva(uti,idPedido, dt);
 							do {
 								System.out.println("Id do produto a utilizar (insira '0' para parar de adicionar):");
 								id = inserir(sc);
@@ -604,12 +613,15 @@ public class Teste {
 									System.out.println("Tente outra vez.");
 									continue;
 								}
-								gb.adicionarNaReserva(id,qtd, r);
-								tenta = true;
+								if(gb.verificarJaExiste(id, idPedido)) {
+									gb.acrescentarMais(id,qtd, idPedido);
+								}else {
+									gb.adicionarNaReserva(id,qtd, r);
+								}
 							}while(id != 0);
 							if(!tenta) {
-								gb.apagarReserva(idReserva,uti);
-								idReserva -=1;
+								gb.apagarReserva(idPedido,uti);
+								idPedido -=1;
 							}
 						break;
 						/** Imprime todas as reservas do cliente autenticado. */

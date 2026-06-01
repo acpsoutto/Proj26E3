@@ -1,20 +1,32 @@
 package proj26E3;
-
+/**
+ * Classe principal de gestão do bar.
+ * Centraliza todas as operações sobre utilizadores, produtos,
+ * reservas e pedidos do sistema.
+ */
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class GerirBar {
 	private ArrayList<Utilizador> utilizadores;
 	private ArrayList<Produto> produtos;
-	private ArrayList<Reserva> reservas; // ADICIONADO: lista de reservas (Tomás)
 	
+	/**
+	 * CONSTRUTOR
+	 */
 	public GerirBar() {
 		utilizadores = new ArrayList<>();
 		produtos = new ArrayList<>();
-		reservas = new ArrayList<>(); // ADICIONADO: inicialização da lista de reservas (Tomás)
 	}
 	
-	
+	/**
+	 * Autentica um utilizador verificando o número e a palavra-passe.
+	 * @param num -número identificador do utilizador
+	 * @param chave - palavra-passe a verificar
+	 * @return true, caso as credenciais forem validar e falso caso contrario
+	 */
 	public boolean autenticarPorFuncionario(int num, String chave) {
 		if (utilizadores.isEmpty()) {
 			return false;
@@ -28,6 +40,10 @@ public class GerirBar {
 		return false;
 	}
 	
+	/**Pesquisa um utilizador pelo número identificador.
+	 * @param num -número do utilizador a pesquisar
+	 * @return o utilizador e null se nao existir
+	 */
 	public Utilizador pesquisarUtilizador(int num) {
 		if (utilizadores.isEmpty()) {
 			return null;
@@ -40,23 +56,35 @@ public class GerirBar {
 		return null;
 	}
 	
-	public void adicionarUtilizador(int num, String nome, String pw, String mail, TipoUtilizador tipo) {
+	/**
+	 * Adiciona um novo utilizador ao sistema, instanciando o subtipo
+     * correto consoante o (TipoUtilizador) fornecido.
+	 * @param num -número identificador
+	 * @param nome - nome completo
+	 * @param mail - endereço de e-mail
+	 * @param pw - palavra-passe
+	 * @param tipo -tipo de utilizador a criar
+	 */
+	public void adicionarUtilizador(int num, String nome, String mail, String pw, TipoUtilizador tipo) {
 		if (tipo == TipoUtilizador.ADMNISTRACAO || tipo== TipoUtilizador.GERENTE) {
-			Utilizador u = new Utilizador (num, nome, pw, mail, tipo);
+			Utilizador u = new Utilizador (num, nome,mail, pw, tipo);
 			utilizadores.add(u);
 		}
 		if (tipo == TipoUtilizador.FUNCIONARIO_BAR) {
-			FuncionarioBar f = new FuncionarioBar (num, nome, pw, mail, tipo);
+			FuncionarioBar f = new FuncionarioBar (num, nome,mail, pw, tipo);
 			utilizadores.add(f);
 		}
 		if (tipo == TipoUtilizador.CLIENTE) {
-			Cliente c = new Cliente (num, nome, pw, mail, tipo);
+			Cliente c = new Cliente (num, nome,mail, pw, tipo);
 			utilizadores.add(c);
 		}
 	}
 	
-	/*
-	 * Metodos relacionados com as funções do gerente
+	
+	/**
+	 * Pesquisa um produto pelo seu identificador.
+	 * @param id - identificador do produto
+	 * @return o produto encontrado ou null se nao existir
 	 */
 	public Produto pesquisarProduto(int id) {
 		if(produtos.isEmpty()){
@@ -70,59 +98,185 @@ public class GerirBar {
 		return null;
 	}
 
-	public void adicionarProduto(int id, String nome, double preco, CategoriaProduto categoria, int stock, int validade) {
-		Produto p = new Produto(id, nome, preco, categoria, stock, validade);
+	public Produto pesquisarParcela(int id) {
+		if(produtos.isEmpty()){
+			return null;
+		}
+		for(Produto p : produtos ) {
+			if(!(p instanceof Elementar || p instanceof Composto)) {
+				if(p.getId() == id) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean pesquisarSeExiste() {
+		int i = 0;
+		for(Produto p : produtos ) {
+			if(!(p instanceof Elementar || p instanceof Composto)) {
+				i++;
+			}
+		}
+		if(i >= 2) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean pesquisarJaUsado(int id, int parce) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto)p;
+		p = pesquisarProduto(parce);
+		if(c.jaExiste(p)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean pesquisarComposto(int id) {
+		Produto p = pesquisarProduto(id);
+		if(p instanceof Composto) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Cria e adiciona um novo produto à lista de produtos do bar.
+	 * @param id - identificador único do produto
+	 * @param nome - nome do produto
+	 * @param preco - preço unitário
+	 * @param categoria - categoria do produto
+	 * @param stock - quantidade inicial em stock
+	 * @param validade - meses de validade do lote inicial
+	 */
+	public void adicionarProduto(int id, String nome, double preco, int stock, int validade,int opc) {
+		if(opc == 2) {
+			Elementar p = new Elementar(id, nome, preco);
+			p.adicionarStock(validade, stock);
+			produtos.add(p);
+			System.out.println("Produto adicionado");
+		}else {
+			Composto p = new Composto(id, nome, preco);
+			produtos.add(p);
+		}
+	}
+	
+	public void adicionarParcela(int id, String nome, int stock, int validade) {
+		Produto p = new Produto(id,nome);
+		p.adicionarStock(stock, validade);
 		produtos.add(p);
 		System.out.println("Produto adicionado");
 	}
+	
+	public void adiconarNoComposto (int id, int idParce, double qtd) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		p = pesquisarProduto(idParce);
+		c.adicionarNoComposto(p , qtd);	
+	}
 
+	/**
+	 * Imprime todos os produtos registados no output padrão.
+	 */
 	public void imprimirProdutos() {
 		for(Produto p : produtos) {
 			System.out.println(p);
 		}
 	}
+	
+	public int imprimirConteudos(int id) {
+		System.out.println("Produtos que utiliza:");
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		int i = c.imprimirParcelas();	
+		System.out.println("\n Podem ser adicionadas um maximo de "+i+" do produto.");
+		return i;
+	}
 
+	/**
+	 * Imprime o ID, nome e preço de cada produto no output padrão.
+	 */
 	public void imprimirPreços() {
 		for(Produto p : produtos){
-			System.out.println("Produto: " +p.getId()+ " | "+p.getNome()+" Preço="+p.getPreco());
+			if(p instanceof Elementar || p instanceof Composto) {
+				System.out.println("Produto: " +p.getId()+ " | "+p.getNome()+" Preço="+p.getPreco());
+			}
 		}
 		
 	}
 
+	/**
+	 * Atualiza o preço de um produto existente.
+	 * @param id -identificador do produto
+	 * @param preco -novo preço a aplicar
+	 */
 	public void atualizarPreco(int id, double preco) {
 		Produto p = pesquisarProduto(id);
-		p.atualizarPreco(preco);
+		p.setPreco(preco);
 	}
 	
+	/**
+	 * Adiciona um novo lote de stock a um produto existente.
+	 * @param id -identificador do produto
+	 * @param quant -quantidade a adicionar
+	 * @param val -meses de validade do novo lote
+	 */
 	public void adicionarStock(int id, int quant, int val) {
 		Produto p = pesquisarProduto(id);
 		p.adicionarStock(quant, val);
 	}
 	
-//---------------------------------------------------------------------
+	public void adicionarStock(int id, int quant) {
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto)p;
+		c.produzir(quant);
+	}
 	
-	/*
-	 * METODO PARA REDUZIR O STOCK COM VENDAS
-	 * 
+	/**
+	 * Verifica se um produto tem stock suficiente para a quantidade pedida.
+	 * @param id identificador do produto
+	 * @param qtd quantidade desejada
+	 * @return true se o stock for suficiente e false caso contrario
+	 */
+	public boolean verificarStock(int id, int qtd) {
+		Produto p = pesquisarProduto(id);
+		if(p.getStock() < qtd) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Reduz o stock de um produto após uma venda.
+	 * @param id identificador do produto
+	 * @param quant quantidade a subtrair do stock
 	 */
 	public void reduzirStock(int id, int quant) {
 		Produto p = pesquisarProduto(id);
-		p.reduzirStock(quant);
+		p.reduzir(quant);
+	}
+	
+	public boolean verficarQuantidadeParce(int id){
+		Produto p = pesquisarProduto(id);
+		Composto c = (Composto) p;
+		return c.getSize();
 	}
 
-//--------------------------------------------------------------------
-	/*
-	 * Consultar produtos disponíveis (Stock > 0)
+
+	/**
+	 * Lista todos os produtos com stock disponível
+	 * @return true, se existirem produtos disponiveis e false caso contrario
 	 */
-	public void consultarProdutosDisponiveis() {
+	public boolean consultarProdutosDisponiveis() {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");
 		boolean encontrou = false;
-		
 		for (Produto p: produtos) {
-			if (!(p.getStock()==0)) {
+			if (p.getStock()!=0) {
 				System.out.println("|ID: " +p.getId() 
 						+ "\n|Nome: " + p.getNome() 
-						+ "\n|Categoria: " +p.getCategoria() 
 						+ "\n|Preço: " + p.getPreco() + "€");
 			    encontrou =true;
 			}
@@ -130,178 +284,269 @@ public class GerirBar {
 		if (!encontrou) {
 			System.out.println("Não existem produtos disponiveis no stock este momento!");
 		}
+		return encontrou;
 	}
 	
-//--------------------------------------------------------------------
-		/*
-		 * US02: Registar Pedido 
+		/**
+		 * Cria um novo pedido e associa-o ao funcionário do bar indicado.
+		 * @param num Unúmero do utilizador (funcionário do bar)
+		 * @param idPedido identificador do novo pedido
+		 * @return o pedido criado
 		 */
-		public void registrarPedido(Scanner sc) {
-			System.out.println("--- REGISTAR NOVO PEDIDO ---");
-			
-			System.out.print("Introduza o ID do produto: ");
-			int id = sc.nextInt();
-			sc.nextLine();
-			
-			Produto p = pesquisarProduto(id);
-			
-			if (p == null) {
-				System.out.println("Produto não encontrado!");
-				return;
-			}
-			
-			if (p.getStock()==0 ) {
-				System.out.println("Erro: Produto sem stock disponível ou fora da validade!");
-				return;
-			}
-			
-			System.out.print("Introduza a quantidade desejada: ");
-			int qtd = sc.nextInt();
-			sc.nextLine();
-			
-			int stockAtual = p.getStock();
-			if (qtd > stockAtual) {
-				System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
-				return;
-			}
-			
-			p.reduzirStock(stockAtual - qtd);
-			
-			double totalItem = p.getPreco() * qtd;
-			System.out.println("\nPedido registado com sucesso!");
-			System.out.println("Produto: " + p.getNome() + " x" + qtd);
-			System.out.println("Total a pagar: " + totalItem + "€");
+		public Pedido registrarPedido(int numU, int idPedido) {
+			Utilizador u = pesquisarUtilizador(numU);
+			FuncionarioBar f = (FuncionarioBar) u;
+			Pedido pd = new Pedido (idPedido);
+			f.adicionarPedido(pd);
+			return pd;
 		}
 
-//--------------------------------------------------------------------
-		/*
-		 * ADICIONADO (Tomás): Pesquisa uma reserva pelo seu ID
-		 * Percorre a lista de reservas e devolve a que tiver o id correspondente.
-		 * Devolve null se não encontrar nenhuma.
+		/**
+		 * Adiciona um item (produto e quantidade) a um pedido existente.
+		 * @param idP - identificador do produto
+		 * @param qtd- quantidade do produto
+		 * @param pd- pedido ao qual o item sera adicionado
+		 */
+		public void adicionarNoPedido(int idP, int qtd, Pedido pd) {
+			Produto p = pesquisarProduto(idP);
+			pd.adicionarItem(p, qtd);
+		}
+		
+		/**
+		 * Remove um pedido da lista do funcionário do bar indicado.
+		 * @param idPedido identificador do pedido
+		 * @param uti - numero do utilizador (funcionario bar)
+		 */
+		public void apagarPedido(int idPedido, int uti) {
+			Utilizador u = pesquisarUtilizador(uti);
+			FuncionarioBar fb = (FuncionarioBar) u;
+			fb.apagarPedido(idPedido);
+		}
+		
+		/**
+		 * Pesquisa uma reserva pelo seu ID, percorrendo todos os clientes registados.
+		 * @param id - identificador de reserva
+		 * @return a reserva encontrada e null se nao existir
 		 */
 		public Reserva pesquisarReserva(int id) {
-			for (Reserva r : reservas) {
-				if (r.getId() == id) {
-					return r;
+			Reserva r;
+			for(Utilizador u : utilizadores) {
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente) u;
+					if (c.encontrarReserva(id) != null) {
+						r = c.encontrarReserva(id);
+						return r;
+					}
 				}
 			}
 			return null;
 		}
-
-//--------------------------------------------------------------------
-		/*
-		 * ADICIONADO (Tomás): US06 - Fazer Pré-Reserva
-		 * O cliente seleciona produtos disponíveis e submete uma pré-reserva.
-		 * A reserva fica no estado PENDENTE até ser confirmada por um funcionário.
+		
+		/**
+		 *Verifica se o estado de uma reserva impede alterações,ou seja, se já está
+		 * (CONFIRMADA),(CANCELADA) ou (LEVANTADA).
+		 * @param id  identificador da reserva
+		 * @return true se o estado bloquear edicao e false caso contrario
 		 */
-		public void fazerPreReserva(Scanner sc) {
-			System.out.println("--- FAZER PRÉ-RESERVA ---");
-
-			// Mostra os produtos disponíveis para o cliente escolher
-			consultarProdutosDisponiveis();
-
-			// Gera um ID único para a reserva (tamanho da lista + 1)
-			int novoId = reservas.size() + 1;
-			Reserva novaReserva = new Reserva(novoId);
-
-			// Loop para adicionar vários produtos à reserva
-			String continuar = "s";
-			while (continuar.equalsIgnoreCase("s")) {
-				System.out.print("Introduza o ID do produto que quer reservar: ");
-				int idProduto = sc.nextInt();
-				sc.nextLine();
-
-				Produto p = pesquisarProduto(idProduto);
-
-				if (p == null) {
-					System.out.println("Produto não encontrado! Tente novamente.");
-				} else if (p.getStock() == 0) {
-					System.out.println("Produto sem stock disponível! Tente outro.");
-				} else {
-					System.out.print("Introduza a quantidade: ");
-					int qtd = sc.nextInt();
-					sc.nextLine();
-
-					if (qtd <= 0) {
-						System.out.println("Quantidade inválida!");
-					} else if (qtd > p.getStock()) {
-						System.out.println("Stock insuficiente! Stock disponível: " + p.getStock());
-					} else {
-						// Adiciona o item à reserva
-						novaReserva.adicionarItem(p, qtd);
-						System.out.println("Item adicionado: " + p.getNome() + " x" + qtd);
-					}
-				}
-
-				System.out.print("Deseja adicionar mais produtos? (s/n): ");
-				continuar = sc.nextLine();
+		public boolean detetarEstado(int id) {
+			Reserva r = pesquisarReserva(id);
+			if(r.getEstado()!= EstadoReserva.CONFIRMADA || r.getEstado()!= EstadoReserva.CANCELADA || r.getEstado()!= EstadoReserva.LEVANTADA) {
+				return false;
 			}
-
-			// Só guarda a reserva se tiver pelo menos um item
-			if (novaReserva.getItensR().isEmpty()) {
-				System.out.println("Reserva cancelada — nenhum item foi adicionado.");
-			} else {
-				reservas.add(novaReserva);
-				System.out.println("\nPré-reserva submetida com sucesso!");
-				System.out.println("ID da sua reserva: " + novaReserva.getId());
-				System.out.println("Total estimado: " + novaReserva.calcularTotal() + "€");
-				System.out.println("Estado: " + novaReserva.getEstado());
-			}
+			return true;
+		}
+		
+		/**
+		 * Cria uma nova reserva no estado (PENDENTE) e associa ao cliente indicado.
+		 * @param uti -número do utilizador (cliente)
+		 * @param idReserva -identificador da nova reserva
+		 * @param input -data e hora no formato {@code "yyyy-M-d H:m"}
+		 * @return RESERVA CRIADA
+		 */
+		public Reserva criarReserva(int uti, int idReserva,String input) {
+			Utilizador p = pesquisarUtilizador(uti);
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
+			LocalDateTime dt = LocalDateTime.parse(input, formatter);
+			Cliente c = (Cliente) p;
+			
+			Reserva r = new Reserva(idReserva, dt);
+			c.adicionarReserva(r);
+			return r;
+		}
+		
+		/**
+		 * Adiciona um item (produto e quantidade) a uma reserva existente.
+		 * @param idProd - identificador do produto
+		 * @param qtd -quantidade do produto
+		 * @param r - reserva à qual o item será adicionado
+		 */
+		public void adicionarNaReserva(int idProd, int qtd, Reserva r) {
+			Produto p = pesquisarProduto(idProd);
+			r.adicionarItem(p, qtd);
+		}
+		
+		/**
+		 * Cancela a reserva com o ID indicado para o cliente especificado.
+		 * @param idReserva -identificador da reserva a cancelar
+		 * @param uti - número do utilizador (cliente)
+		 */
+		public void cancelarReserva(int idReserva, int uti) {
+			Utilizador p = pesquisarUtilizador(uti);
+			Cliente c = (Cliente) p;
+			
+			c.cancelarReserva(idReserva);
+		}
+		
+		/**
+		 * Apaga a reserva com o ID indicado para o cliente especificado.
+		 * @param idReserva -identificador da reserva a apagar
+		 * @param uti - número do utilizador (cliente)
+		 */
+		public void apagarReserva(int idReserva,int uti){
+			Utilizador p = pesquisarUtilizador(uti);
+			Cliente c = (Cliente) p;
+			
+			c.apagarReserva(idReserva);
+		}
+		
+		/**
+		 * Imprime todas as reservas do cliente indicado.
+		 * @param uti - numero do utilizador (cliente)
+		 * @return true, caso exista reservas e false se a lista estiver vazia
+		 */
+		public boolean imprimirReservasdeUti(int uti) {
+			Utilizador p = pesquisarUtilizador(uti);
+			Cliente c = (Cliente) p;
+			return c.imprimir();
 		}
 
-//--------------------------------------------------------------------
-		/*
-		 * COMPLETO (Tomás): US09 - Consultar Reservas Pendentes
-		 * Percorre a lista de reservas e mostra apenas as que estão no estado PENDENTE.
+		/**
+         *Consulta e imprime todas as reservas no estado (PENDENTE)
+         * de todos os clientes registados.
+		 * @return true, se existir reservas pendentes e false, caso contrario
 		 */
-		public void consultarReservasPendentes() {
+		public boolean consultarReservasPendentes() {
 			System.out.println("--- CONSULTAR RESERVAS PENDENTES ---");
 			boolean encontrou = false;
-
-			for (Reserva r : reservas) {
-				// Só mostra as reservas que ainda estão pendentes
-				if (r.getEstado() == EstadoReserva.PENDENTE) {
-					System.out.println(r);
-					encontrou = true;
+			int a = 0;
+			for (Utilizador u : utilizadores) {
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente) u;
+					a = c.consultar();
+					if(a == 1) {
+						encontrou = true;
+					}
 				}
 			}
-
 			if (!encontrou) {
 				System.out.println("Não existem reservas pendentes de momento.");
 			}
-		}
+			return encontrou;
+	    }
 
-//--------------------------------------------------------------------
-		/*
-		 * COMPLETO (Tomás): US09 - Confirmar Reserva
-		 * O funcionário procura a reserva pelo ID e confirma-a.
-		 * Ao confirmar, o stock dos produtos é reduzido.
+		/**
+		*Confirma a reserva com o IDreserva indicado, desde que esteja no estado
+         *(PENDENTE). Caso contrário, informa o estado atual.
+		 * @param id - identificador da reserva
 		 */
-		public void confirmarReserva(Scanner sc) {
-			System.out.println("--- CONFIRMAR RESERVA ---");
-
-			System.out.print("Introduza o ID da Reserva a confirmar: ");
-			int idReserva = sc.nextInt();
-			sc.nextLine();
-
-			// Procura a reserva na lista
+		public void confirmarReserva(int idReserva) {
 			Reserva r = pesquisarReserva(idReserva);
-
-			if (r == null) {
-				System.out.println("Reserva " + idReserva + " não encontrada.");
-				return;
-			}
 
 			if (r.getEstado() != EstadoReserva.PENDENTE) {
 				System.out.println("Esta reserva não pode ser confirmada. Estado atual: " + r.getEstado());
 				return;
 			}
-
-			// Confirma a reserva e reduz o stock de cada produto reservado
 			r.confirmar();
-			for (ItemReserva item : r.getItensR()) {
-				item.getProduto().reduzirStock(item.getQuantidade());
+		}
+		
+		public String pequisarEmail(String mail) {
+			for(Utilizador u:utilizadores) {
+				if(u.getEmail().equals(mail)) {
+					return mail;
+				}
 			}
-			System.out.println("Stock atualizado com sucesso!");
+			return null;
+		}
+		
+		
+		public void totalVendas() {
+			double total = 0;
+			for (Utilizador f: utilizadores) {
+				if (f instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar) f;
+					total += fb.funcionarioTotalPedido();
+				}
+				if (f instanceof Cliente) {
+					Cliente c = (Cliente) f;
+					total += c.clienteTotalReserva();
+				}
+			}
+			System.out.println(total);
+		}
+		
+		public void numeroVendas() {
+			double total = 0;
+			for (Utilizador f: utilizadores) {
+				if (f instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar) f;
+					total += fb.numeroPedidos();
+				}
+				if (f instanceof Cliente) {
+					Cliente c = (Cliente) f;
+					total += c.numeroPedidos();
+				}
+			}
+			System.out.println(total);
+		}
+		
+		public void imprimirRelatorio()	{
+		    System.out.println("\n================ RELATÓRIO DE VENDAS ================");
+
+		    System.out.printf("%-15s %-15s %-15s%n",
+		            "Data",
+		            "Qtd Produtos",
+		            "Total (€)");
+
+		    System.out.println("-----------------------------------------------------");
+
+		    int numeroVendas = 0;
+		    double montanteTotal = 0;
+
+		    // Pedidos dos funcionários
+		    for(Utilizador u : utilizadores) {
+
+		        if(u instanceof FuncionarioBar || u instanceof Cliente) {
+		        	
+		        	if (u instanceof FuncionarioBar) {
+		        		FuncionarioBar fb = (FuncionarioBar) u;
+		        		
+			            for(Pedido p : fb.getPedidos()) {
+
+			                System.out.printf("%-15s %-15d %-15.2f%n", p.getDataHora(), p.getQuantidadeProdutos(), p.getTotal());
+
+			                numeroVendas++;
+			                montanteTotal += p.getTotal();
+			            }
+		        	}
+		        	if (u instanceof Cliente) {
+		        		Cliente c = (Cliente) u;
+		        		
+		        		for (Reserva r : c.getReservas()) {
+		        			if (r.getEstado()==EstadoReserva.LEVANTADA || r.getEstado()==EstadoReserva.NAO_LEVANTADA) {
+		        				System.out.printf("%-15s %-15d %-15.2f%n", r.getDataHora(), r.getQuantidadeProdutos(), r.getTotal());
+
+				                numeroVendas++;
+				                montanteTotal += r.getTotal();	
+		        			}
+		        		}
+		        	} 
+		        	
+		        }
+
+		    System.out.println("-----------------------------------------------------");
+		    System.out.println("Número de vendas: " + numeroVendas);
+		    System.out.printf("Montante total: %.2f €%n", montanteTotal);
+		    }
 		}
 }
+

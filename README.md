@@ -41,16 +41,25 @@ diferentes stakeholders.
 A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de POO, promovendo os conceitos de modularidade, coesão e capsulamento. A arquitetura do sistema também ajuda a entender e ter uma visão inicial dos contornos que o projeto terá, de forma a impulsionar positivamente o começo deste projeto. 
 ```
 📦 Proj26E3/
+├── 📂 settings/
+│   └── ...
 ├── 📂 src/
+│   ├── 📄 .project
 │   └── 📂 proj26E3/
-│       ├── 📄 CategoriaProduto.java    # Enum/Classe de categorias de produto
-│       ├── 📄 Funcionario.java         # Classe base do Funcionário
-│       ├── 📄 FuncionarioBar.java      # Classe do perfil Funcionário de Bar
-│       ├── 📄 GerirBar.java            # Classe principal de gestão do bar
-│       ├── 📄 ItemPedido.java          # Classe que representa um item de um pedido
-│       ├── 📄 Produto.java             # Classe de Produto
-│       └── 📄 Teste.java              # Classe de testes
-│       └── ...                  
+│       ├── 📄 .gitignore
+│       ├── 📄 CategoriaProduto.java     # Enum/Classe de categorias de produto
+│       ├── 📄 Cliente.java              # Classe de Cliente
+│       ├── 📄 EstadoReserva.java        # Enum/Classe de estados de reserva
+│       ├── 📄 FuncionarioBar.java       # Classe do perfil Funcionário de Bar
+│       ├── 📄 GerirBar.java             # Classe principal de gestão do bar
+│       ├── 📄 ItemPedido.java           # Classe que representa um item de um pedido
+│       ├── 📄 ItemReserva.java          # Classe que representa um item de uma reserva
+│       ├── 📄 Pedido.java               # Classe de Pedido
+│       ├── 📄 Produto.java              # Classe de Produto
+│       ├── 📄 Reserva.java              # Classe de Reserva
+│       ├── 📄 Teste.java                # Classe de testes
+│       ├── 📄 TipoUtilizador.java       # Enum/Classe de tipos de utilizador
+│       └── 📄 Utilizador.java           # Classe base de Utilizador
 ├── 📄 .classpath
 ├── 📄 .gitignore
 ├── 📄 .project
@@ -72,15 +81,14 @@ O projeto foi dividido rigidamente em dois blocos de entrega (Incrementos):
 ## 📜6. Regras de Nomenclatura ( GitHub )
 
 > 🌿 **Relativamente á nomeação de branches :**
-- Procurar seguir o formato tipo/descricao-curta; 
-- Separar com hifens para melhor organização e leitura;
-- Cada branch ter um objetivo especifico para evitar a multiplicidade desnecessária de branches.
+- Procurar seguir o formato nome_branch; 
+- Separar com underline para melhor organização e leitura;
+- Apenas um branch por utilizador para evitar a multiplicidade desnecessária de branches.
 
 **Exemplos:**
 ```
-feature/login-utilizador
-fix/calculo-total-pedido
-docs/atualizar-readme
+Antonio_branch
+Ana_branch
 ```
 
 ---

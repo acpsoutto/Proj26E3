@@ -15,6 +15,10 @@ public class Item {
 	public int getQtd() {
 		return qtd;
 	}
+	
+	public void setQtd(int quant) {
+		this.qtd = quant;
+	}
 
 	public Produto getProduto() {
 		return produto;

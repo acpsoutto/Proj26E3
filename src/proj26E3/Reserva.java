@@ -15,25 +15,16 @@ public class Reserva extends Pedido {
          * @param dataHoraLevantamento - data e hora prevista do levantamento
          */
     public Reserva(int id, LocalDateTime dataHoraLevantamento) {
-       super(id);
-
-       LocalDateTime agora = LocalDateTime.now(); //passar isto para gerirBar
-       LocalDateTime minimo = agora.plusMinutes(30);
-       LocalDateTime maximo = agora.plusDays(7);
-
-       if (dataHoraLevantamento.isBefore(minimo) || dataHoraLevantamento.isAfter(maximo)) {
-           throw new IllegalArgumentException("A reserva deve ser marcada entre 30 minutos e 7 dias a partir de agora." );
-       }
-            this.estado = EstadoReserva.PENDENTE;
-            this.dataHoraLevantamento = dataHoraLevantamento;
-            this.itens = new ArrayList<>();
+       super(id, dataHoraLevantamento);
+       this.estado = EstadoReserva.PENDENTE;
+       this.dataHoraLevantamento = dataHoraLevantamento;
+       this.itens = new ArrayList<>();
         }
 	
 	@Override
     public void adicionarItem(Produto produto, int quantidade) {
         Item item = new Item(quantidade, produto);
         itens.add(item);
-        item.registarStockVal(quantidade);
     }
 
 	 @Override

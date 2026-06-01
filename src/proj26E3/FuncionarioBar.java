@@ -52,6 +52,22 @@ public class FuncionarioBar extends Utilizador {
 		}
 	}
 	
+	public boolean vericarJaExiste(int id, int idPedido) {
+		for(Pedido p : pedidos) {
+			if(p.getId() == idPedido) {
+				if(p.vericarJaExiste(id)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public boolean temOPedido(int idPedido) {
+		for(pedido)
+		return true;
+	}
+	
 	public double funcionarioTotalPedido() {
 		double total = 0;
 		for (Pedido p : pedidos) {
@@ -62,5 +78,14 @@ public class FuncionarioBar extends Utilizador {
 	
 	public int numeroPedidos() {
 		return pedidos.size();
+	}
+
+	public Pedido pesquisaPedio(int idPedido) {
+		for(Pedido p : pedidos) {
+			if(p.getId()== idPedido) {
+				return p;
+			}
+		}
+		return null;
 	}
 }

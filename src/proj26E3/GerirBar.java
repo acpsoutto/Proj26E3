@@ -1,5 +1,4 @@
 package proj26E3;
-import java.time.LocalDate;
 /**
  * Classe principal de gestão do bar.
  * Centraliza todas as operações sobre utilizadores, produtos,
@@ -297,7 +296,7 @@ public class GerirBar {
 		public Pedido registrarPedido(int numU, int idPedido) {
 			Utilizador u = pesquisarUtilizador(numU);
 			FuncionarioBar f = (FuncionarioBar) u;
-			Pedido pd = new Pedido (idPedido);
+			Pedido pd = new Pedido (idPedido, LocalDateTime.now());
 			f.adicionarPedido(pd);
 			return pd;
 		}
@@ -404,7 +403,6 @@ public class GerirBar {
 		public void apagarReserva(int idReserva,int uti){
 			Utilizador p = pesquisarUtilizador(uti);
 			Cliente c = (Cliente) p;
-			
 			c.apagarReserva(idReserva);
 		}
 		
@@ -474,26 +472,6 @@ public class GerirBar {
 				}
 			}
 			return false;
-		}
-		public void acrescentarMais(int id, int qtd, int idPedido) {
-			for(Utilizador u : utilizadores) {
-				if(u instanceof FuncionarioBar) {
-					FuncionarioBar fb = (FuncionarioBar)u ;
-					Pedido p = fb.pesquisaPedio(idPedido);
-					if(p != null) {
-						p.acrescentar(id,qtd);
-						return;
-					}
-				}
-				if(u instanceof Cliente) {
-					Cliente c = (Cliente) u;
-					Reserva r = c.pesquisarReserva(idPedido);
-					if(r != null) {
-						r.acrescentar(id,qtd);
-						return;
-					}
-				}
-			}
 		}
 		
 		public String pequisarEmail(String mail) {
@@ -584,6 +562,26 @@ public class GerirBar {
 		    System.out.println("Número de vendas: " + numeroVendas);
 		    System.out.printf("Montante total: %.2f €%n", montanteTotal);
 		    }
+		}
+
+		public Pedido pesquisarPedido(int idPedido) {
+			for(Utilizador u : utilizadores) {
+				if(u instanceof FuncionarioBar) {
+					FuncionarioBar fb = (FuncionarioBar)u;
+					Pedido P = fb.pesquisarpedido(idPedido);
+					if(P != null) {
+						return P;
+					}
+				}
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente)u;
+					Pedido P = c.pesquisarpedido(idPedido);
+					if(P != null) {
+						return P;
+					}
+				}
+			}
+			return null;
 		}
 }
 

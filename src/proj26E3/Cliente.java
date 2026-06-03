@@ -52,12 +52,14 @@ public class Cliente extends Utilizador {
 	 * @param idReserva
 	 */
 	public void apagarReserva(int idReserva) {
-		cancelarReserva(idReserva);
-		for(Reserva r : reservas) {
-			if(r.getId()== idReserva) {
-				reservas.remove(r);
-			}
-		}
+	    cancelarReserva(idReserva);
+
+	    for(int i = 0; i < reservas.size(); i++) {
+	        if(reservas.get(i).getId() == idReserva) {
+	            reservas.remove(i);
+	            break;
+	        }
+	    }
 	}
 /*
  * Imprime todas as reservas do cliente no terminal
@@ -129,6 +131,26 @@ public class Cliente extends Utilizador {
 			}
 		}
 		return null;
+	}
+
+	public Pedido pesquisarpedido(int idPedido) {
+		for(Pedido p : reservas) {
+			if(p.getId()== idPedido) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+	public boolean vericarJaExiste(int id, int idPedido) {
+		for(Pedido p : reservas) {
+			if(p.getId() == idPedido) {
+				if(p.vericarJaExiste(id)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }

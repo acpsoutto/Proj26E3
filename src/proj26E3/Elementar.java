@@ -29,11 +29,4 @@ public class Elementar extends Produto{
 	public String toString() {
 		return super.toString()+ "precoE=" + precoE + " ";
 	}
-	
-	
-	
-	
-	
-	
-
 }

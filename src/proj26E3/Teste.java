@@ -8,7 +8,6 @@ import java.time.temporal.ChronoUnit;
  ** através de menus em modo de texto (consola).
  **/
 import java.util.*;
-//import jdk.internal.org.jline.terminal.TerminalBuilder.SystemOutput;
 
 public class Teste {
 
@@ -17,12 +16,16 @@ public class Teste {
 		GerirBar gb = new GerirBar();
 		int idPedido = 0;
 		int opc;
-		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
 		
+		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
 		gb.adicionarUtilizador(1, "Admin", "admin@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.GERENTE;
 		gb.adicionarUtilizador(2, "Gere", "gere@gmail.com", "123", tipoU);
-		gb.adicionarProduto(1, "Maça", 1.99 , 100, 1, 2);
+		tipoU = TipoUtilizador.CLIENTE;
+		gb.adicionarUtilizador(3, "CLIENTE", "Cliente@gmail.com", "123", tipoU);
+		tipoU = TipoUtilizador.FUNCIONARIO_BAR;
+		gb.adicionarUtilizador(4, "fUNC", "FUNC@gmail.com", "123", tipoU);
+		gb.adicionarProduto(1, "Maça", 1.99 , 5, 1, 2);
 		
 		do {
 			
@@ -504,9 +507,12 @@ public class Teste {
 									System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
 									continue;
 								}
-								
+								if(pd.verificarJaExiste(idP)) {
+									pd.acrescentarMais(idP,qtd);
+								}else {
 								gb.adicionarNoPedido(idP, qtd, pd);
 								tenta = true;
+								}
 								
 							} while (idP!=0);
 							
@@ -514,6 +520,47 @@ public class Teste {
 								gb.apagarPedido(idPedido, uti);
 								idPedido -=1;
 							} else {
+								int alteracao;
+								System.out.println("----- O seu Pedido ----");
+								pd.imprimirPedido();
+								System.out.println("-----------------------");
+								do {
+									System.out.println("\nDeseja fazer alterações (reduzir numero de itens) do seu pedido:");
+									System.out.println("1-Sim\n 2-Não");
+									alteracao = inserir(sc);
+									if(alteracao != 1 && alteracao != 2) {
+										System.out.println("Opção Invalida! Tente novamente");
+										continue;
+										
+									}else if(alteracao == 1) {
+										do {
+											pd.imprimirPedido();
+											System.out.println("Qual id do produto que quer alterar (insira 0 para parar de editar)");
+											idP = inserir(sc);
+											if(idP == 0) {
+												break;
+											}
+											if(!pd.consultarItensPedido(idP)) {
+												System.out.println("ID do produto não encontrado! Tente outra vez.");
+												continue;
+											}
+											System.out.println("Para que quantidade que alterar");
+											int qtd = inserir(sc);
+											if(qtd <= 0) {
+												System.out.println("Valor de quantidade Invalido");
+												continue;
+											}
+											pd.trocarQuantidade(idP,qtd);
+											alteracao = 2;
+										}while (idP !=0 );
+									}
+								}while (alteracao != 2);
+								
+								
+								//COLOCAR O PACAMENTO AQUI
+								
+								
+								pd.confirmarPedido();
 								System.out.println("O pedido foi registrado!");
 							}
 							break;
@@ -576,7 +623,7 @@ public class Teste {
 				         */
 						case 1:
 							boolean tenta = false;
-							int id;
+							int idP;
 							if(!gb.consultarProdutosDisponiveis()) {
 								break;
 							}
@@ -593,12 +640,12 @@ public class Teste {
 							Reserva r = gb.criarReserva(uti,idPedido, dt);
 							do {
 								System.out.println("Id do produto a utilizar (insira '0' para parar de adicionar):");
-								id = inserir(sc);
+								idP = inserir(sc);
 								
-								if(id == 0) {
+								if(idP == 0) {
 									break;
 								}
-								if(gb.pesquisarProduto(id) == null) {
+								if(gb.pesquisarProduto(idP) == null) {
 									System.out.println("Produto não encontrado! Tente Novamente");
 									continue;
 								}
@@ -608,20 +655,65 @@ public class Teste {
 									System.out.println("Erro! Quantidade tem de ser superiror a 0.");
 									System.out.println("Tente outra vez.");
 									continue;
-								}else if(!gb.verificarStock(id, qtd)){
+								}else if(!gb.verificarStock(idP, qtd)){
 									System.out.println("Quantidade pedida acima do stock!");
 									System.out.println("Tente outra vez.");
 									continue;
 								}
-								if(gb.verificarJaExiste(id, idPedido)) {
-									gb.acrescentarMais(id,qtd, idPedido);
+								if(r.verificarJaExiste(idP)) {
+									r.acrescentarMais(idP,qtd);
 								}else {
-									gb.adicionarNaReserva(id,qtd, r);
+									gb.adicionarNaReserva(idP,qtd,r);
 								}
-							}while(id != 0);
+								tenta = true;
+							}while(idP != 0);
 							if(!tenta) {
 								gb.apagarReserva(idPedido,uti);
 								idPedido -=1;
+							}else {
+								Pedido p = gb.pesquisarPedido(idPedido);
+								int alteracao;
+								System.out.println("----- O seu Pedido ----");
+								r.imprimirPedido();
+								System.out.println("-----------------------");
+								do {
+									System.out.println("\nDeseja fazer alterações (reduzir numero de itens) do seu pedido:");
+									System.out.println("1-Sim\n 2-Não");
+									alteracao = inserir(sc);
+									if(alteracao != 1 && alteracao != 2) {
+										System.out.println("Opção Invalida! Tente novamente");
+										continue;
+										
+									}else if(alteracao == 1) {
+										do {
+											p.imprimirPedido();
+											System.out.println("Qual id do produto que quer alterar (insira 0 para parar de editar)");
+											idP = inserir(sc);
+											if(idP == 0) {
+												break;
+											}
+											if(!r.consultarItensPedido(idP)) {
+												System.out.println("ID do produto não encontrado! Tente outra vez.");
+												continue;
+											}
+											System.out.println("Para que quantidade que alterar");
+											int qtd = inserir(sc);
+											if(qtd <= 0) {
+												System.out.println("Valor de quantidade Invalido");
+												continue;
+											}
+											r.trocarQuantidade(idP,qtd);
+											alteracao = 2;
+										}while (idP !=0 );
+									}
+								}while (alteracao != 2);
+								
+								
+								//COLOCAR O PACAMENTO AQUI
+								
+								
+								p.confirmarPedido();
+								System.out.println("O pedido foi registrado!");
 							}
 						break;
 						/** Imprime todas as reservas do cliente autenticado. */

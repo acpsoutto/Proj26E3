@@ -95,5 +95,4 @@ public class Utilizador {
 				 + "| Código de acesso: " + pw
 				 + "| Tipo: " + tipo;
 	}
-	
-}	
+}

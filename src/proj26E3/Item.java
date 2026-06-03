@@ -10,6 +10,7 @@ public class Item {
 	public Item(int qtd, Produto produto) {
 		this.qtd = qtd;
 		this.produto = produto;
+		itensReservados = new ArrayList<>();
 	}
 
 	public int getQtd() {
@@ -36,6 +37,7 @@ public class Item {
 		ArrayList<Lote> retirados = produto.retirarComRegisto(quantidade);
 		itensReservados.addAll(retirados);
 	}
+	
 	
 	public void repor() {
 		produto.restituirStock(itensReservados);

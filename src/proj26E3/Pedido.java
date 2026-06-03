@@ -82,4 +82,53 @@ public class Pedido {
 		}
 	}
 
+	public void imprimirPedido() {
+		for(Item i : itens) {
+			System.out.println(i.getProduto().getId() +" | "+ i.getProduto().getNome() +" | " + i.getQtd());
+		}
+	}
+
+	public boolean consultarItensPedido(int idP) {
+		for(Item i : itens) {
+			if(i.getProduto().getId() == idP) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void trocarQuantidade(int idP, int qtd) {
+		for(Item i : itens) {
+			if(i.getProduto().getId() == idP) {
+				i.setQtd(qtd);
+				return;
+			}
+		}
+	}
+
+	public void confirmarPedido() {
+		for(Item i : itens) {
+			i.registarStockVal(i.getQtd());
+		}
+	}
+
+	public void acrescentarMais(int idP, int qtd) {
+		for(Item i : itens) {
+			if(i.getProduto().getId()== idP) {
+				i.setQtd(i.getQtd()+qtd);
+				return;
+			}
+		}
+	}
+
+	public boolean verificarJaExiste(int idP) {
+		for(Item i : itens) {
+			if(i.getProduto().getId()==idP) {
+				System.out.println("Encontrei");
+				return true;
+			}
+		}
+		System.out.println("nao Encontrei");
+		return false;
+	}
 }

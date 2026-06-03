@@ -63,10 +63,11 @@ public class FuncionarioBar extends Utilizador {
 		return false;
 	}
 	
-	public boolean temOPedido(int idPedido) {
-		for(pedido)
-		return true;
-	}
+	
+	/**public boolean temOPedido(int idPedido) {
+	* for(pedido)
+	* return true;
+	*/ 
 	
 	public double funcionarioTotalPedido() {
 		double total = 0;
@@ -84,6 +85,15 @@ public class FuncionarioBar extends Utilizador {
 		for(Pedido p : pedidos) {
 			if(p.getId()== idPedido) {
 				return p;
+			}
+		}
+		return null;
+	}
+
+	public Pedido pesquisarpedido(int idPedido) {
+		for(Pedido P : pedidos) {
+			if(P.getId()==idPedido) {
+				return P;
 			}
 		}
 		return null;

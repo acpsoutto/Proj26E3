@@ -556,9 +556,26 @@ public class Teste {
 									}
 								}while (alteracao != 2);
 								
+								double totalBalcao = pd.getTotal();
+								System.out.println("\n ============ PAGAMENTO ========= ");
+								System.out.printf("Total a pagar: %.2f €\n", totalBalcao);
 								
-								//COLOCAR O PACAMENTO AQUI
+								double valorEntregue = 0;
 								
+								do {
+									System.out.print("Insira o valor entregue pelo cliente");
+									valorEntregue = inserirDouble(sc);
+									
+									if (valorEntregue < totalBalcao) {
+										System.out.printf("Valor insuficiente! Ainda faltam %.2f €.\n",( totalBalcao - valorEntregue));
+										
+									}
+								} while (valorEntregue < totalBalcao);
+								
+								double troco = valorEntregue - totalBalcao;
+								System.out.printf("Pagamento validado! Troco a devolver ao cliente: %.2f €\n", troco);
+								System.out.println("=============================");
+						
 								
 								pd.confirmarPedido();
 								System.out.println("O pedido foi registrado!");
@@ -622,6 +639,18 @@ public class Teste {
 				         * Se nenhum item for adicionado, a reserva é descartada.
 				         */
 						case 1:
+							
+							Utilizador utilizadorAtual = gb.pesquisarUtilizador(uti);
+							Cliente clienteAtual = (Cliente) utilizadorAtual;
+							
+							if (clienteAtual.getCredito() < 0) {
+								System.out.printf("Operação bloqueada! O seu saldo de crédito é negativo: %.2f €\n", clienteAtual.getCredito());
+								System.out.printf("Por favor, regularize as suas dividas antes de tentar efetuar novas reservas");
+								System.out.println("================================================");
+								break; // Aborta este case e volta para o menu do cliente
+							}
+							
+							
 							boolean tenta = false;
 							int idP;
 							if(!gb.consultarProdutosDisponiveis()) {
@@ -709,8 +738,25 @@ public class Teste {
 								}while (alteracao != 2);
 								
 								
-								//COLOCAR O PACAMENTO AQUI
+								double totalReserva = p.getTotal();
+								System.out.println("\n ==== PAGAMENTO DA RESERVA ========");
+								System.out.printf("Total a pagar: %.2f €\n", totalReserva);
 								
+								double valorPago = 0;
+								do {
+									
+									System.out.println("Insira o valor para pagamento: ");
+									valorPago = inserirDouble(sc);
+									
+									if (valorPago < totalReserva) {
+										System.out.printf("Valor insuficiente! Para confirmar a reserva faltam %.2f €.\n", (totalReserva - valorPago));
+									}
+									
+								} while (valorPago < totalReserva);
+								
+								double trocoReserva = valorPago - totalReserva;
+								System.out.printf("Pagamento efetuado com sucesso! Troco: %.2f €\n "), trocoReserva);
+								System.out.println("==============================");
 								
 								p.confirmarPedido();
 								System.out.println("O pedido foi registrado!");
@@ -803,4 +849,17 @@ public class Teste {
 		return mail;
 	}
 	
+	public static double inserirDouble (Scanner sc) {  // serve como verificador para os pagamentos ( em que será necessário usar double)
+		while(true) {
+			try {
+					double a = sc.nextDouble();
+					sc.nextLine();
+					return a; 
+			} catch (InputMismatchException e)  {
+				System.out.println("Formato incorreto. Por favor, insira apenas números ( use a virgula para decimais):\n ");
+				sc.nextLine();
+				continue;
+			}
+		}
+	}
 }

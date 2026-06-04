@@ -446,6 +446,7 @@ public class Teste {
 						System.out.println("2- Registrar pedido");
 						System.out.println("3- Consultar reservas pendentes");
 						System.out.println("4- Confirmar reserva");
+						System.out.println("5- Confirmar Levantamento de Reserva");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -585,6 +586,46 @@ public class Teste {
 								break;
 							}
 							gb.confirmarReserva(id);
+							break;
+							
+						case 5:
+							System.out.println("=======Escolher=Reserva=======");
+							gb.imprimirReservasConfirmadas();
+							System.out.println("==============================");
+							int idReserva = inserir(sc);
+							if(!gb.reservaValida(idReserva)) {
+								System.out.println("Essa Reserva é Invalida ser levantada");
+								continue;
+							}
+							System.out.println("=====Tipo=de=Levantamento=====");
+							System.out.println("1- Levantar Encomenda");
+							System.out.println("2- Marcar como não Levantada");
+							System.out.println("==============================");
+							int tipo = inserir(sc);
+							Reserva r = gb.pesquisarReserva(idReserva);
+							
+							switch (tipo) {
+							case 1:
+								//Inserir Pagamento Aqui
+								r.setEstado(EstadoReserva.LEVANTADA);
+								System.out.println("Reserva Levantada");
+								break;
+							case 2:
+								if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
+									System.out.println("Ainda não pode marcar esta encomenda como não levantada");
+									continue;
+								}
+								r.setEstado(EstadoReserva.NAO_LEVANTADA);
+								//inserir para dar multa = ao preço da reserva ao respetivo cliente
+								System.out.println("Reserva marcada como não levantada.");
+								break;
+								
+							default:
+								System.out.println("Opção Invalida!");
+								break;
+							}
+							break;
+							
 						/** Regressa ao menu de login. */
 						case 10:
 							System.out.println("A sair para o login");
@@ -707,11 +748,6 @@ public class Teste {
 										}while (idP !=0 );
 									}
 								}while (alteracao != 2);
-								
-								
-								//COLOCAR O PACAMENTO AQUI
-								
-								
 								p.confirmarPedido();
 								System.out.println("O pedido foi registrado!");
 							}

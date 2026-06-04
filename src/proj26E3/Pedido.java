@@ -124,11 +124,15 @@ public class Pedido {
 	public boolean verificarJaExiste(int idP) {
 		for(Item i : itens) {
 			if(i.getProduto().getId()==idP) {
-				System.out.println("Encontrei");
 				return true;
 			}
 		}
-		System.out.println("nao Encontrei");
 		return false;
+	}
+
+	public void reporItens() {
+		for(Item i: itens){
+			i.repor();
+		}
 	}
 }

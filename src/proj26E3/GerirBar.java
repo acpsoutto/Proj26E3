@@ -5,8 +5,6 @@ package proj26E3;
  * reservas e pedidos do sistema.
  */
 import java.time.LocalDateTime;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class GerirBar {
@@ -582,6 +580,28 @@ public class GerirBar {
 				}
 			}
 			return null;
+		}
+
+		public void imprimirReservasConfirmadas() {
+			for(Utilizador u : utilizadores) {
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente)u ;
+					c.imprimirRervasConfirmadas();
+				}
+			}
+			
+		}
+
+		public boolean reservaValida(int idReserva) {
+			for(Utilizador u : utilizadores) {
+				if(u instanceof Cliente) {
+					Cliente c = (Cliente)u ;
+					if(c.verificarReserva(idReserva)){
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 }
 

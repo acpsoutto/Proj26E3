@@ -152,5 +152,22 @@ public class Cliente extends Utilizador {
 		}
 		return false;
 	}
+
+	public void imprimirRervasConfirmadas() {
+		for(Reserva r : reservas) {
+			if(r.getEstado()== EstadoReserva.CONFIRMADA) {
+				System.out.println(r);
+			}
+		}
+	}
+
+	public boolean verificarReserva(int idReserva) {
+		for(Reserva r : reservas) {
+			if(r.getEstado()== EstadoReserva.CONFIRMADA && r.getId()== idReserva) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 }

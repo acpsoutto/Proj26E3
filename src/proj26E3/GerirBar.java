@@ -272,10 +272,9 @@ public class GerirBar {
 		System.out.println("\n----- PRODUTOS DISPONIVEIS -----");
 		boolean encontrou = false;
 		for (Produto p: produtos) {
-			if (p.getStock()!=0) {
-				System.out.println("|ID: " +p.getId() 
-						+ "\n|Nome: " + p.getNome() 
-						+ "\n|Preço: " + p.getPreco() + "€");
+			if (p.getStock()!=0 && (p instanceof Composto || p instanceof Elementar)) {
+				
+				System.out.println("|ID: " +p.getId() + "\n|Nome: " + p.getNome() + "\n|Preço: " + p.getPreco() + "€");
 			    encontrou =true;
 			}
 		}
@@ -515,10 +514,7 @@ public class GerirBar {
 		public void imprimirRelatorio()	{
 		    System.out.println("\n================ RELATÓRIO DE VENDAS ================");
 
-		    System.out.printf("%-15s %-15s %-15s%n",
-		            "Data",
-		            "Qtd Produtos",
-		            "Total (€)");
+		    System.out.printf("%-15s %-15s %-15s%n","Data","Qtd Produtos","Total (€)");
 
 		    System.out.println("-----------------------------------------------------");
 
@@ -528,14 +524,14 @@ public class GerirBar {
 		    // Pedidos dos funcionários
 		    for(Utilizador u : utilizadores) {
 
-		        if(u instanceof FuncionarioBar || u instanceof Cliente) {
-		        	
+		        if(u.getTipo() == TipoUtilizador.FUNCIONARIO_BAR|| u.getTipo() == TipoUtilizador.CLIENTE) {
 		        	if (u instanceof FuncionarioBar) {
 		        		FuncionarioBar fb = (FuncionarioBar) u;
 		        		
 			            for(Pedido p : fb.getPedidos()) {
-
-			                System.out.printf("%-15s %-15d %-15.2f%n", p.getDataHora(), p.getQuantidadeProdutos(), p.getTotal());
+			            	
+			            	String diahora = p.getDataHora().getDayOfMonth() + "/" + p.getDataHora().getMonth() + "|" + p.getDataHora().getHour() + ":" + p.getDataHora().getMinute();
+			                System.out.printf("%-15s %-15d %-15.2f%n", diahora, p.getQuantidadeProdutos(), p.getTotal());
 
 			                numeroVendas++;
 			                montanteTotal += p.getTotal();
@@ -546,20 +542,19 @@ public class GerirBar {
 		        		
 		        		for (Reserva r : c.getReservas()) {
 		        			if (r.getEstado()==EstadoReserva.LEVANTADA || r.getEstado()==EstadoReserva.NAO_LEVANTADA) {
-		        				System.out.printf("%-15s %-15d %-15.2f%n", r.getDataHora(), r.getQuantidadeProdutos(), r.getTotal());
+		        				String diahora = r.getDataHora().getDayOfMonth() + "/" + r.getDataHora().getMonth() + "|" + r.getDataHora().getHour() + ":" + r.getDataHora().getMinute();
+		        				System.out.printf("%-15s %-15d %-15.2f%n", diahora, r.getQuantidadeProdutos(), r.getTotal());
 
 				                numeroVendas++;
 				                montanteTotal += r.getTotal();	
 		        			}
 		        		}
-		        	} 
-		        	
+		        	}
 		        }
-
+		    }
 		    System.out.println("-----------------------------------------------------");
 		    System.out.println("Número de vendas: " + numeroVendas);
 		    System.out.printf("Montante total: %.2f €%n", montanteTotal);
-		    }
 		}
 
 		public Pedido pesquisarPedido(int idPedido) {

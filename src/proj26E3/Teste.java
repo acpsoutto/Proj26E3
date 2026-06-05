@@ -484,7 +484,7 @@ public class Teste {
 									break;
 								}
 								
-								if (p == null) {
+								if (p == null || gb.pesquisarParcela(idP)!=null) {
 									System.out.println("Produto não encontrado!");
 									continue;
 								}
@@ -686,7 +686,7 @@ public class Teste {
 								if(idP == 0) {
 									break;
 								}
-								if(gb.pesquisarProduto(idP) == null) {
+								if(gb.pesquisarProduto(idP) == null || gb.pesquisarParcela(idP)!=null) {
 									System.out.println("Produto não encontrado! Tente Novamente");
 									continue;
 								}

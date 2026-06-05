@@ -45,11 +45,12 @@ public class FuncionarioBar extends Utilizador {
 	 * @param idPedido -identificador do pedido
 	 */
 	public void apagarPedido(int idPedido) {
-		for (Pedido p: pedidos) {
-			if(p.getId()==idPedido) {
-				pedidos.remove(p);
-			}
-		}
+	    for (int i = 0; i < pedidos.size(); i++) {
+	        if (pedidos.get(i).getId() == idPedido) {
+	            pedidos.remove(i);
+	            return;
+	        }
+	    }
 	}
 	
 	public boolean vericarJaExiste(int id, int idPedido) {

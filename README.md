@@ -49,11 +49,14 @@ A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de PO
 │       ├── 📄 .gitignore
 │       ├── 📄 CategoriaProduto.java     # Enum/Classe de categorias de produto
 │       ├── 📄 Cliente.java              # Classe de Cliente
+│       ├── 📄 Composto.java             # Classe de Elementos Compostos
+│       ├── 📄 Elementar.java            # Classe dos Elementos Elementares
 │       ├── 📄 EstadoReserva.java        # Enum/Classe de estados de reserva
 │       ├── 📄 FuncionarioBar.java       # Classe do perfil Funcionário de Bar
 │       ├── 📄 GerirBar.java             # Classe principal de gestão do bar
-│       ├── 📄 ItemPedido.java           # Classe que representa um item de um pedido
-│       ├── 📄 ItemReserva.java          # Classe que representa um item de uma reserva
+│       ├── 📄 Item.java                 # Classe que representa um item de um pedido
+│       ├── 📄 Lote.java                 # Classe que representa um lote de um pedido
+│       ├── 📄 Parcela Usada.java        # Classe que representa as parcelas usadas
 │       ├── 📄 Pedido.java               # Classe de Pedido
 │       ├── 📄 Produto.java              # Classe de Produto
 │       ├── 📄 Reserva.java              # Classe de Reserva
@@ -74,7 +77,7 @@ O projeto foi dividido rigidamente em dois blocos de entrega (Incrementos):
 * **Entregáveis:** 1º Incremento do código Java e relatório de conclusões (Sprint Retrospective 1).
 ---
 ### 📅 Sprint 2: [25/05] -> [08/06] 🔄
-* **Objetivo do Sprint:** Por definir.
+* **Objetivo do Sprint:** Implementar o sistema de pagamento ( pedidos e reservas) , multas e aprimorar o 1º incremento.
 * **Entregáveis:** 2º Incremento (Aplicação Global) e Reflexão Global do PBL.
 ---
 

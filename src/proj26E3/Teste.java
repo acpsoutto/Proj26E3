@@ -17,6 +17,7 @@ public class Teste {
 		int idPedido = 0;
 		int opc;
 		
+		// Utilizadores e produto de teste pré-carregados no sistema
 		TipoUtilizador tipoU = TipoUtilizador.ADMNISTRACAO;
 		gb.adicionarUtilizador(1, "Admin", "admin@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.GERENTE;
@@ -48,10 +49,12 @@ public class Teste {
 				}
 				
 				if(opc == 0) {
-					System.out.println("Obrigado por utilizar o programa.");
+					System.out.println("Obrigado por utilizar o programa. Até breve!");
 					break;
 				}
 				
+				// --- Autenticação do Utilizador ---
+
 				int intentos=0;
 				Utilizador f=null;
 				int uti =0;
@@ -77,7 +80,7 @@ public class Teste {
 						continue;
 						}
 					if(!f.getPw().equals(chave)){
-						System.out.println("Chave errada");
+						System.out.println("Palavra-chave errada. Tente outra vez.\n");
 						intentos++;
 						continue;	
 					}
@@ -85,26 +88,26 @@ public class Teste {
 				}while(intentos<5);	
 				
 				if(intentos>=5) {
-					System.out.println("Limite de intentos atingido");
+					System.out.println("Limite de tentativas atingido");
 					continue;
 				}
 						
 				// Validação do tipo de perfil correspondente
 					
 				if (opc == 1 && f.getTipo()!= TipoUtilizador.ADMNISTRACAO) { 
-					System.out.println("Este utilizador não é Administrador!\n");
+					System.out.println("Este utilizador não tem perfil de Administrador!\n");
 					continue;
 				}
 				if (opc == 2 && f.getTipo()!= TipoUtilizador.GERENTE) {
-					System.out.println("Este utilizador não é Gerente!\n");
+					System.out.println("Este utilizador não tem perfil de Gerente!\n");
 					continue;
 				}
 				if (opc == 3 && f.getTipo()!= TipoUtilizador.FUNCIONARIO_BAR) {
-					System.out.println("Este utilizador não é do Bar!\n");
+					System.out.println("Este utilizador não tem perfil de Funcionário do Bar!\n");
 					continue;
 				}
 				if (opc == 4 && f.getTipo()!= TipoUtilizador.CLIENTE) {
-					System.out.println("Este utilizador não é cliente");
+					System.out.println("Este utilizador não tem perfil de Cliente!\n");
 					continue;
 				}
 						
@@ -121,21 +124,30 @@ public class Teste {
 	             */
 				if(opc == 1){
 					do {
+						System.out.println("==========================================");
+						System.out.println("          MENU - ADMINISTRADOR           ");
+						System.out.println("==========================================");
 						System.out.println("1- Adicionar utilizador");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
-						System.out.print("Opção:");
+						System.out.print("Opção: ");
 						escolha = inserir(sc);
 						System.out.println();
 						
 						switch (escolha) {
+							/**
+					 		* Permite ao administrador registar um novo utilizador no sistema.
+					 		* Solicita o tipo, ID, email, palavra-chave e nome.
+					 		* Valida se o ID já está em uso antes de criar.
+					 		*/
 						case 1:
-							System.out.println("Que tipo de utilizador quer adicionar:");
+							System.out.println("------ TIPO DE UTILIZADOR ------");
 							System.out.println("1- Adicionar Funcionário do bar");
 							System.out.println("2- Adicionar Cliente");
 							System.out.println("3- Adicionar Gerente");
 							System.out.println("4- Adicionar Admnistrador");
+							System.out.println("--------------------------------");
 							int utilizadore = sc.nextInt();
 							if(utilizadore <= 0 || utilizadore >= 5  ) {
 								System.out.println("Opção invalida!");
@@ -143,17 +155,17 @@ public class Teste {
 							}
 							TipoUtilizador tipo = null;
 							
-							System.out.println("ID do Utilizador:");
+							System.out.println("ID do novo Utilizador: ");
 							int id = inserir(sc);
 							
 							if (gb.pesquisarUtilizador(id)!= null) {
-								System.out.println("ID já existe.");
+								System.out.println("Esse ID já está em uso. Tente outro ID.");
 								continue;
 							}
 							System.out.println("Email do Utilizador:");
 							String mail = inserirEmail(sc,gb);
 							
-							System.out.println("PassWord do Utilizador:");
+							System.out.println("Palavra-chave do Utilizador:");
 							String pw = sc.next();
 							
 							System.out.println("Nome do Utilizador:");
@@ -174,14 +186,15 @@ public class Teste {
 							}
 							
 							gb.adicionarUtilizador(id, nome, mail, pw, tipo);
-							System.out.println("Utilizador adicionado");
+							System.out.println("Utilizador adicionado com sucesso!");
+							break;
 							
 						case 10:
-							System.out.println("A sair para o login");
+							System.out.println("A regressar ao menu de login");
 							break;
 							
 						case 0:
-							System.out.println("Obrigado por utilizar o programa.");
+							System.out.println("Obrigado por utilizar o Sistema.");
 							opc = 0;
 							break;
 							
@@ -192,18 +205,21 @@ public class Teste {
 				}
 				 
 					
-				
-				/* 
-				 * USUARIO - GERENTE
-				 */
+				// ==========================================
+				// MENU GERENTE
+				// ==========================================
 				if(opc == 2){
 					do {
+						System.out.println("==========================================");
+						System.out.println("             MENU - GERENTE              ");
+						System.out.println("==========================================");
 						System.out.println("1- Adicionar Produtos");
 						System.out.println("2- Consultar Produtos");
 						System.out.println("3- Consultar Preços");
 						System.out.println("4- Atualizar Preços");
 						System.out.println("5- Adicionar stock");
 						System.out.println("6- Consultar Relatório de vendas");
+						System.out.println("------------------------------------------");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -228,14 +244,16 @@ public class Teste {
 								break;
 							}
 							if(gb.pesquisarProduto(id) != null) {
-								System.out.println("ID já em utilização! Tente novamente.");
+								System.out.println("ID já está em uso! Tente novamente.");
 								break;
 							}
+
 							System.out.println("Nome do novo produto");
 							String nome = sc.nextLine();
-					
-							System.out.println("Qual é o tipo do produto: ");
-							System.out.println("1-Parcela\n2-Elementar\n3-Composto");
+							System.out.println("Tipo do produto:");
+							System.out.println(" 1 - Parcela");
+							System.out.println(" 2 - Elementar");
+							System.out.println(" 3 - Composto");
 							int opcao = sc.nextInt();
 							sc.nextLine();
 							if(opcao !=3 && opcao !=2 && opcao !=1 ) {
@@ -249,7 +267,7 @@ public class Teste {
 								}
 							}
 							if(opcao == 1 || opcao == 2) {
-								System.out.println("Qual é a quantidade a armazenar em stock produto");
+								System.out.println("Quantidade em stock do produto: ");
 								stock = inserir(sc);
 								if(stock<0) {
 									System.out.println("Numero de Stock invalido! Tente novamente");
@@ -263,15 +281,16 @@ public class Teste {
 								}
 							}
 							if(opcao == 2 || opcao == 3) {
-								System.out.println("Preço do produto");
+								System.out.println("Preço do produto (€): ");
 								preco = sc.nextDouble();
 								sc.nextLine();
 								if(preco <= 0) {
-									System.out.println("Erro! Preço Invalido.");
+									System.out.println("Erro! Preço tem de ser superior a 0.");
 									break;
 								}
 							}else{
 								gb.adicionarParcela(id,nome,stock, validade);
+								System.out.println("Parcela adicionada com sucesso!\n");
 								break;
 							}
 							if(opcao == 2) {
@@ -318,11 +337,15 @@ public class Teste {
 							break;
 						/** Imprime todos os produtos registados no sistema. */	
 						case 2:
+							System.out.println("------ LISTA DE PRODUTOS ------");
 							gb.imprimirProdutos();
+							System.out.println("-------------------------------\n");
 							break;
 						/** Imprime o ID, nome e preço de cada produto. */	
 						case 3:
+							System.out.println("------ LISTA DE PREÇOS ------");
 							gb.imprimirPreços();
+							System.out.println("-----------------------------\n");
 							break;
 						/** Atualiza o preço de um produto existente.
 					      * Solicita o ID do produto e o novo preço.
@@ -341,10 +364,10 @@ public class Teste {
 									
 									gb.atualizarPreco(id, novoPreco);
 								}else {
-									System.out.println("Esse ID corresponde a um produto Parcela! Parcelas não tem preço associado.");
+									System.out.println("Preço atualizado com sucesso!\n");
 								}
 							} else{
-								System.out.println("Esse id não esta atribuido a nenhum produto! Tente outra vez!");
+									System.out.println("[ERRO] Parcelas não têm preço associado.\n");
 							}
 							break;
 						/** Adiciona stock a um produto existente.
@@ -352,7 +375,7 @@ public class Teste {
 					     * Verifica se o produto existe antes de adicionar.
 					     */	
 						case 5:
-							System.out.print("Qual o id do produto: ");
+							System.out.print("ID do produto: ");
 							id = inserir(sc);
 							System.out.println();
 							if(gb.pesquisarProduto(id) !=null) {
@@ -397,17 +420,22 @@ public class Teste {
 						}
 					}while(opc != 0 && escolha != 10);
 				}
-				/*
-				 * USUARIO - FUNCIONARIO DO BAR
-				 */
+				
+				// ==========================================
+				// MENU FUNCIONÁRIO DO BAR
+				// ==========================================
+
 				if(opc == 3){
 					do {
-						System.out.println("===== MENU FUNCIONARIO BAR =====");
+						System.out.println("==========================================");
+						System.out.println("         MENU - FUNCIONÁRIO DO BAR       ");
+						System.out.println("==========================================");
 						System.out.println("1- Consultar Produtos Disponíveis");
 						System.out.println("2- Registrar pedido");
 						System.out.println("3- Consultar reservas pendentes");
 						System.out.println("4- Confirmar reserva");
 						System.out.println("5- Confirmar Levantamento de Reserva");
+						System.out.println("------------------------------------------");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -416,15 +444,16 @@ public class Teste {
 						System.out.println();
 						
 						switch (escolha) {
-						/** Consulta e imprime todos os produtos com stock disponível. */
+						/** Consulta e imprime todos os produtos com stock disponível (stock > 0). */
 						case 1:
 							gb.consultarProdutosDisponiveis(); 
 							break;
-						/** Regista um novo pedido para o funcionário autenticado.
-					     * Solicita produtos e quantidades em ciclo até o utilizador inserir 0.
-					     * Valida stock disponível para cada produto adicionado.
-					     * Se nenhum item for adicionado, o pedido é descartado.
-					      */
+						/**
+					 	* Regista um novo pedido de balcão para o funcionário autenticado.
+					 	* Solicita produtos e quantidades em ciclo até o utilizador inserir 0.
+					 	* Permite editar quantidades antes de confirmar.
+					 	* Se nenhum item for adicionado, o pedido é descartado.
+					 	*/
 						case 2:
 							idPedido += 1;
 							Pedido pd = gb.registrarPedido(uti, idPedido);
@@ -488,7 +517,8 @@ public class Teste {
 								System.out.println("-----------------------");
 								do {
 									System.out.println("\nDeseja fazer alterações (reduzir/aumentar numero de itens) do seu pedido:");
-									System.out.println("1-Sim\n 2-Não");
+									System.out.println(" 1 - Sim");
+									System.out.println(" 2 - Não");
 									alteracao = inserir(sc);
 									if(alteracao != 1 && alteracao != 2) {
 										System.out.println("Opção Invalida! Tente novamente");
@@ -525,14 +555,17 @@ public class Teste {
 								}while (alteracao != 2);
 								
 							
-								System.out.println("\n========= PAGAMENTO =========");
+								System.out.println("==========================================");
+								System.out.println("              PAGAMENTO                  ");
+								System.out.println("==========================================");
 								System.out.printf("Total a pagar: %.2f €\n", pd.getTotal());
 								
+								System.out.println("------------------------------------------");
 								int metodoPagamento;
 								do {
 									System.out.println("1 - Dinheiro");
 									System.out.println("2 - Multibanco");
-									System.out.print("Selecione o método: ");
+									System.out.print("Método de pagamento: ");
 									metodoPagamento = inserir(sc);
 									
 									if (metodoPagamento == 1) {
@@ -573,20 +606,24 @@ public class Teste {
 							}
 							gb.confirmarReserva(id);
 							break;
-							
+						
+							/* *Confirma o levantamento de uma reserva já confirmada.
+					 		* Opção 1: processa o pagamento e marca como LEVANTADA.
+					 		* Opção 2: marca como NÃO LEVANTADA e aplica multa ao cliente se não pagou.
+					 		*/
 						case 5:
-							System.out.println("=======Escolher=Reserva=======");
+							System.out.println("------ RESERVAS CONFIRMADAS ------");
 							gb.imprimirReservasConfirmadas();
-							System.out.println("==============================");
+							System.out.println("----------------------------------");
 							int idReserva = inserir(sc);
 							if(!gb.reservaValida(idReserva)) {
 								System.out.println("Essa Reserva é Invalida ser levantada");
 								continue;
 							}
-							System.out.println("=====Tipo=de=Levantamento=====");
-							System.out.println("1- Levantar Encomenda");
-							System.out.println("2- Marcar como não Levantada");
-							System.out.println("==============================");
+							System.out.println("------ TIPO DE LEVANTAMENTO ------");
+							System.out.println(" 1 - Levantar Encomenda");
+							System.out.println(" 2 - Marcar como Não Levantada");
+							System.out.println("----------------------------------");
 							int tipo = inserir(sc);
 							Reserva r = gb.pesquisarReserva(idReserva);
 							
@@ -594,10 +631,12 @@ public class Teste {
 							case 1:
 								if (r.getEstadoPagamento() == EstadoPagamento.NAO_PAGO) {
 									double totalLevantamento = r.getTotal();
-									System.out.println("\n========= PAGAMENTO =========");
-									System.out.printf("Total a pagar pela reserva: %.2f €\n", totalLevantamento);
-									System.out.println("Método de pagamento aceite: Apenas Multibanco.");
-									
+									System.out.println("==========================================");
+									System.out.println("              PAGAMENTO                  ");
+									System.out.println("==========================================");
+									System.out.printf(" Total da reserva: %.2f €%n", totalLevantamento);
+								System.out.println(" Método aceite: Multibanco");
+								System.out.println("------------------------------------------");
 									pagamentoMultibanco(sc);
 									
 									System.out.println("=============================");
@@ -649,18 +688,22 @@ public class Teste {
 						}
 					}while(escolha != 0 && escolha != 10);
 				}
-				/*
-				 * USUARIO - CLIENTE
-				 */
+				// ==========================================
+				// MENU CLIENTE
+				// ==========================================
 				if(opc == 4){
 					do {
-						System.out.println("1- Fazer Reserva");
-						System.out.println("2- Consultar Reservas");
-						System.out.println("3- Canselar Reserva");
-						System.out.println("4- Pagar Multas Pendentes");
-						System.out.println("10- Sair para login");
-						System.out.println("0- Encerrar programa");
-						System.out.println("================================");
+						System.out.println("==========================================");
+						System.out.println("             MENU - CLIENTE              ");
+						System.out.println("==========================================");
+						System.out.println(" 1 - Fazer Pré-Reserva");
+						System.out.println(" 2 - Consultar Reservas");
+						System.out.println(" 3 - Cancelar Reserva");
+						System.out.println(" 4 - Pagar Multas Pendentes");
+						System.out.println("------------------------------------------");
+						System.out.println(" 10 - Sair para o Login");
+						System.out.println(" 0  - Encerrar Programa");
+						System.out.println("==========================================");
 						System.out.print("Opção:");	
 						escolha = inserir(sc);
 						System.out.println();
@@ -774,11 +817,16 @@ public class Teste {
 								}while (alteracao != 2);
 								
 								double totalReserva = r.getTotal();
-								System.out.println("\n========= PAGAMENTO DA RESERVA =========");
-								System.out.printf("Total da reserva: %.2f €\n", totalReserva);
-								System.out.println("1 - Pagamento Imediato (Apenas Multibanco)");
-								System.out.println("2 - Pagamento Mais Tarde (Aviso: Não levantar resultará em multa do valor total!)");
-								System.out.print("Selecione a opção: ");
+								System.out.println("==========================================");
+								System.out.println("         PAGAMENTO DA RESERVA            ");
+								System.out.println("==========================================");
+								System.out.printf(" Total da reserva: %.2f €%n", totalReserva);
+								System.out.println("------------------------------------------");
+								System.out.println(" 1 - Pagar agora (Multibanco)");
+								System.out.println(" 2 - Pagar no levantamento");
+								System.out.println("   [AVISO] Não levantar resultará em multa do valor total!");
+								System.out.println("------------------------------------------");
+								System.out.print(" Opção: ");
 								
 								int tipoPagamentoReserva = inserir(sc);
 								if (tipoPagamentoReserva == 1) {
@@ -827,7 +875,9 @@ public class Teste {
 							break;
 						
 						case 4:
-							System.out.println("=========== CONSULTAR E PAGAR MULTAS ===========  ");
+							System.out.println("==========================================");
+							System.out.println("         CONSULTAR E PAGAR MULTAS        ");
+							System.out.println("==========================================");
 							Utilizador uCli = gb.pesquisarUtilizador(uti);
 							Cliente cCli = (Cliente) uCli;
 							
@@ -893,6 +943,15 @@ public class Teste {
 			}
 		}
 	}
+
+	/**
+	 * Lê e valida um endereço de email do Scanner.
+	 * Verifica se o formato é válido e se o email já existe no sistema.
+	 * Repete a leitura até ser inserido um email válido e único.
+	 * @param sc - Scanner de entrada
+	 * @param gb - instância do GerirBar para verificar emails duplicados
+	 * @return o email válido inserido pelo utilizador
+	 */
 	public static String inserirEmail(Scanner sc,GerirBar gb) {
 		String patron = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
 		String mail=null;
@@ -914,6 +973,13 @@ public class Teste {
 		
 		return mail;
 	}
+	/**
+	 * Lê um número decimal (double) do Scanner com proteção contra entradas inválidas.
+	 * Usado principalmente nos processos de pagamento.
+	 * @param sc - Scanner de entrada
+	 * @return o valor decimal inserido pelo utilizador
+	 */
+
 	public static double inserirDouble(Scanner sc) { // serve para os valores cujo o int já é iusuficiente,  neste momento a ser usado apenas para os pagamentos
 		while(true) {
 			try {
@@ -927,40 +993,48 @@ public class Teste {
 			}
 		}
 	}
-	
-	public static void pagamentoMultibanco(Scanner sc) {  // "menu" de pagamento de multibanco  
-		System.out.println("\n--- PAGAMENTO MULTIBANCO ---");
-		System.out.print("Número do cartão: ");
+	/**
+	 * Simula o processo de pagamento por Multibanco.
+	 * Solicita número do cartão, validade, CVV e nome do titular.
+	 * @param sc - Scanner de entrada
+	 */
+	public static void pagamentoMultibanco(Scanner sc) {
+		System.out.println("------ PAGAMENTO MULTIBANCO ------");
+		System.out.print(" Número do cartão: ");
 		String num = sc.nextLine();
-		
-		System.out.print("Insira o mês e ano de validade (ex: 12/26): ");
+		System.out.print(" Validade do cartão (ex: 12/26): ");
 		String validade = sc.nextLine();
-		
-		System.out.print("Insira o código de segurança (3 últimos números): ");
+		System.out.print(" Código de segurança (CVV): ");
 		String cvv = sc.nextLine();
-		
-		System.out.print("Insira o nome do dono do cartão: ");
+		System.out.print(" Nome do titular: ");
 		String titular = sc.nextLine();
-		
-		System.out.println("\nA processar pagamento com o banco...");
-		System.out.println("Pagamento bem sucedido! Muito obrigado e volte sempre, " + titular + ".");
+		System.out.println("----------------------------------");
+		System.out.println(" A processar pagamento...");
+		System.out.println(" Pagamento aprovado! Obrigado, " + titular + ".");
+		System.out.println("----------------------------------\n");
 	}
+	/**
+	 * Simula o processo de pagamento em dinheiro.
+	 * Solicita o valor entregue e calcula o troco.
+	 * Repete a leitura se o valor entregue for insuficiente.
+	 * @param sc    - Scanner de entrada
+	 * @param total - valor total a pagar
+	 */
 
-	public static void pagamentoDinheiro(Scanner sc, double total) { // "menu" de pagamento de dinheiro
-		System.out.println("\n--- PAGAMENTO EM DINHEIRO ---");
-		System.out.printf("Total a pagar: %.2f €\n", total);
-		
+	public static void pagamentoDinheiro(Scanner sc, double total) {
+		System.out.println("------ PAGAMENTO EM DINHEIRO ------");
+		System.out.printf(" Total a pagar: %.2f €%n", total);
+		System.out.println("-----------------------------------");
 		double valorEntregue = 0;
 		do {
-			System.out.print("Insira o valor entregue: ");
+			System.out.print(" Valor entregue: ");
 			valorEntregue = inserirDouble(sc);
-			
 			if (valorEntregue < total) {
-				System.out.printf("Valor insuficiente! Faltam %.2f €.\n", (total - valorEntregue));
+				System.out.printf("Valor insuficiente! Faltam %.2f €.%n", (total - valorEntregue));
 			}
 		} while (valorEntregue < total);
-		
 		double troco = valorEntregue - total;
-		System.out.printf("Pagamento validado! Troco a devolver: %.2f €\n", troco);
+		System.out.printf(" Pagamento validado! Troco: %.2f €%n", troco);
+		System.out.println("-----------------------------------\n");
 	}
 }

@@ -121,10 +121,7 @@ public class Teste {
 	             */
 				if(opc == 1){
 					do {
-						System.out.println("1- Adicionar Funcionário do bar");
-						System.out.println("2- Adicionar Cliente");
-						System.out.println("3- Adicionar Gerente");
-						System.out.println("4- Adicionar Admnistrador");
+						System.out.println("1- Adicionar utilizador");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -133,96 +130,51 @@ public class Teste {
 						System.out.println();
 						
 						switch (escolha) {
-						case 1: 
-							System.out.println("ID do Funcionário:");
+						case 1:
+							System.out.println("Que tipo de utilizador quer adicionar:");
+							System.out.println("1- Adicionar Funcionário do bar");
+							System.out.println("2- Adicionar Cliente");
+							System.out.println("3- Adicionar Gerente");
+							System.out.println("4- Adicionar Admnistrador");
+							int utilizadore = sc.nextInt();
+							if(utilizadore <= 0 || utilizadore >= 5  ) {
+								System.out.println("Opção invalida!");
+								break;
+							}
+							TipoUtilizador tipo = null;
+							
+							System.out.println("ID do Utilizador:");
 							int id = inserir(sc);
 							
 							if (gb.pesquisarUtilizador(id)!= null) {
 								System.out.println("ID já existe.");
 								continue;
 							}
-							System.out.println("Email do Funcionário:");
+							System.out.println("Email do Utilizador:");
 							String mail = inserirEmail(sc,gb);
 							
-							System.out.println("PassWord do Funcionário:");
+							System.out.println("PassWord do Utilizador:");
 							String pw = sc.next();
 							
-							System.out.println("Nome do Funcionário:");
+							System.out.println("Nome do Utilizador:");
 							String nome = sc.next();
-							
-							TipoUtilizador tipo = TipoUtilizador.FUNCIONARIO_BAR;
-							
-							gb.adicionarUtilizador(id, nome, mail, pw, tipo);
-							System.out.println("Funcionário adicionado");
-							break;
-							
-						case 2:
-							System.out.println("ID do Cliente:");
-							id = inserir(sc);
-							
-							if (gb.pesquisarUtilizador(id)!= null) {
-								System.out.println("ID já existe.");
-								continue;
+							switch(utilizadore) {
+							case 1 :
+								tipo = TipoUtilizador.FUNCIONARIO_BAR;
+								break;
+							case 2 :
+								tipo = TipoUtilizador.CLIENTE;
+								break;
+							case 3:
+								tipo = TipoUtilizador.GERENTE;
+								break;
+							case 4:
+								tipo = TipoUtilizador.ADMNISTRACAO;
+								break;
 							}
-							System.out.println("Email do Cliente:");
-							mail = inserirEmail(sc,gb);
-							
-							System.out.println("PassWord do Cliente:");
-							pw = sc.next();
-							
-							System.out.println("Nome do Cliente:");
-							nome = sc.next();
-							
-							tipo = TipoUtilizador.CLIENTE;
 							
 							gb.adicionarUtilizador(id, nome, mail, pw, tipo);
-							System.out.println("Cliente adicionado");
-							break;
-							
-						case 3: 
-							System.out.println("ID do Gerente:");
-							id = inserir(sc);
-							
-							if (gb.pesquisarUtilizador(id)!= null) {
-								System.out.println("ID já existe.");
-								continue;
-							}
-							System.out.println("Email do Gerente:");
-							mail = inserirEmail(sc,gb);
-							
-							System.out.println("PassWord do Gerente:");
-							pw = sc.next();
-							
-							System.out.println("Nome do Gerente:");
-							nome = sc.next();
-							
-							tipo = TipoUtilizador.GERENTE;
-							
-							gb.adicionarUtilizador(id, nome, mail, pw, tipo);
-							System.out.println("Gerente adicionado");
-							break;
-						case 4: 
-							System.out.println("ID do Admnistrador:");
-							id = inserir(sc);
-							
-							if (gb.pesquisarUtilizador(id)!= null) {
-								System.out.println("ID já existe.");
-								continue;
-							}
-							System.out.println("Email do Admnistrador:");
-							mail = inserirEmail(sc,gb);
-							
-							System.out.println("PassWord do Admnistrador:");
-							pw = sc.next();
-							
-							System.out.println("Nome do Admnistrador:");
-							nome = sc.next();
-							
-							tipo = TipoUtilizador.ADMNISTRACAO;
-							
-							gb.adicionarUtilizador(id, nome, mail, pw, tipo);
-							System.out.println("Admnistrador adicionado");
-							break;
+							System.out.println("Utilizador adicionado");
 							
 						case 10:
 							System.out.println("A sair para o login");
@@ -248,7 +200,7 @@ public class Teste {
 					do {
 						System.out.println("1- Adicionar Produtos");
 						System.out.println("2- Consultar Produtos");
-						System.out.println("3- Consultar Preços"); //Menu do Gerente
+						System.out.println("3- Consultar Preços");
 						System.out.println("4- Atualizar Preços");
 						System.out.println("5- Adicionar stock");
 						System.out.println("6- Consultar Relatório de vendas");
@@ -326,9 +278,14 @@ public class Teste {
 								gb.adicionarProduto(id, nome, preco, stock, validade, opcao);
 							}else {
 								gb.adicionarProduto(id, nome, preco, 0, 0, opcao);
+								boolean testa = false;
+								int i = 0;
 								do {
 									System.out.println("Qual é o ID da parcela (Insira 0 para parar de adicionar):");
 									idParce = inserir(sc);
+									if(i >=2) {
+										testa = true;
+									}
 									if(idParce == 0) {
 										if(gb.verficarQuantidadeParce(id)) {
 											break;
@@ -352,7 +309,11 @@ public class Teste {
 										continue;
 									}
 									gb.adiconarNoComposto(id,idParce,qtd);
+									i++;
 								}while(idParce != 0);
+								if(!testa) {
+									gb.removerProduto(id);
+								}
 							}
 							break;
 						/** Imprime todos os produtos registados no sistema. */	
@@ -526,7 +487,7 @@ public class Teste {
 								pd.imprimirPedido();
 								System.out.println("-----------------------");
 								do {
-									System.out.println("\nDeseja fazer alterações (reduzir numero de itens) do seu pedido:");
+									System.out.println("\nDeseja fazer alterações (reduzir/aumentar numero de itens) do seu pedido:");
 									System.out.println("1-Sim\n 2-Não");
 									alteracao = inserir(sc);
 									if(alteracao != 1 && alteracao != 2) {
@@ -551,15 +512,21 @@ public class Teste {
 												System.out.println("Valor de quantidade Invalido");
 												continue;
 											}
+											Produto p = gb.pesquisarProduto(idP);
+											int stockAtual = p.getStock();
+											if (qtd > stockAtual) {
+												System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
+												continue;
+											}
 											pd.trocarQuantidade(idP,qtd);
 											alteracao = 2;
 										}while (idP !=0 );
 									}
 								}while (alteracao != 2);
 								
-								
+							
 								System.out.println("\n========= PAGAMENTO =========");
-								System.out.printf("Total a pagar: %.2f €\n", totalBalcao);
+								System.out.printf("Total a pagar: %.2f €\n", pd.getTotal());
 								
 								int metodoPagamento;
 								do {
@@ -569,7 +536,7 @@ public class Teste {
 									metodoPagamento = inserir(sc);
 									
 									if (metodoPagamento == 1) {
-										pagamentoDinheiro(sc, totalBalcao);
+										pagamentoDinheiro(sc, pd.getTotal());
 									} else if (metodoPagamento == 2) {
 										pagamentoMultibanco(sc);
 									} else {
@@ -650,10 +617,10 @@ public class Teste {
 								System.out.println("A reserva foi levantada com sucesso!");
 								break;
 							case 2:
-								if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
-									System.out.println("Ainda não pode marcar esta encomenda como não levantada");
-									continue;
-								}
+								//if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
+									//System.out.println("Ainda não pode marcar esta encomenda como não levantada");
+									//continue;
+								//}
 								r.marcarComoNaoLevantada(); // Altera o estado com metodo que a torna nao levantada
 								
 								Cliente cliMultado = gb.pesquisarClientePorReserva(idReserva);
@@ -771,7 +738,7 @@ public class Teste {
 								r.imprimirPedido();
 								System.out.println("-----------------------");
 								do {
-									System.out.println("\nDeseja fazer alterações (reduzir numero de itens) do seu pedido:");
+									System.out.println("\nDeseja fazer alterações (reduzir/aumentar numero de itens) do seu pedido:");
 									System.out.println("1-Sim\n 2-Não");
 									alteracao = inserir(sc);
 									if(alteracao != 1 && alteracao != 2) {
@@ -794,6 +761,12 @@ public class Teste {
 											int qtd = inserir(sc);
 											if(qtd <= 0) {
 												System.out.println("Valor de quantidade Invalido");
+												continue;
+											}
+											Produto prod = gb.pesquisarProduto(idP);
+											int stockAtual = prod.getStock();
+											if (qtd > stockAtual) {
+												System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
 												continue;
 											}
 											r.trocarQuantidade(idP,qtd);
@@ -955,6 +928,7 @@ public class Teste {
 			}
 		}
 	}
+	
 	public static void pagamentoMultibanco(Scanner sc) {  // "menu" de pagamento de multibanco  
 		System.out.println("\n--- PAGAMENTO MULTIBANCO ---");
 		System.out.print("Número do cartão: ");

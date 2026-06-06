@@ -610,5 +610,9 @@ public class GerirBar {
 			}
 			return null;
 		}
+
+		public void removerProduto(int id) {
+			produtos.removeLast();
+		}
 }
 

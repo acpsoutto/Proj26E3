@@ -8,7 +8,8 @@ import java.util.ArrayList;
 
 public class Cliente extends Utilizador {
 	private ArrayList<Reserva> reservas;
-
+	private double credito;
+	
 	/**
 	 * CONSTRUTOR
 	 * @param numero - numero identificador do utilizador
@@ -21,6 +22,7 @@ public class Cliente extends Utilizador {
 	public Cliente(int numero, String nome, String email, String pw, TipoUtilizador tipo) {
 		super(numero, nome, email, pw, tipo);
 		reservas = new ArrayList<>();
+		this.credito= 0.0;
 	}
 	
 	public ArrayList<Reserva> getReservas() {
@@ -168,6 +170,14 @@ public class Cliente extends Utilizador {
 			}
 		}
 		return false;
+	}
+
+	public double getCredito() {
+		return credito;
+	}
+
+	public void setCredito(double credito) {
+		this.credito = credito;
 	}
 	
 }

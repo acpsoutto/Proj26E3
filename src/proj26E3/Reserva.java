@@ -61,5 +61,13 @@ public class Reserva extends Pedido {
 		+ "Itens: " + getItens();
 	}
 	
+	public void marcarComoNaoLevantada() {
+        if (this.estado == EstadoReserva.PENDENTE || this.estado == EstadoReserva.CONFIRMADA) {
+            this.estado = EstadoReserva.NAO_LEVANTADA;
+            System.out.println("O estado da reserva foi alterado para: NÃO LEVANTADA.");
+        } else {
+            System.out.println("Não é possível alterar o estado da reserva. A mesma já está: " + this.estado);
+        }
+    }
 
 }

@@ -598,5 +598,17 @@ public class GerirBar {
 			}
 			return false;
 		}
+
+		public Cliente pesquisarClientePorReserva(int idReserva) {
+			for (Utilizador u : utilizadores) {
+				if (u instanceof Cliente) {
+					Cliente c = (Cliente) u;
+					if (c.encontrarReserva(idReserva) != null) {
+						return c;
+					}
+				}
+			}
+			return null;
+		}
 }
 

@@ -558,7 +558,26 @@ public class Teste {
 								}while (alteracao != 2);
 								
 								
-								//COLOCAR O PACAMENTO AQUI
+								System.out.println("\n========= PAGAMENTO =========");
+								System.out.printf("Total a pagar: %.2f €\n", totalBalcao);
+								
+								int metodoPagamento;
+								do {
+									System.out.println("1 - Dinheiro");
+									System.out.println("2 - Multibanco");
+									System.out.print("Selecione o método: ");
+									metodoPagamento = inserir(sc);
+									
+									if (metodoPagamento == 1) {
+										pagamentoDinheiro(sc, totalBalcao);
+									} else if (metodoPagamento == 2) {
+										pagamentoMultibanco(sc);
+									} else {
+										System.out.println("Opção inválida! Por favor, escolha 1 para Dinheiro ou 2 para Multibanco.\n");
+									}
+								} while (metodoPagamento != 1 && metodoPagamento != 2);
+								
+								System.out.println("=============================");
 								
 								
 								pd.confirmarPedido();
@@ -606,18 +625,43 @@ public class Teste {
 							
 							switch (tipo) {
 							case 1:
-								//Inserir Pagamento Aqui
+								double totalLevantamento = r.getTotal();
+								System.out.println("\n========= PAGAMENTO =========");
+								System.out.printf("Total a pagar pela reserva: %.2f €\n", totalLevantamento);
+								
+								int metodoPag;
+								do {
+									System.out.println("1 - Dinheiro");
+									System.out.println("2 - Multibanco");
+									System.out.print("Selecione o método: ");
+									metodoPag = inserir(sc);
+									
+									if (metodoPag == 1) {
+										pagamentoDinheiro(sc, totalLevantamento);
+									} else if (metodoPag == 2) {
+										pagamentoMultibanco(sc);
+									} else {
+										System.out.println("Opção inválida! Escolha 1 ou 2.\n");
+									}
+								} while (metodoPag != 1 && metodoPag != 2);
+								System.out.println("=============================");
+								
 								r.setEstado(EstadoReserva.LEVANTADA);
-								System.out.println("Reserva Levantada");
+								System.out.println("A reserva foi levantada com sucesso!");
 								break;
 							case 2:
 								if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
 									System.out.println("Ainda não pode marcar esta encomenda como não levantada");
 									continue;
 								}
-								r.setEstado(EstadoReserva.NAO_LEVANTADA);
-								//inserir para dar multa = ao preço da reserva ao respetivo cliente
-								System.out.println("Reserva marcada como não levantada.");
+								r.marcarComoNaoLevantada(); // Altera o estado com metodo que a torna nao levantada
+								
+								Cliente cliMultado = gb.pesquisarClientePorReserva(idReserva);
+								if (cliMultado != null) {
+									double valorMulta = r.getTotal(); // Multa igual ao preço da reserva( mas pode ser mudado para outro valor apenas substiituir)
+									cliMultado.setCredito(cliMultado.getCredito() - valorMulta);
+									System.out.printf("Multa de %.2f € aplicada com sucesso ao cliente %s!\n", valorMulta, cliMultado.getNome());
+								}
 								break;
 								
 							default:
@@ -648,6 +692,7 @@ public class Teste {
 						System.out.println("1- Fazer Reserva");
 						System.out.println("2- Consultar Reservas");
 						System.out.println("3- Canselar Reserva");
+						System.out.println("4- Pagar Multas Pendentes");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -663,6 +708,14 @@ public class Teste {
 				         * Se nenhum item for adicionado, a reserva é descartada.
 				         */
 						case 1:
+							Utilizador utilizadorAtual = gb.pesquisarUtilizador(uti);
+							Cliente clienteAtual = (Cliente) utilizadorAtual;
+							if (clienteAtual.getCredito() < 0) {
+								System.out.printf("Operação Bloqueada! Tem crédito negativo: %.2f €\n", clienteAtual.getCredito());
+								System.out.println("Por favor, regularize as suas multas (Opção 4) antes de efetuar novas reservas.");
+								break; 
+							}
+						
 							boolean tenta = false;
 							int idP;
 							if(!gb.consultarProdutosDisponiveis()) {
@@ -748,6 +801,22 @@ public class Teste {
 										}while (idP !=0 );
 									}
 								}while (alteracao != 2);
+								
+								double totalReserva = r.getTotal();
+								System.out.println("\n========= PAGAMENTO DA RESERVA =========");
+								System.out.printf("Total da reserva: %.2f €\n", totalReserva);
+								System.out.println("1 - Pagamento Imediato (Apenas Multibanco)");
+								System.out.println("2 - Pagamento Mais Tarde (Aviso: Não levantar resultará em multa do valor total!)");
+								System.out.print("Selecione a opção: ");
+								
+								int tipoPagamentoReserva = inserir(sc);
+								if (tipoPagamentoReserva == 1) {
+									pagamentoMultibanco(sc);
+								} else {
+									System.out.println("\nReserva registada com pagamento pendente.");
+								}
+								System.out.println("========================================");
+								
 								p.confirmarPedido();
 								System.out.println("O pedido foi registrado!");
 							}
@@ -784,6 +853,41 @@ public class Teste {
 							
 							
 							break;
+						
+						case 4:
+							System.out.println("=========== CONSULTAR E PAGAR MULTAS ===========  ");
+							Utilizador uCli = gb.pesquisarUtilizador(uti);
+							Cliente cCli = (Cliente) uCli;
+							
+							if (cCli.getCredito() >= 0) {
+								System.out.println("Não tem multas pendentes. O seu saldo está regularizado.");
+								break;
+							}
+							
+							double divida = -cCli.getCredito();
+							System.out.printf("O seu saldo está negativo. O valor total a pagar: %.2f €\n", divida);
+							
+							int metPag;
+							do {
+								System.out.println("1 - Pagar com Dinheiro");
+								System.out.println("2 - Pagar com Multibanco");
+								System.out.print("Selecione o método de pagamento: ");
+								metPag = inserir(sc);
+								
+								if (metPag == 1) {
+									pagamentoDinheiro(sc, divida);
+									cCli.setCredito(0.0); 
+									System.out.println("Dívida liquidada! Agora já pode criar novas reservas.");
+								} else if (metPag == 2) {
+									pagamentoMultibanco(sc);
+									cCli.setCredito(0.0); 
+									System.out.println("Dívida liquidada! Agora já pode criar novas reservas.");
+								} else {
+									System.out.println("Opção inválida! Escolha 1 ou 2.\n");
+								}
+							} while (metPag != 1 && metPag != 2);
+							break;	
+							
 						/** Regressa ao menu de login. */
 						case 10:
 							System.out.println("A sair para o login");
@@ -838,5 +942,52 @@ public class Teste {
 		
 		return mail;
 	}
-	
+	public static double inserirDouble(Scanner sc) { // serve para os valores cujo o int já é iusuficiente,  neste momento a ser usado apenas para os pagamentos
+		while(true) {
+			try {
+				double a = sc.nextDouble();
+				sc.nextLine(); // Limpar o buffer do Scanner
+				return a;
+			} catch(InputMismatchException e) {
+				System.out.println("Formato inválido. Insira apenas números (use a vírgula para decimais):\n");
+				sc.nextLine(); // Limpar o buffer incorreto
+				continue;
+			}
+		}
+	}
+	public static void pagamentoMultibanco(Scanner sc) {  // "menu" de pagamento de multibanco  
+		System.out.println("\n--- PAGAMENTO MULTIBANCO ---");
+		System.out.print("Número do cartão: ");
+		String num = sc.nextLine();
+		
+		System.out.print("Insira o mês e ano de validade (ex: 12/26): ");
+		String validade = sc.nextLine();
+		
+		System.out.print("Insira o código de segurança (3 últimos números): ");
+		String cvv = sc.nextLine();
+		
+		System.out.print("Insira o nome do dono do cartão: ");
+		String titular = sc.nextLine();
+		
+		System.out.println("\nA processar pagamento com o banco...");
+		System.out.println("Pagamento bem sucedido! Muito obrigado e volte sempre, " + titular + ".");
+	}
+
+	public static void pagamentoDinheiro(Scanner sc, double total) { // "menu" de pagamento de dinheiro
+		System.out.println("\n--- PAGAMENTO EM DINHEIRO ---");
+		System.out.printf("Total a pagar: %.2f €\n", total);
+		
+		double valorEntregue = 0;
+		do {
+			System.out.print("Insira o valor entregue: ");
+			valorEntregue = inserirDouble(sc);
+			
+			if (valorEntregue < total) {
+				System.out.printf("Valor insuficiente! Faltam %.2f €.\n", (total - valorEntregue));
+			}
+		} while (valorEntregue < total);
+		
+		double troco = valorEntregue - total;
+		System.out.printf("Pagamento validado! Troco a devolver: %.2f €\n", troco);
+	}
 }

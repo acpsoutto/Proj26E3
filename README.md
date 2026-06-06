@@ -52,6 +52,7 @@ A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de PO
 │       ├── 📄 Composto.java             # Classe de Elementos Compostos
 │       ├── 📄 Elementar.java            # Classe dos Elementos Elementares
 │       ├── 📄 EstadoReserva.java        # Enum/Classe de estados de reserva
+|       ├── 📄 EstadoPagamento.java      # Enum/Classe de estados de pagamento
 │       ├── 📄 FuncionarioBar.java       # Classe do perfil Funcionário de Bar
 │       ├── 📄 GerirBar.java             # Classe principal de gestão do bar
 │       ├── 📄 Item.java                 # Classe que representa um item de um pedido

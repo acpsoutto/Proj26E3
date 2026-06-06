@@ -1,8 +1,9 @@
 package proj26E3;
-/*
- * Class Cliente representa um cliente do bar, que é um tipo de utilizador.
- * Um cliente pode criar, cancelar, apagar reservas e consultar o 
- * estado das suas reservas pendentes.
+/**
+ * Representa um cliente do bar.
+ * Um cliente é um tipo de Utilizador que pode criar, consultar e cancelar reservas.
+ * Tem também um sistema de crédito: se não levantar uma reserva confirmada,
+ * é aplicada uma multa (crédito negativo) que impede novas reservas até ser paga.
  */
 import java.util.ArrayList;
 
@@ -24,7 +25,10 @@ public class Cliente extends Utilizador {
 		reservas = new ArrayList<>();
 		this.credito= 0.0;
 	}
-	
+	 /**
+     * Devolve a lista de todas as reservas do cliente.
+     * @return reservas - lista de reservas
+     */
 	public ArrayList<Reserva> getReservas() {
 	    return reservas;
 	}
@@ -38,9 +42,10 @@ public class Cliente extends Utilizador {
 	}
 
 	/**
-	 * Cancelar reserva com o ID fornecido se existir na lista do cliente.
-	 * @param idReserva
-	 */
+     * Cancela a reserva com o ID indicado, se existir na lista do cliente.
+     * A lógica de validação do estado está dentro do método cancelar() da Reserva.
+     * @param idReserva - identificador da reserva a cancelar
+     */
 	public void cancelarReserva(int idReserva) {
 		for(Reserva r : reservas) {
 			if(r.getId()== idReserva) {
@@ -50,9 +55,10 @@ public class Cliente extends Utilizador {
 	}
 
 	/**
-	 * Cancelar e remover permanentemente a reserva com o ID fornecido.
-	 * @param idReserva
-	 */
+     * Cancela e remove permanentemente a reserva com o ID indicado.
+     * Usado quando a reserva foi criada por engano e ainda está PENDENTE.
+     * @param idReserva - identificador da reserva a apagar
+     */
 	public void apagarReserva(int idReserva) {
 	    cancelarReserva(idReserva);
 
@@ -105,7 +111,11 @@ public class Cliente extends Utilizador {
 		}
 		return a;
 	}
-	
+	/**
+     * Calcula o total gasto pelo cliente em reservas já concluídas
+     * (estados LEVANTADA ou NAO_LEVANTADA).
+     * @return o total acumulado em euros
+     */
 	public double clienteTotalReserva() {
 		double total = 0;
 		for (Reserva r : reservas) {
@@ -115,7 +125,11 @@ public class Cliente extends Utilizador {
 		}
 		return total;
 	}
-	
+	/**
+     * Conta o número de reservas concluídas pelo cliente
+     * (estados LEVANTADA ou NAO_LEVANTADA).
+     * @return o número de reservas concluídas
+     */
 	public int numeroPedidos() {
 		int total = 0;
 		for (Reserva r : reservas) {
@@ -125,7 +139,11 @@ public class Cliente extends Utilizador {
 		}
 		return total;
 	}
-
+	/**
+     * Pesquisa uma reserva pelo seu ID na lista do cliente.
+     * @param idReserva - identificador da reserva
+     * @return a reserva encontrada, ou null se não existir
+     */
 	public Reserva pesquisarReserva(int idPedido) {
 		for(Reserva r : reservas) {
 			if(r.getId()== idPedido) {
@@ -134,7 +152,12 @@ public class Cliente extends Utilizador {
 		}
 		return null;
 	}
-
+	/**
+     * Pesquisa um pedido (Reserva tratada como Pedido) pelo seu ID.
+     * Usado em contextos onde se trabalha com a classe base Pedido.
+     * @param idPedido - identificador do pedido
+     * @return o pedido encontrado, ou null se não existir
+     */
 	public Pedido pesquisarpedido(int idPedido) {
 		for(Pedido p : reservas) {
 			if(p.getId()== idPedido) {
@@ -143,7 +166,13 @@ public class Cliente extends Utilizador {
 		}
 		return null;
 	}
-
+	 /**
+     * Verifica se um produto (por ID) já existe num pedido/reserva específico do cliente.
+     * Usado para evitar duplicados ao adicionar itens.
+     * @param id       - ID do produto a verificar
+     * @param idPedido - ID do pedido/reserva onde procurar
+     * @return true se o produto já existir nesse pedido, false caso contrário
+     */
 	public boolean vericarJaExiste(int id, int idPedido) {
 		for(Pedido p : reservas) {
 			if(p.getId() == idPedido) {
@@ -154,7 +183,10 @@ public class Cliente extends Utilizador {
 		}
 		return false;
 	}
-
+	/**
+     * Imprime todas as reservas do cliente que estão no estado CONFIRMADA.
+     * Usado pelo funcionário do bar para ver quais reservas pode marcar como levantadas.
+     */
 	public void imprimirRervasConfirmadas() {
 		for(Reserva r : reservas) {
 			if(r.getEstado()== EstadoReserva.CONFIRMADA) {
@@ -162,7 +194,12 @@ public class Cliente extends Utilizador {
 			}
 		}
 	}
-
+	/**
+     * Verifica se uma reserva específica do cliente está no estado CONFIRMADA.
+     * Usado para validar se uma reserva pode ser levantada.
+     * @param idReserva - identificador da reserva a verificar
+     * @return true se a reserva existir e estiver CONFIRMADA, false caso contrário
+     */
 	public boolean verificarReserva(int idReserva) {
 		for(Reserva r : reservas) {
 			if(r.getEstado()== EstadoReserva.CONFIRMADA && r.getId()== idReserva) {
@@ -171,11 +208,19 @@ public class Cliente extends Utilizador {
 		}
 		return false;
 	}
-
+	/**
+     * Devolve o crédito atual do cliente.
+     * Um valor negativo indica dívida (multa por reserva não levantada).
+     * @return credito - valor do crédito (negativo = dívida)
+     */
 	public double getCredito() {
 		return credito;
 	}
-
+	/**
+     * Define o crédito do cliente.
+     * Usado para aplicar multas (valor negativo) ou para liquidar dívidas (repor a 0).
+     * @param credito - novo valor do crédito
+     */
 	public void setCredito(double credito) {
 		this.credito = credito;
 	}

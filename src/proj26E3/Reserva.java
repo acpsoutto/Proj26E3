@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class Reserva extends Pedido {
     private EstadoReserva estado; // Estado da reserva
+    private EstadoPagamento estadoPagamento;
         /**
          * CONSTRUTOR
          * @param id                   - identificador único da reserva
@@ -14,6 +15,7 @@ public class Reserva extends Pedido {
     public Reserva(int id, LocalDateTime dataHoraLevantamento) {
        super(id, dataHoraLevantamento);
        this.estado = EstadoReserva.PENDENTE;
+       this.estadoPagamento = EstadoPagamento.NAO_PAGO;
         }
 	
 	public void setEstado(EstadoReserva estado) {
@@ -69,5 +71,13 @@ public class Reserva extends Pedido {
             System.out.println("Não é possível alterar o estado da reserva. A mesma já está: " + this.estado);
         }
     }
+
+	public EstadoPagamento getEstadoPagamento() {
+		return estadoPagamento;
+	}
+
+	public void setEstadoPagamento(EstadoPagamento estadoPagamento) {
+		this.estadoPagamento = estadoPagamento;
+	}
 
 }

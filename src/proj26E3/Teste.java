@@ -592,42 +592,40 @@ public class Teste {
 							
 							switch (tipo) {
 							case 1:
-								double totalLevantamento = r.getTotal();
-								System.out.println("\n========= PAGAMENTO =========");
-								System.out.printf("Total a pagar pela reserva: %.2f €\n", totalLevantamento);
-								
-								int metodoPag;
-								do {
-									System.out.println("1 - Dinheiro");
-									System.out.println("2 - Multibanco");
-									System.out.print("Selecione o método: ");
-									metodoPag = inserir(sc);
+								if (r.getEstadoPagamento() == EstadoPagamento.NAO_PAGO) {
+									double totalLevantamento = r.getTotal();
+									System.out.println("\n========= PAGAMENTO =========");
+									System.out.printf("Total a pagar pela reserva: %.2f €\n", totalLevantamento);
+									System.out.println("Método de pagamento aceite: Apenas Multibanco.");
 									
-									if (metodoPag == 1) {
-										pagamentoDinheiro(sc, totalLevantamento);
-									} else if (metodoPag == 2) {
-										pagamentoMultibanco(sc);
-									} else {
-										System.out.println("Opção inválida! Escolha 1 ou 2.\n");
-									}
-								} while (metodoPag != 1 && metodoPag != 2);
-								System.out.println("=============================");
+									pagamentoMultibanco(sc);
+									
+									System.out.println("=============================");
+									
+									r.setEstadoPagamento(EstadoPagamento.PAGO); 
+								} else {
+									System.out.println("\nEsta reserva já foi paga antecipadamente. Pode entregar os artigos.");
+								}
 								
 								r.setEstado(EstadoReserva.LEVANTADA);
-								System.out.println("A reserva foi levantada com sucesso!");
+								System.out.println("Reserva Levantada com sucesso!");
 								break;
+								
 							case 2:
 								//if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
-									//System.out.println("Ainda não pode marcar esta encomenda como não levantada");
+									//System.out.println("Ainda não pode marcar como não levantada. Faltam os 30 min de tolerância.");
 									//continue;
 								//}
-								r.marcarComoNaoLevantada(); // Altera o estado com metodo que a torna nao levantada
+								r.marcarComoNaoLevantada();
 								
-								Cliente cliMultado = gb.pesquisarClientePorReserva(idReserva);
-								if (cliMultado != null) {
-									double valorMulta = r.getTotal(); // Multa igual ao preço da reserva( mas pode ser mudado para outro valor apenas substiituir)
-									cliMultado.setCredito(cliMultado.getCredito() - valorMulta);
-									System.out.printf("Multa de %.2f € aplicada com sucesso ao cliente %s!\n", valorMulta, cliMultado.getNome());
+								
+								if (r.getEstadoPagamento() == EstadoPagamento.NAO_PAGO) {
+									Cliente cliMultado = gb.pesquisarClientePorReserva(idReserva);
+									if (cliMultado != null) {
+										double valorMulta = r.getTotal();
+										cliMultado.setCredito(cliMultado.getCredito() - valorMulta);
+										System.out.printf("Multa de %.2f € aplicada ao cliente %s!\n", valorMulta, cliMultado.getNome());
+									}
 								}
 								break;
 								
@@ -785,6 +783,7 @@ public class Teste {
 								int tipoPagamentoReserva = inserir(sc);
 								if (tipoPagamentoReserva == 1) {
 									pagamentoMultibanco(sc);
+									r.setEstadoPagamento(EstadoPagamento.PAGO);
 								} else {
 									System.out.println("\nReserva registada com pagamento pendente.");
 								}

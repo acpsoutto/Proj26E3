@@ -13,12 +13,13 @@ public class Cliente extends Utilizador {
 	
 	/**
 	 * CONSTRUTOR
-	 * @param numero - numero identificador do utilizador
-	 * @param nome - nome do cliente
-	 * @param email - endereço de email do cliente
-	 * @param pw - palavra-asse de acesso
+	 * @param numero - numero de identificação do utilizador
+	 * @param nome - nome do utilizador
+	 * @param email - endereço de email do utilizador
+	 * @param pw - palavra-passe do utilizador
 	 * @param tipo - tipo de utilizador
 	 * @param reservas - reservas do cliente
+	 * @param credito - credito associado a multas do cliente
 	 */
 	public Cliente(int numero, String nome, String email, String pw, TipoUtilizador tipo) {
 		super(numero, nome, email, pw, tipo);
@@ -26,7 +27,7 @@ public class Cliente extends Utilizador {
 		this.credito= 0.0;
 	}
 	 /**
-     * Devolve a lista de todas as reservas do cliente.
+     * Devolve a lista de todas as reservas do cliente
      * @return reservas - lista de reservas
      */
 	public ArrayList<Reserva> getReservas() {
@@ -34,7 +35,7 @@ public class Cliente extends Utilizador {
 	}
 	
 	/**
-	 * Adiciona uma reserva á lista de reservas do cliente.
+	 * Adiciona uma reserva à lista de reservas do cliente
 	 * @param r
 	 */
 	public void adicionarReserva(Reserva r) {
@@ -43,8 +44,8 @@ public class Cliente extends Utilizador {
 
 	/**
      * Cancela a reserva com o ID indicado, se existir na lista do cliente.
-     * A lógica de validação do estado está dentro do método cancelar() da Reserva.
-     * @param idReserva - identificador da reserva a cancelar
+     * O método chama o método cancelar() da classe Reserva.
+     * @param idReserva - número de identificação da reserva a cancelar
      */
 	public void cancelarReserva(int idReserva) {
 		for(Reserva r : reservas) {
@@ -55,9 +56,9 @@ public class Cliente extends Utilizador {
 	}
 
 	/**
-     * Cancela e remove permanentemente a reserva com o ID indicado.
-     * Usado quando a reserva foi criada por engano e ainda está PENDENTE.
-     * @param idReserva - identificador da reserva a apagar
+     * Cancela e remove a reserva com o ID indicado.
+     * Usado quando a reserva é criada mas não é adicionado nenhum item à reserva.
+     * @param idReserva - número de identificação da reserva a apagar
      */
 	public void apagarReserva(int idReserva) {
 	    cancelarReserva(idReserva);
@@ -70,7 +71,7 @@ public class Cliente extends Utilizador {
 	    }
 	}
 /*
- * Imprime todas as reservas do cliente no terminal
+ * Imprime todas as reservas do cliente
  */
 	public boolean imprimir() {
 		if(reservas.isEmpty()) {
@@ -84,9 +85,9 @@ public class Cliente extends Utilizador {
 
 	/**
 	 * Procura e devolve a reserva com o ID indicado.
-	 * @param idReserva - identificador da reserva
-	 * @return r - caso encontre a reserva
-	 * @return null - caso não encontre
+	 * @param idReserva - número de identificação da reserva
+	 * @return r - retorna a reserva com o id indicado, caso ela exista
+	 * @return null - retorna vazio caso não encontre
 	 */
 	public Reserva encontrarReserva(int idReserva) { 
 		for(Reserva r : reservas) {
@@ -101,12 +102,12 @@ public class Cliente extends Utilizador {
 	 * Consulta se o cliente tem reservas no estado (PENDENTE)
 	 * @return a - se encontrar a=1, caso nao a=0
 	 */
-	public int consultar() {
-		int a= 0;
+	public boolean consultar() {
+		boolean a= false;
 		for(Reserva r : reservas) {
 			if(r.getEstado()== EstadoReserva.PENDENTE) {
 				System.out.println(r);
-				a  = 1;
+				a  = true;
 			}
 		}
 		return a;
@@ -114,7 +115,7 @@ public class Cliente extends Utilizador {
 	/**
      * Calcula o total gasto pelo cliente em reservas já concluídas
      * (estados LEVANTADA ou NAO_LEVANTADA).
-     * @return o total acumulado em euros
+     * @return total - retorna o total acumulado de todas as reservas levantadas e nao levantadas
      */
 	public double clienteTotalReserva() {
 		double total = 0;
@@ -128,7 +129,7 @@ public class Cliente extends Utilizador {
 	/**
      * Conta o número de reservas concluídas pelo cliente
      * (estados LEVANTADA ou NAO_LEVANTADA).
-     * @return o número de reservas concluídas
+     * @return total - retorna o número total de reservas concluídas pelo cliente
      */
 	public int numeroPedidos() {
 		int total = 0;
@@ -142,7 +143,7 @@ public class Cliente extends Utilizador {
 	/**
      * Pesquisa uma reserva pelo seu ID na lista do cliente.
      * @param idReserva - identificador da reserva
-     * @return a reserva encontrada, ou null se não existir
+     * @return retorna a reserva encontrada, ou null se não existir
      */
 	public Reserva pesquisarReserva(int idPedido) {
 		for(Reserva r : reservas) {
@@ -155,8 +156,8 @@ public class Cliente extends Utilizador {
 	/**
      * Pesquisa um pedido (Reserva tratada como Pedido) pelo seu ID.
      * Usado em contextos onde se trabalha com a classe base Pedido.
-     * @param idPedido - identificador do pedido
-     * @return o pedido encontrado, ou null se não existir
+     * @param idPedido - número de identificação do pedido
+     * @return p - retorna o pedido encontrado (null se não existir)
      */
 	public Pedido pesquisarpedido(int idPedido) {
 		for(Pedido p : reservas) {

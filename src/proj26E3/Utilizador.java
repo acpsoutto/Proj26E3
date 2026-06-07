@@ -12,7 +12,7 @@ public class Utilizador {
     
 	/**
 	 * CONSTRUTOR
-	 * @param numero - numero identificador do utilizador
+	 * @param numero - numero de identificação do utilizador
 	 * @param nome - nome do utilizador
 	 * @param email - email do utilizador
 	 * @param pw - palavra-passe do utilizador
@@ -28,7 +28,7 @@ public class Utilizador {
 
 	
 	/**
-	 * GET devolve o email do utilizador
+	 * GET Devolve o email do utilizador
 	 * @return email
 	 */
 	public String getEmail() {
@@ -36,15 +36,7 @@ public class Utilizador {
 	}
 
 	/**
-	 * SET altera o email do utilizador
-	 * @param email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * GET devolve a palavra passe no utilizador
+	 * GET Devolve a palavra passe no utilizador
 	 * @return pw
 	 */
 	public String getPw() {
@@ -52,15 +44,7 @@ public class Utilizador {
 	}
 
 	/**
-	 * SET altera a palavra passe o utilizador
-	 * @param pw
-	 */
-	public void setPw(String pw) {
-		this.pw = pw;
-	}
-
-	/**
-	 * GET devolve o numero (identificador)do utilizador
+	 * GET Devolve o numero de identificação do utilizador
 	 * @return numero 
 	 */
 	public int getNumero() {
@@ -68,7 +52,7 @@ public class Utilizador {
 	}
 
 	/**
-	 * GET devolve o nome do utilizador
+	 * GET Devolve o nome do utilizador
 	 * @return nome
 	 */
 	public String getNome() {
@@ -76,7 +60,7 @@ public class Utilizador {
 	}
 	
 	/**
-	 * GET devolve o tipo de utilizador
+	 * GET Devolve o tipo de utilizador
 	 * @return tipo
 	 */
 	public TipoUtilizador getTipo() {
@@ -85,7 +69,7 @@ public class Utilizador {
 
 
 	/**
-	 *toString - devolve as informaçoes do utilizador
+	 *toString - Devolve as informações do utilizador
 	 */
 	@Override
 	public String toString() {

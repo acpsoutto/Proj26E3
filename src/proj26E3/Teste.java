@@ -30,15 +30,15 @@ public class Teste {
 		
 		do {
 			
-				System.out.println("========== MENU USÚARIO ==========");
-				System.out.println("Seleciona perfil");
+				System.out.println("========== MENU UTILIZADOR ==========");
+				System.out.println("Selecione o perfil pretendido:");
 				System.out.println("1- Administrador");
 				System.out.println("2- Gerente");
 				System.out.println("3- Funcionario do Bar");
 				System.out.println("4- Cliente");
 				System.out.println("0- Terminar Programa");
 				System.out.println("===================================");
-				System.out.print("\nOpção:");
+				System.out.print("Opção:");
 				opc = inserir(sc);
 				System.out.println();
 				
@@ -128,6 +128,7 @@ public class Teste {
 						System.out.println("          MENU - ADMINISTRADOR           ");
 						System.out.println("==========================================");
 						System.out.println("1- Adicionar utilizador");
+						System.out.println("------------------------------------------");
 						System.out.println("10- Sair para login");
 						System.out.println("0- Encerrar programa");
 						System.out.println("================================");
@@ -517,8 +518,7 @@ public class Teste {
 								System.out.println("-----------------------");
 								do {
 									System.out.println("\nDeseja fazer alterações (reduzir/aumentar numero de itens) do seu pedido:");
-									System.out.println(" 1 - Sim");
-									System.out.println(" 2 - Não");
+									System.out.println("1-Sim \n2-Não");
 									alteracao = inserir(sc);
 									if(alteracao != 1 && alteracao != 2) {
 										System.out.println("Opção Invalida! Tente novamente");
@@ -651,10 +651,11 @@ public class Teste {
 								break;
 								
 							case 2:
-								//if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
-									//System.out.println("Ainda não pode marcar como não levantada. Faltam os 30 min de tolerância.");
-									//continue;
-								//}
+								
+								if(LocalDateTime.now().isBefore(r.getDataHora().plus(30, ChronoUnit.MINUTES))) {
+									System.out.println("Ainda não pode marcar como não levantada. Faltam os 30 min de tolerância.");
+									continue;
+								}
 								r.marcarComoNaoLevantada();
 								
 								
@@ -780,7 +781,7 @@ public class Teste {
 								System.out.println("-----------------------");
 								do {
 									System.out.println("\nDeseja fazer alterações (reduzir/aumentar numero de itens) do seu pedido:");
-									System.out.println("1-Sim\n 2-Não");
+									System.out.println("1-Sim \n2-Não");
 									alteracao = inserir(sc);
 									if(alteracao != 1 && alteracao != 2) {
 										System.out.println("Opção Invalida! Tente novamente");

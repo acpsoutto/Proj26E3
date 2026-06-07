@@ -1,6 +1,6 @@
 package proj26E3;
 /**
- * Representa uma pré-reserva efetuada por um Cliente.
+ * Representa uma reserva efetuada por um Cliente.
  * Herda de Pedido (partilha a estrutura de itens, data e cálculo do total).
  * Acrescenta o estado da reserva (EstadoReserva) e o estado de pagamento (EstadoPagamento).
  */
@@ -10,9 +10,8 @@ public class Reserva extends Pedido {
     private EstadoReserva estado; // Estado da reserva
     private EstadoPagamento estadoPagamento;
         /**
-     * CONSTRUTOR
      * Cria uma nova reserva no estado PENDENTE e com pagamento em NAO_PAGO.
-     * @param id                   - identificador único da reserva
+     * @param id - identificador único da reserva
      * @param dataHoraLevantamento - data e hora prevista de levantamento pelo cliente
      */
     public Reserva(int id, LocalDateTime dataHoraLevantamento) {
@@ -20,14 +19,25 @@ public class Reserva extends Pedido {
        this.estado = EstadoReserva.PENDENTE;
        this.estadoPagamento = EstadoPagamento.NAO_PAGO;
         }
-        /**
-        * Altera diretamente o estado da reserva.
-        * Usado internamente para transições de estado (ex: LEVANTADA).
-        * @param estado - novo estado a aplicar
-        */
+
+    	
+    public EstadoReserva getEstado() {
+        return estado;
+    }
+    
 	public void setEstado(EstadoReserva estado) {
 			this.estado = estado;
 		}
+    
+	public EstadoPagamento getEstadoPagamento() {
+		return estadoPagamento;
+	}
+	
+	public void setEstadoPagamento(EstadoPagamento estadoPagamento) {
+		this.estadoPagamento = estadoPagamento;
+	}
+	
+	
         /**
         * Confirma a reserva, mudando o estado de PENDENTE para CONFIRMADA.
         * Só é possível confirmar uma reserva que esteja no estado PENDENTE.
@@ -42,6 +52,8 @@ public class Reserva extends Pedido {
             System.out.println("Não é possível confirmar. Estado atual: " + estado);
         }
     }
+    
+    
     /**
      * Cancela a reserva, mudando o estado para CANCELADA.
      * Só é possível cancelar reservas no estado PENDENTE.
@@ -64,30 +76,14 @@ public class Reserva extends Pedido {
           System.out.println("Reserva " + getId() +" cancelada com sucesso.");
         }
     }
-    /**
-     * Devolve o estado atual da reserva.
-     * @return estado - o estado atual (PENDENTE, CONFIRMADA, CANCELADA, LEVANTADA ou NAO_LEVANTADA)
-     */
-
-    public EstadoReserva getEstado() {
-        return estado;
-    }
     
-	/**
-     * Devolve uma representação textual da reserva com todos os seus detalhes.
-     */
-    @Override
-    public String toString() {
-        return "Reserva #" + getId()
-                + " | Estado: " + estado
-                + " | Pagamento: " + estadoPagamento
-                + " | Levantamento: " + getDataHora()
-                + " | Total: " + String.format("%.2f", calcularTotal()) + "€"
-                + " | Itens: " + getItens();
-    }
 	
+    /**
+     * Uma reserva no estado confirmada, pode ficar com o estado nao levantada 
+     */
+    
 	public void marcarComoNaoLevantada() {
-        if (this.estado == EstadoReserva.PENDENTE || this.estado == EstadoReserva.CONFIRMADA) {
+        if (this.estado == EstadoReserva.CONFIRMADA) {
             this.estado = EstadoReserva.NAO_LEVANTADA;
             System.out.println("O estado da reserva foi alterado para: NÃO LEVANTADA.");
         } else {
@@ -95,12 +91,18 @@ public class Reserva extends Pedido {
         }
     }
 
-	public EstadoPagamento getEstadoPagamento() {
-		return estadoPagamento;
-	}
-
-	public void setEstadoPagamento(EstadoPagamento estadoPagamento) {
-		this.estadoPagamento = estadoPagamento;
-	}
-
+	
+	/**
+     * Devolve uma representação textual da reserva com todos os seus detalhes.
+     */
+    @Override
+    public String toString() {
+    	String diahora = getDataHora().getDayOfMonth() + "/" + getDataHora().getMonth() + "|" + getDataHora().getHour() + ":" + getDataHora().getMinute();
+        return "Reserva #" + getId()
+                + " | Estado: " + estado
+                + " | Pagamento: " + estadoPagamento
+                + " | Levantamento: " + diahora
+                + " | Total: " + String.format("%.2f", calcularTotal()) + "€"
+                + " | Itens: " + getItens();
+    }
 }

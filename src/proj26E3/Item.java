@@ -29,31 +29,35 @@ public class Item {
 		return itensReservados;
 	}
 	
-	//public void reduzir() { //reuzircomregisto
-	//	produto.consumirQuantidade(qtd);
-	//}
-	
+	/**
+	 * Regista a validade e quantidade dos produtos retirados de stock
+	 * @param quantidade
+	 */
 	public void registarStockVal(int quantidade) {
 		ArrayList<Lote> retirados = produto.retirarComRegisto(quantidade);
 		itensReservados.addAll(retirados);
 	}
 	
-	
+	/**
+	 * Retorna os itens reservados de volta a stock em caso de cancelamento de reserva
+	 */
 	public void repor() {
 		produto.restituirStock(itensReservados);
 		itensReservados = new ArrayList<>();
 	}
 	
+	/**
+	 * 
+	 * @return total - custo de cada produto * a sua quantidade
+	 */
 	public double calcularSubtotal() {
 	    return produto.getPreco() * qtd;
 	}
 
 	@Override
 	public String toString() {
-		return "Item : "+ produto.getNome() 
-		+"[qtd=" + qtd 
-		+ ", produto=" + produto 
-		+ ", ItensReservados=" + itensReservados + "]";
+		return produto.getNome() 
+		+ " [Quantidade:" + qtd + "]" ;
 	}
 	
 	

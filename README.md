@@ -47,7 +47,6 @@ A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de PO
 │   ├── 📄 .project
 │   └── 📂 proj26E3/
 │       ├── 📄 .gitignore
-│       ├── 📄 CategoriaProduto.java     # Enum/Classe de categorias de produto
 │       ├── 📄 Cliente.java              # Classe de Cliente
 │       ├── 📄 Composto.java             # Classe de Elementos Compostos
 │       ├── 📄 Elementar.java            # Classe dos Elementos Elementares
@@ -73,13 +72,13 @@ A arquitetura do sistema foi desenhada de forma a seguir as boas práticas de PO
 
 O projeto foi dividido rigidamente em dois blocos de entrega (Incrementos):
 
-### 📅 Sprint 1: [11/04] -> [24/04] 🔄
+### 📅 Sprint 1: [11/04] -> [24/04] ✅
 * **Objetivo do Sprint:** Criação de um sistema que permite registar e gerir funcionários e produtos, consultar o stock disponível, registar pedidos no balcão e efetuar pré-reservas por parte dos clientes.
 * **Entregáveis:** 1º Incremento do código Java e relatório de conclusões (Sprint Retrospective 1).
 ---
 ### 📅 Sprint 2: [25/05] -> [08/06] 🔄
-* **Objetivo do Sprint:** Implementar o sistema de pagamento ( pedidos e reservas) , multas e aprimorar o 1º incremento.
-* **Entregáveis:** 2º Incremento (Aplicação Global) e Reflexão Global do PBL.
+* **Objetivo do Sprint:** Implementar o sistema de pagamento ( pedidos e reservas) , multas , aprimorar o 1º incremento e procurar otimizar o código da melhor forma possível.
+* **Entregáveis:** 2º Incremento (Versão Final da Aplicação), Sprint Retrospective 2 e Reflexão Global do PBL.
 ---
 
 ## 📜6. Regras de Nomenclatura ( GitHub )

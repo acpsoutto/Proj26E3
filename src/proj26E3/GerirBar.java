@@ -11,9 +11,6 @@ public class GerirBar {
 	private ArrayList<Utilizador> utilizadores;
 	private ArrayList<Produto> produtos;
 	
-	/**
-	 * CONSTRUTOR
-	 */
 	public GerirBar() {
 		utilizadores = new ArrayList<>();
 		produtos = new ArrayList<>();
@@ -38,7 +35,7 @@ public class GerirBar {
 		return false;
 	}
 	
-	/**Pesquisa um utilizador pelo número identificador.
+	/**Pesquisa um utilizador pelo número de identificação.
 	 * @param num -número do utilizador a pesquisar
 	 * @return o utilizador e null se nao existir
 	 */
@@ -55,8 +52,7 @@ public class GerirBar {
 	}
 	
 	/**
-	 * Adiciona um novo utilizador ao sistema, instanciando o subtipo
-     * correto consoante o (TipoUtilizador) fornecido.
+	 * Adiciona um novo utilizador ao sistema
 	 * @param num -número identificador
 	 * @param nome - nome completo
 	 * @param mail - endereço de e-mail
@@ -96,6 +92,11 @@ public class GerirBar {
 		return null;
 	}
 
+	/**
+	 * Pesquisa por um produto parcela
+	 * @param id
+	 * @return
+	 */
 	public Produto pesquisarParcela(int id) {
 		if(produtos.isEmpty()){
 			return null;
@@ -110,6 +111,10 @@ public class GerirBar {
 		return null;
 	}
 	
+	/**
+	 * Pesquisa se existem 2 ou mais parcelas no sistema
+	 * @return
+	 */
 	public boolean pesquisarSeExiste() {
 		int i = 0;
 		for(Produto p : produtos ) {
@@ -123,6 +128,12 @@ public class GerirBar {
 		return false;
 	}
 	
+	/**
+	 * Pesquisa se uma parcela já foi usada no Produto composto
+	 * @param id
+	 * @param parce
+	 * @return
+	 */
 	public boolean pesquisarJaUsado(int id, int parce) {
 		Produto p = pesquisarProduto(id);
 		Composto c = (Composto)p;
@@ -133,6 +144,11 @@ public class GerirBar {
 		return false;
 	}
 	
+	/**
+	 * Pesquisa por um produto composto
+	 * @param id
+	 * @return
+	 */
 	public boolean pesquisarComposto(int id) {
 		Produto p = pesquisarProduto(id);
 		if(p instanceof Composto) {
@@ -142,13 +158,13 @@ public class GerirBar {
 	}
 	
 	/**
-	 * Cria e adiciona um novo produto à lista de produtos do bar.
+	 * Cria e adiciona um novo produto à lista de produtos
 	 * @param id - identificador único do produto
 	 * @param nome - nome do produto
 	 * @param preco - preço unitário
-	 * @param categoria - categoria do produto
 	 * @param stock - quantidade inicial em stock
 	 * @param validade - meses de validade do lote inicial
+	 * @param opc - opcão do tipo de produto
 	 */
 	public void adicionarProduto(int id, String nome, double preco, int stock, int validade,int opc) {
 		if(opc == 2) {
@@ -162,6 +178,9 @@ public class GerirBar {
 		}
 	}
 	
+	/**
+	 * Cria e adiciona uma Parcela a Produtos
+	 */
 	public void adicionarParcela(int id, String nome, int stock, int validade) {
 		Produto p = new Produto(id,nome);
 		p.adicionarStock(stock, validade);
@@ -169,6 +188,12 @@ public class GerirBar {
 		System.out.println("Produto adicionado");
 	}
 	
+	/**
+	 * Adiciona uma parcela a um Composto
+	 * @param id
+	 * @param idParce
+	 * @param qtd
+	 */
 	public void adiconarNoComposto (int id, int idParce, double qtd) {
 		Produto p = pesquisarProduto(id);
 		Composto c = (Composto) p;
@@ -177,7 +202,7 @@ public class GerirBar {
 	}
 
 	/**
-	 * Imprime todos os produtos registados no output padrão.
+	 * Imprime todos os produtos registados
 	 */
 	public void imprimirProdutos() {
 		for(Produto p : produtos) {
@@ -185,6 +210,11 @@ public class GerirBar {
 		}
 	}
 	
+	/**
+	 * Imprime os conteudos de um composto e o máximo de produtos a ser adicionados a stock
+	 * @param id
+	 * @return
+	 */
 	public int imprimirConteudos(int id) {
 		System.out.println("Produtos que utiliza:");
 		Produto p = pesquisarProduto(id);
@@ -195,7 +225,7 @@ public class GerirBar {
 	}
 
 	/**
-	 * Imprime o ID, nome e preço de cada produto no output padrão.
+	 * Imprime o ID, nome e preço de cada produto
 	 */
 	public void imprimirPreços() {
 		for(Produto p : produtos){
@@ -217,7 +247,7 @@ public class GerirBar {
 	}
 	
 	/**
-	 * Adiciona um novo lote de stock a um produto existente.
+	 * Adiciona um novo lote de stock a um produto parcela ou elementar
 	 * @param id -identificador do produto
 	 * @param quant -quantidade a adicionar
 	 * @param val -meses de validade do novo lote
@@ -226,7 +256,11 @@ public class GerirBar {
 		Produto p = pesquisarProduto(id);
 		p.adicionarStock(quant, val);
 	}
-	
+	/**
+	 * Adicionar stock a um produto composto
+	 * @param id
+	 * @param quant
+	 */
 	public void adicionarStock(int id, int quant) {
 		Produto p = pesquisarProduto(id);
 		Composto c = (Composto)p;
@@ -254,9 +288,14 @@ public class GerirBar {
 	 */
 	public void reduzirStock(int id, int quant) {
 		Produto p = pesquisarProduto(id);
-		p.reduzir(quant);
+		p.consumirQuantidade(quant);
 	}
 	
+	/**
+	 * Verifica a quantidade de parcelas de um composto
+	 * @param id
+	 * @return
+	 */
 	public boolean verficarQuantidadeParce(int id){
 		Produto p = pesquisarProduto(id);
 		Composto c = (Composto) p;
@@ -422,12 +461,10 @@ public class GerirBar {
 		public boolean consultarReservasPendentes() {
 			System.out.println("--- CONSULTAR RESERVAS PENDENTES ---");
 			boolean encontrou = false;
-			int a = 0;
 			for (Utilizador u : utilizadores) {
 				if(u instanceof Cliente) {
 					Cliente c = (Cliente) u;
-					a = c.consultar();
-					if(a == 1) {
+					if(c.consultar()) {
 						encontrou = true;
 					}
 				}
@@ -452,7 +489,12 @@ public class GerirBar {
 			}
 			r.confirmar();
 		}
-		
+		/**
+		 * Verifica se um produto ja foi utilizado num pedido
+		 * @param id
+		 * @param idPedido
+		 * @return
+		 */
 		public boolean verificarJaExiste(int id,int idPedido) {
 			for(Utilizador u : utilizadores) {
 				if(u instanceof FuncionarioBar) {
@@ -470,7 +512,11 @@ public class GerirBar {
 			}
 			return false;
 		}
-		
+		/**
+		 * Pesquisa utilizadores por email
+		 * @param mail
+		 * @return
+		 */
 		public String pequisarEmail(String mail) {
 			for(Utilizador u:utilizadores) {
 				if(u.getEmail().equals(mail)) {
@@ -481,6 +527,9 @@ public class GerirBar {
 		}
 		
 		
+		/**
+		 * Calcula o valor total dos pedidos (balcao e reservas).
+		 */
 		public void totalVendas() {
 			double total = 0;
 			for (Utilizador f: utilizadores) {
@@ -496,6 +545,9 @@ public class GerirBar {
 			System.out.println(total);
 		}
 		
+		/**
+		 * Calcula o número total de  pedidos (balcao e reservas).
+		 */
 		public void numeroVendas() {
 			double total = 0;
 			for (Utilizador f: utilizadores) {
@@ -511,6 +563,9 @@ public class GerirBar {
 			System.out.println(total);
 		}
 		
+		/**
+		 * Imprime o relatorio de vendas 
+		 */
 		public void imprimirRelatorio()	{
 		    System.out.println("\n================ RELATÓRIO DE VENDAS ================");
 
@@ -557,11 +612,16 @@ public class GerirBar {
 		    System.out.printf("Montante total: %.2f €%n", montanteTotal);
 		}
 
+		/**
+		 * Pesquisa um pedido pelo seu id
+		 * @param idPedido - id do pedido a pesquisar
+		 * @return
+		 */
 		public Pedido pesquisarPedido(int idPedido) {
 			for(Utilizador u : utilizadores) {
 				if(u instanceof FuncionarioBar) {
 					FuncionarioBar fb = (FuncionarioBar)u;
-					Pedido P = fb.pesquisarpedido(idPedido);
+					Pedido P = fb.pesquisarPedido(idPedido);
 					if(P != null) {
 						return P;
 					}
@@ -576,7 +636,9 @@ public class GerirBar {
 			}
 			return null;
 		}
-
+		/**
+		 * Imprime reservas confirmadas
+		 */
 		public void imprimirReservasConfirmadas() {
 			for(Utilizador u : utilizadores) {
 				if(u instanceof Cliente) {
@@ -586,7 +648,11 @@ public class GerirBar {
 			}
 			
 		}
-
+		/**
+		 * Verifica se uma reserva esta no estado confirmada
+		 * @param idReserva
+		 * @return
+		 */
 		public boolean reservaValida(int idReserva) {
 			for(Utilizador u : utilizadores) {
 				if(u instanceof Cliente) {
@@ -598,7 +664,11 @@ public class GerirBar {
 			}
 			return false;
 		}
-
+		/**
+		 * Pesquisa o cliente por uma reserva
+		 * @param idReserva
+		 * @return
+		 */
 		public Cliente pesquisarClientePorReserva(int idReserva) {
 			for (Utilizador u : utilizadores) {
 				if (u instanceof Cliente) {
@@ -610,7 +680,10 @@ public class GerirBar {
 			}
 			return null;
 		}
-
+		/**
+		 * Remove um produto da lista de produtos
+		 * @param id
+		 */
 		public void removerProduto(int id) {
 			produtos.removeLast();
 		}

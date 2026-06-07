@@ -4,11 +4,9 @@ public class Elementar extends Produto{
 	private double precoE;
 
 	/**
-	 * @param id - id do produto
-	 * @param nome - nome do produto
-	 * @param validade - validade do lote quando o produto é adicionado
-	 * @param qtd - quantidade do lote quando o produto é adicionado
-	 * @param precoE - preço do produto
+	 * @param id - id do produto elementar
+	 * @param nome - nome do produto elementar
+	 * @param precoE - preço do produto elementar
 	 */
 	public Elementar(int id, String nome, double precoE) {
 		super(id, nome);
@@ -27,6 +25,6 @@ public class Elementar extends Produto{
 
 	@Override
 	public String toString() {
-		return super.toString()+ "precoE=" + precoE + " ";
+		return super.toString()+ "Preço: " + precoE + " ";
 	}
 }

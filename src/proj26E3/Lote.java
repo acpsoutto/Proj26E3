@@ -29,6 +29,6 @@ public class Lote {
 
 	@Override
 	public String toString() {
-		return "[quantidade: "+ quantidade + " | validade: "+ validade + "]";
+		return "[Quantidade: "+ quantidade + " | Validade: "+ validade + "]";
 	}
 }

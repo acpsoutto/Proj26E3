@@ -10,11 +10,12 @@ public class FuncionarioBar extends Utilizador {
 
 	/**
 	 * CONSTRUTOR 
-	 * @param numero - numero identificador do funcionario bar
-	 * @param nome - nome do funcionario bar
-	 * @param email - endereço de email do funcionario bar
-	 * @param pw - codigo de acesso do funcionario bar
-	 * @param tipo - tipo de utilizador (FUNCIONARIO_BAR)
+	 * @param numero - numero de identificação do utilizador
+	 * @param nome - nome do utilizador
+	 * @param email - endereço de email do utilizador
+	 * @param pw - codigo de acesso do utilizador
+	 * @param tipo - tipo de utilizador
+	 * @param pedidos - lista de pedidos associados ao funcionario
 	 */
 	public FuncionarioBar(int numero, String nome, String email, String pw, TipoUtilizador tipo) {
 		super(numero, nome, email, pw, tipo);
@@ -25,15 +26,9 @@ public class FuncionarioBar extends Utilizador {
 	    return pedidos;
 	}
 	
+
 	/**
-	 * toString - Devolve as informações do funcionário.
-     */
-	@Override
-	public String toString() {
-		return "Funcionario : Funcionario do Bar\n  " + super.toString();
-	}
-	/**
-	 * Adiciona um pedido á lista de pedidos do funcionario
+	 * Adiciona um pedido à lista de pedidos do funcionario
 	 * @param p - pedido a adicionar
 	 */
 	public void adicionarPedido(Pedido p) {
@@ -53,6 +48,11 @@ public class FuncionarioBar extends Utilizador {
 	    }
 	}
 	
+	/**
+	 * Verifica se o id de um produto já foi utilizado num certo pedido
+	 * @param id - número de identificação do produto
+	 * @param idPedido - número de identificação do pedido
+	 */
 	public boolean vericarJaExiste(int id, int idPedido) {
 		for(Pedido p : pedidos) {
 			if(p.getId() == idPedido) {
@@ -63,13 +63,10 @@ public class FuncionarioBar extends Utilizador {
 		}
 		return false;
 	}
-	
-	
-	/**public boolean temOPedido(int idPedido) {
-	* for(pedido)
-	* return true;
-	*/ 
-	
+	/**
+	 * Calcula o valor total dos pedidos do funcionario
+	 * @return total - valor total de todos os pedidos do funcionario
+	 */
 	public double funcionarioTotalPedido() {
 		double total = 0;
 		for (Pedido p : pedidos) {
@@ -78,25 +75,34 @@ public class FuncionarioBar extends Utilizador {
 		return total;
 	}
 	
+	/**
+	 * 
+	 * @return o número total de pedidos
+	 */
 	public int numeroPedidos() {
 		return pedidos.size();
 	}
 
-	public Pedido pesquisaPedio(int idPedido) {
-		for(Pedido p : pedidos) {
-			if(p.getId()== idPedido) {
-				return p;
-			}
-		}
-		return null;
-	}
-
-	public Pedido pesquisarpedido(int idPedido) {
+	
+	/**
+	 * Pesquisa um pedido pelo seu numero de identificação
+	 * @param idPedido - numero identificaçao do pedido
+	 * @return
+	 */
+	public Pedido pesquisarPedido(int idPedido) {
 		for(Pedido P : pedidos) {
 			if(P.getId()==idPedido) {
 				return P;
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * toString - Devolve as informações do funcionário.
+     */
+	@Override
+	public String toString() {
+		return "Funcionario : Funcionario do Bar\n  " + super.toString();
 	}
 }

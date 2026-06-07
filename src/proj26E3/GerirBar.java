@@ -220,7 +220,7 @@ public class GerirBar {
 		Produto p = pesquisarProduto(id);
 		Composto c = (Composto) p;
 		int i = c.imprimirParcelas();	
-		System.out.println("\n Podem ser adicionadas um maximo de "+i+" do produto.");
+		System.out.println("\nPodem ser adicionado um máximo de "+i+" unidades ao stock do produto.");
 		return i;
 	}
 

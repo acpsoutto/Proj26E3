@@ -111,7 +111,7 @@ public class Composto extends Produto{
 	
 	@Override
 	public String toString() {
-		return super.toString()+ "Preço: " + precoC + " ";
+		return super.toString()+ " | Preço: " + precoC + " ";
 	}
 
 }

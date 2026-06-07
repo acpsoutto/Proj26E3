@@ -23,14 +23,19 @@ public class Teste {
 		tipoU = TipoUtilizador.GERENTE;
 		gb.adicionarUtilizador(2, "Gere", "gere@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.CLIENTE;
-		gb.adicionarUtilizador(3, "CLIENTE", "Cliente@gmail.com", "123", tipoU);
+		gb.adicionarUtilizador(4, "CLIENTE", "Cliente@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.FUNCIONARIO_BAR;
-		gb.adicionarUtilizador(4, "fUNC", "FUNC@gmail.com", "123", tipoU);
+		gb.adicionarUtilizador(3, "fUNC", "FUNC@gmail.com", "123", tipoU);
 		gb.adicionarProduto(1, "Maça", 1.99 , 10, 1, 2);
 		gb.adicionarParcela(2,"Pão",5, 0);
         gb.adicionarStock(2, 10, 4);
         gb.adicionarParcela(3,"Queijo",16, 3);
-		
+        String insert = "2026-06-07 12:00";
+		DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
+		LocalDateTime tempoP = LocalDateTime.parse(insert, formatter1);
+        Reserva h = gb.criarReserva(4,idPedido, tempoP);
+        gb.adicionarNaReserva(1,1,h);
+        
 		do {
 			
 				System.out.println("========== MENU UTILIZADOR ==========");

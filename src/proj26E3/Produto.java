@@ -166,7 +166,7 @@ public class Produto {
 
 	@Override
 	public String toString() {
-		return "Produto: Id do produto:" + id + "Nome do produto=" + nome + ", Lotes: " + lotes;
+		return " Id do produto: " + id + " | Nome do produto: " + nome + " | Lotes: " + lotes;
 	}
 
 

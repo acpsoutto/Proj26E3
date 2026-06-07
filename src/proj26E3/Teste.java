@@ -26,7 +26,10 @@ public class Teste {
 		gb.adicionarUtilizador(3, "CLIENTE", "Cliente@gmail.com", "123", tipoU);
 		tipoU = TipoUtilizador.FUNCIONARIO_BAR;
 		gb.adicionarUtilizador(4, "fUNC", "FUNC@gmail.com", "123", tipoU);
-		gb.adicionarProduto(1, "Maça", 1.99 , 5, 1, 2);
+		gb.adicionarProduto(1, "Maça", 1.99 , 10, 1, 2);
+		gb.adicionarParcela(2,"Pão",5, 0);
+        gb.adicionarStock(2, 10, 4);
+        gb.adicionarParcela(3,"Queijo",16, 3);
 		
 		do {
 			
@@ -495,7 +498,11 @@ public class Teste {
 								
 								int stockAtual = p.getStock();
 								
-								if (qtd > stockAtual) {
+								Pedido pedido = gb.pesquisarPedido(idPedido);
+                                int qtdJaSelecionada = pedido.procurarUtilizado(idP);
+                                
+                                if (qtd + qtdJaSelecionada > stockAtual) {
+
 									System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
 									continue;
 								}
@@ -536,7 +543,7 @@ public class Teste {
 												System.out.println("ID do produto não encontrado! Tente outra vez.");
 												continue;
 											}
-											System.out.println("Para que quantidade que alterar");
+											System.out.println("Para que quantidade quer alterar?");
 											int qtd = inserir(sc);
 											if(qtd <= 0) {
 												System.out.println("Valor de quantidade Invalido");
@@ -615,6 +622,7 @@ public class Teste {
 							System.out.println("------ RESERVAS CONFIRMADAS ------");
 							gb.imprimirReservasConfirmadas();
 							System.out.println("----------------------------------");
+							System.out.println("Qual reserva pretende selecionar?");
 							int idReserva = inserir(sc);
 							if(!gb.reservaValida(idReserva)) {
 								System.out.println("Essa Reserva é Invalida ser levantada");
@@ -635,11 +643,24 @@ public class Teste {
 									System.out.println("              PAGAMENTO                  ");
 									System.out.println("==========================================");
 									System.out.printf(" Total da reserva: %.2f €%n", totalLevantamento);
-								System.out.println(" Método aceite: Multibanco");
-								System.out.println("------------------------------------------");
-									pagamentoMultibanco(sc);
 									
-									System.out.println("=============================");
+									int metodoPagamento;
+									
+									do {
+										System.out.println("1 - Dinheiro");
+	                                    System.out.println("2 - Multibanco");
+	                                    System.out.print("Método de pagamento: ");
+	                                    
+	                                    metodoPagamento = inserir(sc);
+	                                    if (metodoPagamento == 1) {
+	                                        pagamentoDinheiro(sc, r.getTotal());
+	                                    } else if (metodoPagamento == 2) {
+	                                        pagamentoMultibanco(sc);
+	                                    } else {
+	                                        System.out.println("Opção inválida! Por favor, escolha 1 para Dinheiro ou 2 para Multibanco.\n");
+	                                    }
+                                } while (metodoPagamento != 1 && metodoPagamento != 2);
+									
 									
 									r.setEstadoPagamento(EstadoPagamento.PAGO); 
 								} else {
@@ -763,6 +784,16 @@ public class Teste {
 									System.out.println("Tente outra vez.");
 									continue;
 								}
+								
+								Produto p = gb.pesquisarProduto(idP);								
+								int stockAtual = p.getStock();
+                                Pedido pedido = gb.pesquisarPedido(idPedido);
+                                int qtdJaSelecionada = pedido.procurarUtilizado(idP);
+                       
+                                if (qtd + qtdJaSelecionada > stockAtual) {
+                                    System.out.println("Erro: Quantidade indisponível! Stock atual: " + stockAtual);
+                                    continue;
+                                }
 								if(r.verificarJaExiste(idP)) {
 									r.acrescentarMais(idP,qtd);
 								}else {
@@ -799,7 +830,7 @@ public class Teste {
 												System.out.println("ID do produto não encontrado! Tente outra vez.");
 												continue;
 											}
-											System.out.println("Para que quantidade que alterar");
+											System.out.println("Para que quantidade quer alterar?");
 											int qtd = inserir(sc);
 											if(qtd <= 0) {
 												System.out.println("Valor de quantidade Invalido");
@@ -962,11 +993,11 @@ public class Teste {
 			if(a.matches(patron)) {
 				mail=a;
 			}else {
-				System.out.println("Email invalido, inserir no siguiente formato: usuario@gmail.com\nInsira de novo:\n");
+				System.out.println("Email invalido, inserir no seguinte formato: utilizador@gmail.com\nInsira de novo:\n");
 				continue;
 			}
 			if(gb.pequisarEmail(mail)!=null) {
-				System.out.println("Email ya en uso\nIngrese de novo:\n");
+				System.out.println("Email já em utilização\nInsira de novo:\n");
 				mail=null;
 				continue;
 			}

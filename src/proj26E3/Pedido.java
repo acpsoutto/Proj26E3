@@ -184,6 +184,24 @@ public class Pedido {
 		}
 	}
 	
+	/**
+	*Procura a quantidade já pedida de um produto num item
+	@return i.getQtd() - quantidade de produto jaselecionada numproduto
+	return 0 - se esse produto não foi selecionado no pedido
+	*/
+	public int procurarUtilizado(int idP) {
+	        if(itens.isEmpty()) {
+	            return 0;
+	        }else {
+	            for(Item i : itens) {
+	                if(i.getProduto().getId() == idP) {
+	                    return i.getQtd();
+	                }
+	            }
+	        }
+	        return 0;
+	    }
+	
 	@Override
 	public String toString() {
 		return "Pedido [Id do pedido: " + id + ", Data e Hora: " + data + ", Valor Total: " + total + ", Itens do Pedido: " + itens + "]";

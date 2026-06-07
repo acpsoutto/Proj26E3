@@ -25,6 +25,6 @@ public class Elementar extends Produto{
 
 	@Override
 	public String toString() {
-		return super.toString()+ "Preço: " + precoE + " ";
+		return super.toString()+ " | Preço: " + precoE + " ";
 	}
 }

@@ -2,6 +2,7 @@ package proj26E3;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 /**
  * Classe principal do programa, responsável pela interação com o utilizador
@@ -760,7 +761,13 @@ public class Teste {
 							System.out.println("Quando quer recolher (Introduza na forma de ano-mes-dia Hora:min):");
 							String input = sc.nextLine();
 							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d H:m");
-							LocalDateTime dt = LocalDateTime.parse(input, formatter);
+							LocalDateTime dt;
+							try {
+								dt = LocalDateTime.parse(input, formatter);
+							}catch (DateTimeParseException e) {
+								System.out.println("Data Invalida!");
+								break;
+							}
 							if(dt.isBefore(LocalDateTime.now().plus(30, ChronoUnit.MINUTES)) || dt.isAfter(LocalDateTime.now().plus(7, ChronoUnit.DAYS) )){
 								System.out.println("A data inserida tem de ser abaixo de 7 dias ou acima de 30 minuntos.");
 								break;
